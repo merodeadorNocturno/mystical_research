@@ -1,0 +1,32 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}" />
+  <meta name="keywords" content="{{keywords}}" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{title}}" />
+  <meta property="og:description" content="{{description}}" />
+  <meta property="og:image" content="{{main_image_url}}" />
+  <meta property="og:image:alt" content="{{og_image_alt}}" />
+  <!-- Replace with your image URL -->
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{title}}" />
+  <meta name="twitter:description" content="{{description}}" />
+  <meta name="twitter:image" content="{{main_image_url}}" />
+  <!-- Replace with your image URL -->
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{canonical_url}}" />
+  <!-- Replace with your domain -->
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" type="image/png" href="img/favicon.png" />
+
+  {{!  Example of where you might include Schema Markup dynamically (JSON-LD) }}
+  <script type="application/ld+json">{{> section_schema}} </script>
+</head>
