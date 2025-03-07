@@ -1,2 +1,2 @@
-pub mod dynamic_controllers;
+pub mod index_controller;
 pub mod static_controllers;

@@ -28,13 +28,14 @@ impl TitleError {
     }
 }
 
-async fn load_html(section: &str) -> Result<String, RenderError> {
+async fn load_html() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let this_path = Path::new("./src/static");
 
     register_templates(this_path, &mut handlebars);
+    let index_hbs = "index";
 
-    let section_template = match read_hbs_template(section) {
+    let section_template = match read_hbs_template(&index_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -46,10 +47,25 @@ async fn load_html(section: &str) -> Result<String, RenderError> {
     };
 
     let default_env = set_env_urls();
-    let section_template = handlebars.render_template(&section_template, &json!(default_env))?;
+    let section_template = handlebars.render_template(&section_template, &json!(&default_env))?;
     Ok(section_template)
 }
 
-// pub fn serve_parsed_html(cfg: &mut ServiceConfig) {
-//     cfg.service(get("/parsed_html").to(load_html));
-// }
+pub fn index_html(cfg: &mut ServiceConfig) {
+    cfg.route(
+      "/",
+      get().to(|| async move {
+        let mr_help_template = load_html().await;
+        match mr_help_template {
+            Ok(template) => HttpResponse::Ok()
+              .content_type("text/html")
+              .append_header(("HX-Trigger", "help_table"))
+             .body(template),
+            Err(err) => HttpResponse::InternalServerError()
+              .content_type("text/html")
+              .append_header(("HX-Trigger", "help_table"))
+              .body(format!("<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load title: {}</span>",
+              err.to_string())),
+        }
+    }));
+}

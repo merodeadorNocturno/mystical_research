@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{middleware, App, HttpServer};
-use controllers::static_controllers::static_controllers;
+use controllers::{index_controller::index_html, static_controllers::static_controllers};
 use env_logger::{Builder, WriteStyle};
 use log::{info, warn};
 mod constants;
@@ -38,6 +38,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors)
             .wrap(middleware::NormalizePath::trim())
+            .configure(index_html)
             .configure(static_controllers)
     })
     .bind(server_address_conf)
