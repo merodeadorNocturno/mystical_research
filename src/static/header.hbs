@@ -1,30 +1,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{title}}</title>
-  <meta name="description" content="{{description}}" />
-  <meta name="keywords" content="{{keywords}}" />
+  <title>{{header.title}}</title>
+  <meta name="description" content="{{header.description}}" />
+  <meta name="keywords" content="{{header.keywords}}" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{{title}}" />
-  <meta property="og:description" content="{{description}}" />
-  <meta property="og:image" content="{{main_image_url}}" />
-  <meta property="og:image:alt" content="{{main_image_alt}}" />
+  <meta property="og:title" content="{{header.title}}" />
+  <meta property="og:description" content="{{header.description}}" />
+  <meta property="og:image" content="{{header.main_image_url}}" />
+  <meta property="og:image:alt" content="{{header.main_image_alt}}" />
   <!-- Replace with your image URL -->
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{title}}" />
-  <meta name="twitter:description" content="{{description}}" />
-  <meta name="twitter:image" content="{{main_image_url}}" />
+  <meta name="twitter:title" content="{{header.title}}" />
+  <meta name="twitter:description" content="{{header.description}}" />
+  <meta name="twitter:image" content="{{header.main_image_url}}" />
   <!-- Replace with your image URL -->
 
+  <script src="https://unpkg.com/htmx.org@2.0.4" loading="lazy"></script>
+
   <!-- Canonical URL -->
-  <link rel="canonical" href="{{canonical_url}}" />
+  <link rel="canonical" href="{{header.canonical_url}}" />
   <!-- Replace with your domain -->
 
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="static/css/styles.css" />
   <link rel="icon" type="image/png" href="img/favicon.png" />
 
   {{!  Example of where you might include Schema Markup dynamically (JSON-LD) }}

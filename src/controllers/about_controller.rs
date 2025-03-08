@@ -32,14 +32,14 @@ impl TitleError {
     }
 }
 
-async fn load_html() -> Result<String, RenderError> {
+async fn load_about() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let this_path = Path::new("./src/static");
 
     register_templates(this_path, &mut handlebars);
-    let index_hbs = "index";
+    let about_hbs = "about";
 
-    let section_template = match read_hbs_template(&index_hbs) {
+    let section_template = match read_hbs_template(&about_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -50,32 +50,15 @@ async fn load_html() -> Result<String, RenderError> {
         }
     };
 
-    let schema_markup = mock_index_schema_markup();
-    let body = mock_index_body();
-    let header = mock_header_data();
-    let mut featured = Vec::new();
-
-    featured.push(mock_index_featured_section("article1.png".to_string()));
-    featured.push(mock_index_featured_section("article2.png".to_string()));
-    featured.push(mock_index_featured_section("article3.png".to_string()));
-
-    let section_template = handlebars.render_template(
-        &section_template,
-        &json!(&IndexPage {
-            body,
-            schema_markup,
-            featured,
-            header,
-        }),
-    )?;
+    let section_template = handlebars.render_template(&section_template, &json!({}))?;
     Ok(section_template)
 }
 
-pub fn index_html(cfg: &mut ServiceConfig) {
+pub fn about_html(cfg: &mut ServiceConfig) {
     cfg.route(
-      "/",
+      "/about",
       get().to(|| async move {
-        let mr_help_template = load_html().await;
+        let mr_help_template = load_about().await;
         match mr_help_template {
             Ok(template) => HttpResponse::Ok()
               .content_type("text/html")

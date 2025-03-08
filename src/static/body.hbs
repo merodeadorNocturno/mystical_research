@@ -1,0 +1,50 @@
+<body>
+  <!-- Navigation -->
+{{> nav}}
+  <section class="main_container">
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-content">
+        <h1>{{body.title}}</h1>
+        <p>{{body.description}}</p>
+        <div class="cta-buttons" style="margin-top: 10px">
+          <a href="#explore" class="btn">Start Journey</a>
+          <a href="#learn" class="btn btn-outline">Learn More</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Ad Section -->
+    <aside class="ad-container">
+      <div class="ad-content">
+        <!-- Ad placeholder -->
+        <div class="ad-banner">Sponsored Content</div>
+      </div>
+    </aside>
+
+    <!-- Featured Section -->
+    <main class="container">
+      <section class="featured-grid">
+        {{#each featured}}
+          <article class="card">
+            <div
+              class="card-image"
+              style="background-image: url(&quot;{{section_image_url}}&quot;)"
+            ></div>
+            <h3>{{section_title}}</h3>
+            <p>{{section_description}}</p>
+          </article>
+        {{/each}}
+      </section>
+    </main>
+
+    <aside class="ad-container">
+      <div class="ad-content">
+        <!-- Ad placeholder -->
+        <div class="ad-banner">Sponsored Content</div>
+      </div>
+    </aside>
+  </section>
+{{> newsletter_section }}
+{{> footer}}
+</body>
