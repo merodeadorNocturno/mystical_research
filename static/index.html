@@ -44,7 +44,11 @@
 
     <!-- Featured Section -->
     <main class="container">
-      <section class="featured-grid">
+      <section
+        class="featured-grid"
+        hx-get="/blog/article"
+        hx-target=".main_container"
+      >
         <article class="card">
           <div
             class="card-image"

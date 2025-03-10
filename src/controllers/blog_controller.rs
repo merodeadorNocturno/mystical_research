@@ -1,3 +1,4 @@
+use crate::models::ai::{Content, GenerateContentRequest, Part};
 use crate::utils::fs_utils::{read_hbs_template, register_templates};
 use actix_web::{
     web::{get, ServiceConfig},

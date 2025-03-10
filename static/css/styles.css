@@ -147,9 +147,66 @@ h6 {
   border-radius: 5px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 780px) {
+  .nav-container {
+    flex-direction: row; /* Go back to row for logo and hamburger */
+    justify-content: space-between; /* Space logo and hamburger */
+    align-items: center; /* Vertically align items in the nav container */
+  }
+
+  .logo {
+    margin-bottom: 0; /* Remove bottom margin for logo on mobile */
+  }
+
+  .hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    background-color: transparent; /* Back to transparent background */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger-menu .bar {
+    height: 3px;
+    width: 100%;
+    background-color: var(--text-color); /* Force text color */
+    display: block; /* Ensure it's a block to take full width */
+  }
+
   .nav-links {
-    display: none;
+    display: none; /* Initially hide nav links on mobile */
+    flex-direction: column; /* Stack links vertically when open */
+    position: absolute; /* Position the menu below the navbar */
+    top: 100%; /* Position right below the nav bar */
+    left: 0;
+    background: var(--secondary-color);
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 0; /* Reset margin-top if any */
+    z-index: 999; /* Ensure it's below the nav but above other content */
+  }
+
+  .nav-links.open {
+    display: flex; /* Show nav links when 'open' class is added */
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links a {
+    display: block; /* Make links block elements */
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-links a:last-child {
+    border-bottom: none;
   }
 
   .hero-content h1 {
@@ -159,6 +216,25 @@ h6 {
   .featured-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (min-width: 780px) {
+  .hamburger-menu {
+    display: none;
+  }
+}
+
+/* --- Optional: Hamburger Menu Animation (when active) --- */
+.hamburger-menu.active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 /* About Page Specific */
@@ -592,7 +668,7 @@ h6 {
 .contact-hero {
   background-image:
     linear-gradient(rgba(42, 9, 68, 0.8), rgba(58, 24, 95, 0.8)),
-    url("../img/contact-bg.png"); /* You might need to create or use a relevant background image */
+    url("../img/contact-bg.jpg"); /* You might need to create or use a relevant background image */
 }
 
 /* Contact Form Styles */
@@ -714,4 +790,22 @@ a:hover {
 
 .contact-info a:hover {
   text-decoration: underline; /* Already underline on hover */
+}
+
+/* Newsletter Section Styles - Modified */
+.newsletter-form input.newsletter-input, /* Targeting with class (if you added class in hbs) */
+.newsletter-form input {
+  /* Targeting input inside newsletter-form directly - simpler and preferred */
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-family: inherit;
+  width: 100%; /* Make input take full width of form */
+}
+
+.newsletter-form button {
+  /* Keep button styling as is or modify if needed */
+  padding: 0.8rem 1.5rem; /* Ensure button padding matches input roughly */
 }

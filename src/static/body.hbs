@@ -26,7 +26,7 @@
     <main class="container">
       <section class="featured-grid">
         {{#each featured}}
-          <article class="card">
+          <article class="card" hx-get="/blog/article" hx-target=".main_container">
             <div
               class="card-image"
               style="background-image: url(&quot;{{section_image_url}}&quot;)"

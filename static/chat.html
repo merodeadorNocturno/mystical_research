@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Application UI</title>
+    <link rel="stylesheet" href="css/chat.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation Bar -->
+      <header class="top-bar">
+        <div class="logo">ChatApp</div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search..." />
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="top-bar-icons">
+          <div class="notification">
+            <span class="fas fa-bell"></>
+            <span class="badge">3</span>
+          </div>
+          <div class="settings">
+            <i class="fas fa-cog"></i>
+          </div>
+        </div>
+      </header>
+      <div class="content-wrapper">
+        <aside class="sidebar">
+          <div class="contacts-header">Contacts</div>
+          <div class="contacts-search">
+            <input type="text" placeholder="Search contacts..." />
+            <i class="fas fa-search"></i>
+          </div>
+          <ul class="contact-list">
+            <li class="contact">
+              <img src="img/avatar1.png" alt="User 1" class="avatar" />
+              <div class="contact-info">
+                <span class="name">John Doe</span>
+                <span class="status online">Online</span>
+              </div>
+            </li>
+            <li class="contact">
+              <img src="img/avatar2.png" alt="User 2" class="avatar" />
+              <div class="contact-info">
+                <span class="name">Jane Smith</span>
+                <span class="status offline">Last seen 2 hours ago</span>
+              </div>
+            </li>
+            <li class="contact">
+              <img src="img/avatar3.png" alt="User 3" class="avatar" />
+              <div class="contact-info">
+                <span class="name">Peter Jones</span>
+                <span class="status online">Online</span>
+              </div>
+            </li>
+            <li class="contact">
+              <img src="img/avatar4.png" alt="User 4" class="avatar" />
+              <div class="contact-info">
+                <span class="name">Alice Brown</span>
+                <span class="status offline">Last seen yesterday</span>
+              </div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Chat Window -->
+        <main class="chat-window">
+          <header class="chat-header">
+            <div class="recipient-info">
+              <img
+                src="img/avatar1.png"
+                alt="Recipient Avatar"
+                class="avatar large-avatar"
+              />
+              <div class="recipient-details">
+                <span class="recipient-name">John Doe</span>
+                <span class="recipient-status online">Online</span>
+              </div>
+            </div>
+            <div class="chat-header-icons">
+              <i class="fas fa-video"></i>
+              <i class="fas fa-phone"></i>
+              <i class="fas fa-ellipsis-v"></i>
+            </div>
+          </header>
+
+          <div class="message-area">
+            <div class="message received">
+              <img
+                src="img/avatar1.png"
+                alt="User 1"
+                class="avatar message-avatar"
+              />
+              <div class="message-bubble">
+                Hello there! How are you doing today?
+              </div>
+            </div>
+            <div class="message sent">
+              <div class="message-bubble">
+                I'm doing great, thanks! Just working on some stuff.
+              </div>
+              <img
+                src="img/avatar-me.png"
+                alt="Me"
+                class="avatar message-avatar"
+              />
+            </div>
+            <div class="message received">
+              <img
+                src="img/avatar1.png"
+                alt="User 1"
+                class="avatar message-avatar"
+              />
+              <div class="message-bubble">
+                Sounds busy! Let me know if you need anything.
+              </div>
+            </div>
+            <div class="message sent">
+              <div class="message-bubble">Will do, appreciate it!</div>
+              <img
+                src="img/avatar-me.png"
+                alt="Me"
+                class="avatar message-avatar"
+              />
+            </div>
+            <div class="message received">
+              <img
+                src="img/avatar1.png"
+                alt="User 1"
+                class="avatar message-avatar"
+              />
+              <div class="message-bubble">👍</div>
+            </div>
+          </div>
+
+          <footer class="input-area">
+            <div class="input-controls">
+              <i class="far fa-smile"></i>
+              <i class="fas fa-paperclip"></i>
+            </div>
+            <input
+              type="text"
+              class="message-input"
+              placeholder="Type a message..."
+            />
+            <button class="send-button">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

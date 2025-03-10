@@ -1,0 +1,424 @@
+/* General Styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7f6; /* Light background */
+  color: #333; /* Dark text for contrast */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+}
+
+/* --- Navigation Bar --- */
+.top-bar {
+  background-color: #fff; /* White top bar */
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0; /* Light border */
+  z-index: 100; /* Ensure top bar is above other content */
+  width: 100%; /* Full width */
+  position: sticky; /* Stick to the top on scroll */
+  top: 0;
+}
+
+.logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #3498db; /* Example brand color */
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0; /* Light grey search bar background */
+  border-radius: 25px;
+  padding: 5px 15px;
+  margin: 0 20px;
+}
+
+.search-bar input {
+  border: none;
+  background: none;
+  outline: none;
+  padding: 5px;
+  width: 200px; /* Adjust as needed */
+}
+
+.search-bar i {
+  color: #777; /* Grey search icon */
+}
+
+.top-bar-icons {
+  display: flex;
+  align-items: center;
+}
+
+.top-bar-icons > div {
+  margin-left: 20px;
+  position: relative; /* For badge positioning */
+  cursor: pointer;
+  color: #555; /* Dark grey icons */
+  width: 3em;
+}
+
+.top-bar-icons i {
+  font-size: 1.2em;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e74c3c; /* Red badge */
+  color: white;
+  border-radius: 50%;
+  padding: 5px 7px;
+  font-size: 0.7em;
+}
+
+/* --- Sidebar (Contacts) --- */
+.sidebar {
+  width: 280px; /* Fixed sidebar width */
+  background-color: #fff; /* White sidebar */
+  border-right: 1px solid #e0e0e0; /* Right border */
+  display: flex;
+  flex-direction: column;
+}
+
+.contacts-header {
+  padding: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.contacts-search {
+  padding: 10px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f9f9f9; /* Slightly lighter background for search */
+  display: flex;
+  align-items: center;
+}
+
+.contacts-search input {
+  border: none;
+  background: none;
+  outline: none;
+  padding: 8px;
+  width: 100%;
+}
+
+.contacts-search i {
+  color: #777;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto; /* Scrollable contacts */
+}
+
+.contact {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #f0f0f0; /* Light contact separator */
+  cursor: pointer;
+}
+
+.contact:hover {
+  background-color: #f0f0f0; /* Hover effect */
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover; /* Ensure avatar images fit within the circle */
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.status {
+  font-size: 0.8em;
+  color: #777;
+}
+
+.status.online {
+  color: #2ecc71; /* Green for online status */
+}
+
+.content-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+/* --- Chat Window --- */
+.chat-window {
+  flex-grow: 1; /* Take up remaining space */
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  background-color: #fff; /* White chat header */
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0; /* Bottom border */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recipient-info {
+  display: flex;
+  align-items: center;
+}
+
+.large-avatar {
+  width: 50px;
+  height: 50px;
+}
+
+.recipient-details {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.recipient-name {
+  font-weight: bold;
+}
+
+.recipient-status {
+  font-size: 0.8em;
+  color: #777;
+}
+
+.recipient-status.online {
+  color: #2ecc71; /* Green for online status */
+}
+
+.chat-header-icons {
+  display: flex;
+  align-items: center;
+}
+
+.chat-header-icons i {
+  margin-left: 20px;
+  color: #555; /* Dark grey icons */
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.message-area {
+  flex-grow: 1; /* Take up remaining chat space */
+  padding: 20px;
+  overflow-y: auto; /* Scrollable messages */
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 15px;
+  align-items: flex-start; /* Align avatars at the top */
+}
+
+.message.received {
+  justify-content: flex-start; /* Align received messages to the left */
+}
+
+.message.sent {
+  justify-content: flex-end; /* Align sent messages to the right */
+}
+
+.message-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 10px;
+  object-fit: cover;
+}
+
+.message.sent .message-avatar {
+  margin-left: 10px; /* Add margin to the left for sent messages avatar */
+  margin-right: 0; /* Remove margin from right for sent message avatar */
+}
+.message.received .message-avatar {
+  margin-right: 10px; /* Add margin to the right for received messages avatar */
+  margin-left: 0; /* Remove margin from left for received message avatar */
+}
+
+.message-bubble {
+  background-color: #e0e0e0; /* Grey bubbles for received */
+  padding: 10px 15px;
+  border-radius: 20px;
+  display: inline-block; /* Make bubble wrap content */
+  max-width: 70%; /* Limit bubble width */
+  word-wrap: break-word; /* Break long words */
+}
+
+.message.sent .message-bubble {
+  background-color: #dcf8c6; /* Green bubbles for sent */
+  color: #000; /* Ensure text is visible on green background */
+}
+
+.input-area {
+  background-color: #fff; /* White input area */
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0; /* Top border */
+  display: flex;
+  align-items: center;
+}
+
+.input-controls {
+  display: flex;
+  margin-right: 15px;
+}
+
+.input-controls i {
+  margin-right: 15px;
+  color: #777; /* Grey input controls */
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.message-input {
+  flex-grow: 1; /* Take up remaining input area space */
+  border: none;
+  border-radius: 25px;
+  padding: 10px 15px;
+  background-color: #f0f0f0; /* Light grey input background */
+  outline: none;
+  font-size: 1em;
+}
+
+.send-button {
+  background-color: #3498db; /* Blue send button */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.send-button i {
+  font-size: 1.2em;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 768px) {
+  /* Tablet and smaller screens */
+  .content-wrapper {
+    flex-direction: column;
+  }
+  .container {
+    flex-direction: column; /* Stack sidebar and chat window */
+  }
+  .sidebar {
+    width: 100%; /* Full width sidebar on smaller screens */
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0; /* Add bottom border to sidebar when stacked */
+  }
+  .chat-window {
+    width: 100%; /* Full width chat window on smaller screens */
+  }
+  .top-bar .search-bar {
+    display: none; /* Hide search bar in top bar on smaller screens if needed */
+  }
+  .top-bar .logo {
+    margin-right: auto; /* Push icons to the right */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile screens */
+  .top-bar .logo {
+    font-size: 1.2em; /* Smaller logo on mobile */
+  }
+  .top-bar-icons > div {
+    margin-left: 10px; /* Less spacing for icons on mobile */
+  }
+  .chat-header-icons i {
+    margin-left: 10px; /* Less spacing for chat header icons on mobile */
+  }
+  .input-controls i {
+    margin-right: 10px; /* Less spacing for input controls on mobile */
+  }
+}
+
+/* --- Hover Effects --- */
+.top-bar-icons > div:hover,
+.chat-header-icons i:hover,
+.input-controls i:hover,
+.send-button:hover,
+.contact:hover {
+  opacity: 0.8; /* Example hover effect: slightly reduce opacity */
+}
+
+/* --- Dark Mode (Commented Out - for future implementation) --- */
+/*
+body.dark-mode {
+    background-color: #222;
+    color: #eee;
+}
+.top-bar.dark-mode,
+.sidebar.dark-mode,
+.chat-header.dark-mode,
+.input-area.dark-mode,
+.contact-list.dark-mode,
+.contacts-search.dark-mode {
+    background-color: #333;
+    border-color: #555;
+}
+.top-bar.dark-mode .logo,
+.top-bar.dark-mode .search-bar input,
+.sidebar.dark-mode .contacts-search input,
+.chat-header.dark-mode .recipient-name,
+.input-area.dark-mode .message-input,
+.contact-list.dark-mode .name,
+.contact-list.dark-mode .status {
+    color: #eee;
+}
+.top-bar.dark-mode .search-bar,
+.sidebar.dark-mode .contacts-search,
+.input-area.dark-mode .message-input {
+    background-color: #444;
+}
+.message-bubble.dark-mode {
+    background-color: #555;
+    color: #eee;
+}
+.message.sent .message-bubble.dark-mode {
+    background-color: #4CAF50; !* Example dark mode sent color *!
+    color: #eee;
+}
+.top-bar.dark-mode .top-bar-icons i,
+.sidebar.dark-mode .contacts-search i,
+.chat-header.dark-mode .chat-header-icons i,
+.input-area.dark-mode .input-controls i,
+.contact-list.dark-mode .status {
+    color: #ccc;
+}
+*/

@@ -1,6 +1,11 @@
 use actix_cors::Cors;
 use actix_web::{middleware, App, HttpServer};
-use controllers::{index_controller::index_html, static_controllers::static_controllers};
+use controllers::{
+    about_controller::about_html, blog_controller::blog_home_html,
+    contact_controller::contact_html, index_controller::index_html,
+    resources_controller::resources_html, static_controllers::static_controllers,
+    topics_controller::topics_html,
+};
 use env_logger::{Builder, WriteStyle};
 use log::{info, warn};
 mod constants;
@@ -39,6 +44,11 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .wrap(middleware::NormalizePath::trim())
             .configure(index_html)
+            .configure(about_html)
+            .configure(resources_html)
+            .configure(topics_html)
+            .configure(contact_html)
+            .configure(blog_home_html)
             .configure(static_controllers)
     })
     .bind(server_address_conf)

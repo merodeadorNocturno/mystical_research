@@ -6,9 +6,9 @@ pub fn mock_index_schema_markup() -> IndexSchemaMarkup {
         site_name: "My Awesome Site".to_string(),
         site_description: "This is a description of my awesome site for search engines."
             .to_string(),
-        main_image_url: Some("https://example.com/images/main-image.jpg".to_string()),
+        main_image_url: Some("main-image.jpg".to_string()),
         search_term_string: Some("awesome, site, keywords".to_string()),
-        canonical_url: Some("https://example.com/".to_string()),
+        canonical_url: Some("https://mysticalresearch.com/".to_string()),
     }
 }
 
