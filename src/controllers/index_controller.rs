@@ -1,9 +1,12 @@
-use crate::models::index::IndexPage;
-use crate::models::mock::{
-    mock_header_data, mock_index_body, mock_index_featured_section, mock_index_schema_markup,
+use crate::models::{
+    general_model::PageType,
+    index_model::{IndexPage, TitleError},
+    mock::{
+        mock_header_data, mock_index_body, mock_index_featured_section, mock_index_schema_markup,
+    },
 };
 use crate::utils::{
-    env::set_env_urls,
+    env_utils::*,
     fs_utils::{read_hbs_template, register_templates},
 };
 use actix_web::{
@@ -11,33 +14,18 @@ use actix_web::{
     HttpResponse,
 };
 use handlebars::{Handlebars, RenderError};
-use log::{debug, error};
-use serde::{Deserialize, Serialize};
+use log::error;
 use serde_json::json;
 use std::path::Path;
 
-#[derive(Debug, Deserialize, Serialize)]
-struct Title {
-    title: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct TitleError {
-    pub error: String,
-}
-
-impl TitleError {
-    pub fn new(error: String) -> TitleError {
-        TitleError { error }
-    }
-}
-
 async fn load_html() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
-    let this_path = Path::new("./src/static");
+    let PageConfiguration { template_path, .. } = set_env_urls();
+
+    let this_path = Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
-    let index_hbs = "index";
+    let index_hbs = "index/index";
 
     let section_template = match read_hbs_template(&index_hbs) {
         Ok(contents) => contents,
@@ -66,6 +54,7 @@ async fn load_html() -> Result<String, RenderError> {
             schema_markup,
             featured,
             header,
+            section: PageType::Home,
         }),
     )?;
     Ok(section_template)

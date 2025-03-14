@@ -1,0 +1,801 @@
+:root {
+  --primary-color: #f0f4f7; /* Light Grayish Blue - Soft Background */
+  --secondary-color: #e0e8ef; /* Slightly Darker Grayish Blue - Cards, Nav */
+  --accent-color: #00bcd4; /* Teal - Highlights, Buttons */
+  --text-color: #333333; /* Dark Gray - Primary Text */
+  --light-bg: #ffffff; /* White - Very Light Backgrounds */
+  --heading-font: "Roboto Slab", serif; /* More modern heading font */
+  --body-font: "Open Sans", sans-serif; /* Clean, readable body font */
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  background: var(--primary-color);
+  color: var(--text-color);
+  line-height: 1.7; /* Slightly increased line height for readability */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto Slab", serif;
+  color: var(--secondary-color); /* Slightly muted headings */
+  font-weight: 700; /* Stronger heading weight */
+}
+
+.main-nav {
+  background: var(--light-bg); /* Light background for nav */
+  padding: 0.8rem 0; /* Slightly reduced nav padding */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for nav */
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem; /* Add horizontal padding to nav container */
+}
+
+.logo {
+  font-size: 1.8rem; /* Slightly smaller logo font */
+  font-weight: 800; /* Stronger logo weight */
+  color: var(--text-color); /* Dark text color for logo */
+  text-shadow: none; /* Removed text shadow for cleaner logo */
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem; /* Reduced gap in nav links */
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600; /* Slightly bolder nav links */
+  transition: color 0.3s ease;
+  padding: 0.5rem 0; /* Add some vertical padding to nav links */
+}
+
+.nav-links a:hover {
+  color: var(--accent-color);
+}
+
+.hero {
+  height: 60vh; /* Slightly reduced hero height */
+  background:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    /* Lighter overlay */ url("../img/hero-bg-alt.jpg") center/cover; /* Alternate Hero Image - replace with a suitable image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 3rem; /* Slightly reduced hero heading size */
+  margin-bottom: 0.8rem; /* Reduced margin below hero heading */
+  color: var(--secondary-color); /* Muted hero heading color */
+  text-shadow: none; /* Removed text shadow from hero heading */
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(320px, 1fr)
+  ); /* Slightly wider min-width for cards */
+  gap: 1.5rem; /* Reduced grid gap */
+  padding: 3rem 0; /* Reduced padding around featured grid */
+  max-width: 1200px; /* Added max width for content alignment */
+  margin: 0 auto; /* Center the grid */
+  padding: 3rem 1rem; /* Add horizontal padding to grid */
+}
+
+.card {
+  background: var(--light-bg); /* Light card background */
+  border-radius: 8px; /* Slightly less rounded card corners */
+  overflow: hidden;
+  transition: transform 0.2s ease; /* Slightly faster transition */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Subtle card shadow */
+}
+
+.card:hover {
+  transform: translateY(-3px); /* Reduced hover lift */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly increased shadow on hover */
+}
+
+.card-image {
+  height: 180px; /* Reduced card image height */
+  background-size: cover;
+  background-position: center;
+}
+
+.newsletter {
+  background: var(--secondary-color); /* Secondary color for newsletter */
+  padding: 3rem 2rem; /* Reduced newsletter padding */
+  text-align: center;
+}
+
+.newsletter-form {
+  max-width: 550px; /* Slightly wider newsletter form */
+  margin: 1rem auto;
+  display: flex;
+  gap: 0.8rem; /* Reduced gap in newsletter form */
+}
+
+.btn {
+  padding: 0.7rem 1.3rem; /* Reduced button padding */
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px; /* Less rounded button corners */
+  cursor: pointer;
+  transition: all 0.2s ease; /* Faster button transition */
+  font-weight: 600; /* Slightly bolder button text */
+}
+
+.btn:hover {
+  background: #00a7bb; /* Slightly darker teal on hover */
+}
+
+.ad-container {
+  max-width: 1200px;
+  margin: 1.5rem auto; /* Reduced ad container margin */
+  padding: 0.8rem; /* Reduced ad container padding */
+}
+
+.ad-banner {
+  height: 80px; /* Reduced ad banner height */
+  background: rgba(0, 0, 0, 0.03); /* Very subtle ad banner background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px; /* Less rounded ad banner corners */
+  color: var(--text-color); /* Dark text color for ad banner */
+  font-size: 0.9rem; /* Smaller font size for ad banner text */
+}
+
+@media (max-width: 780px) {
+  .nav-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    margin-bottom: 0;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px; /* Slightly smaller hamburger menu */
+    height: 20px; /* Slightly smaller hamburger menu */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger-menu .bar {
+    height: 2.5px; /* Thinner hamburger bars */
+    width: 100%;
+    background-color: var(--text-color);
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--light-bg); /* Light background for mobile nav */
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 0; /* Reduced padding in mobile nav */
+    margin-top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for mobile nav */
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 0.6rem 1rem; /* Slightly reduced padding in mobile nav links */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Subtler border in mobile nav */
+  }
+
+  .nav-links a:last-child {
+    border-bottom: none;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem; /* Further reduced hero heading on mobile */
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+    padding: 2rem 1rem; /* Reduced padding on mobile grid */
+  }
+}
+
+@media (min-width: 780px) {
+  .hamburger-menu {
+    display: none;
+  }
+}
+
+/* --- Optional: Hamburger Menu Animation (when active) --- */
+.hamburger-menu.active .bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg); /* Adjusted animation distance */
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg); /* Adjusted animation distance */
+}
+
+/* About Page Specific */
+.about-hero {
+  background-image:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    url("../img/about-bg-alt.jpg"); /* Alternate About Hero Image - replace with a suitable image */
+}
+
+.topics-hero {
+  background-image:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    url("../img/topics-bg-alt.jpg"); /* Alternate Topics Hero Image - replace with a suitable image */
+}
+
+.resources-hero {
+  background-image:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    url("../img/resources-bg-alt.jpg"); /* Alternate Resources Hero Image - replace with a suitable image */
+}
+
+.content-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2.5rem; /* Reduced column gap */
+  padding: 3rem 0; /* Reduced padding in content columns */
+  max-width: 1200px; /* Added max width for content alignment */
+  margin: 0 auto; /* Center the columns */
+  padding: 3rem 1rem; /* Add horizontal padding to columns */
+}
+
+.timeline-event {
+  border-left: 3px solid var(--accent-color);
+  padding-left: 0.8rem; /* Reduced timeline event padding */
+  margin: 0.8rem 0; /* Reduced timeline event margin */
+}
+
+/* Topics Page Specific */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(270px, 1fr)
+  ); /* Slightly wider category cards */
+  gap: 1.5rem; /* Reduced category grid gap */
+  padding: 3rem 0; /* Reduced padding in category grid */
+  max-width: 1200px; /* Added max width for content alignment */
+  margin: 0 auto; /* Center the grid */
+  padding: 3rem 1rem; /* Add horizontal padding to grid */
+}
+
+.category-card {
+  text-align: center;
+  padding: 1.5rem; /* Reduced padding in category card */
+  background: rgba(0, 0, 0, 0.02); /* Very subtle category card background */
+  border-radius: 12px; /* More rounded category card corners */
+}
+
+.category-icon {
+  font-size: 2.5rem; /* Reduced category icon size */
+  margin-bottom: 0.8rem; /* Reduced margin below category icon */
+  color: var(--accent-color); /* Accent color for category icon */
+}
+
+/* Immersive Hero */
+.post-hero.immersive {
+  height: 50vh; /* Reduced immersive hero height */
+  background:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    url("../img/tarot-placeholder-alt.jpg") center/cover; /* Alternate Immersive Hero Image - replace with a suitable image */
+}
+
+/* Tags */
+.post-tags {
+  margin-top: 0.8rem; /* Reduced post tags margin */
+}
+
+.tag {
+  display: inline-block;
+  background: var(--accent-color);
+  padding: 0.2rem 0.6rem; /* Reduced tag padding */
+  border-radius: 18px; /* More rounded tag corners */
+  font-size: 0.8rem; /* Smaller tag font size */
+  margin-right: 0.4rem; /* Reduced tag margin */
+  color: var(--light-bg); /* Light text color for tags */
+  font-weight: 500; /* Slightly bolder tag text */
+}
+
+/* Image Gallery */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(180px, 1fr)
+  ); /* Slightly smaller images in gallery */
+  gap: 0.8rem; /* Reduced image gallery gap */
+  margin: 1.5rem 0; /* Reduced image gallery margin */
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(140px, 1fr)
+  ); /* Slightly smaller cards in card grid */
+  gap: 0.8rem; /* Reduced card grid gap */
+  margin: 1.5rem 0; /* Reduced card grid margin */
+}
+
+.card-example {
+  text-align: center;
+}
+
+/* Tips List */
+.tips-list {
+  list-style: none;
+  padding-left: 0.8rem; /* Reduced tips list padding */
+}
+
+.tips-list li {
+  margin: 0.4rem 0; /* Reduced tips list item margin */
+  padding-left: 0.8rem; /* Reduced tips list item padding */
+  position: relative;
+}
+
+.tips-list li::before {
+  content: "✨"; /* Changed bullet point */
+  position: absolute;
+  left: -0.8rem; /* Adjusted bullet point position */
+}
+
+/* === Blog Post Styles === */
+
+/* Post Hero Section */
+.post-hero {
+  height: 35vh; /* Reduced post hero height */
+  background:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    url("../img/xico_bg-alt.jpg") center/cover; /* Alternate Post Hero Image - replace with a suitable image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--secondary-color); /* Muted text color for post hero */
+  padding: 2rem;
+}
+
+.post-hero.immersive {
+  height: 50vh; /* Reduced immersive post hero height */
+}
+
+.post-hero h1 {
+  font-size: 2.5rem; /* Reduced post hero heading size */
+  text-shadow: none; /* Removed text shadow from post hero heading */
+  color: var(--secondary-color); /* Muted post hero heading color */
+}
+
+.post-meta {
+  font-size: 0.8rem; /* Smaller post meta font size */
+  opacity: 0.7; /* Slightly more transparent post meta */
+  margin-top: 0.4rem; /* Reduced margin above post meta */
+}
+
+/* Post Container */
+.post-container {
+  max-width: 900px; /* Slightly wider post container */
+  margin: 2rem auto;
+  padding: 0 1.5rem; /* Increased horizontal padding in post container */
+}
+
+.post-content {
+  line-height: 1.7; /* Slightly reduced line height in post content */
+  font-size: 1rem; /* Slightly smaller font size in post content */
+}
+
+/* Featured Image */
+.post-featured-image {
+  margin: 1.5rem 0; /* Reduced featured image margin */
+}
+
+.post-featured-image img {
+  width: 100%;
+  border-radius: 6px; /* Less rounded featured image corners */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Subtler featured image shadow */
+}
+
+.post-featured-image.immersive {
+  position: relative;
+}
+
+.post-featured-image.immersive .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* Lighter image overlay */
+  border-radius: 6px; /* Less rounded image overlay corners */
+}
+
+/* Post Introduction */
+.post-intro {
+  font-size: 1.1rem; /* Slightly reduced post intro font size */
+  font-weight: 500;
+  margin: 1.5rem 0; /* Reduced post intro margin */
+  padding: 0.8rem 1rem; /* Reduced padding in post intro */
+  background: rgba(0, 0, 0, 0.02); /* Very subtle post intro background */
+  border-left: 4px solid var(--accent-color);
+  border-radius: 4px; /* Less rounded post intro corners */
+}
+
+/* Table of Contents */
+.post-toc {
+  background: rgba(0, 0, 0, 0.02); /* Very subtle post toc background */
+  padding: 1.2rem; /* Reduced padding in post toc */
+  border-radius: 8px; /* Less rounded post toc corners */
+  margin: 1.5rem 0; /* Reduced post toc margin */
+}
+
+.post-toc h3 {
+  margin-bottom: 0.8rem; /* Reduced margin below post toc heading */
+  font-size: 1.1rem; /* Slightly reduced post toc heading size */
+  color: var(--text-color); /* Dark text color for post toc heading */
+}
+
+.post-toc ul {
+  list-style: none;
+  padding: 0;
+}
+
+.post-toc li {
+  margin: 0.4rem 0; /* Reduced post toc list item margin */
+}
+
+.post-toc a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s ease; /* Faster transition for post toc links */
+  font-size: 0.95rem; /* Slightly smaller font size for post toc links */
+}
+
+.post-toc a:hover {
+  color: var(--accent-color);
+}
+
+.post-toc.immersive {
+  background: var(--secondary-color);
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Subtler border in immersive post toc */
+}
+
+/* Blog Sections */
+.post-content h2 {
+  font-size: 1.8rem; /* Reduced post content h2 size */
+  margin: 2.5rem 0 1.2rem; /* Reduced margin around post content h2 */
+  color: var(--accent-color);
+}
+
+.post-content p {
+  margin: 0.8rem 0; /* Reduced post content paragraph margin */
+}
+
+/* Image Gallery - Duplicated Below - Keep only once */
+
+/* Card Grid - Duplicated Below - Keep only once */
+
+/* Tips List - Duplicated Below - Keep only once */
+
+/* Author Bio */
+.author-bio {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem; /* Reduced author bio gap */
+  margin: 2.5rem 0; /* Reduced author bio margin */
+  padding: 1.2rem; /* Reduced padding in author bio */
+  background: rgba(0, 0, 0, 0.02); /* Very subtle author bio background */
+  border-radius: 8px; /* Less rounded author bio corners */
+}
+
+.author-bio.immersive {
+  background: var(--secondary-color);
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Subtler border in immersive author bio */
+}
+
+.author-image img {
+  width: 80px; /* Reduced author image size */
+  height: 80px; /* Reduced author image size */
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Subtle shadow for author image */
+}
+
+.author-details h3 {
+  font-size: 1.1rem; /* Slightly reduced author details h3 size */
+  margin-bottom: 0.4rem; /* Reduced margin below author details h3 */
+  color: var(--text-color); /* Dark text color for author details h3 */
+}
+
+.author-details p {
+  font-size: 0.8rem; /* Smaller author details paragraph font size */
+  opacity: 0.7; /* Slightly more transparent author details paragraph */
+}
+
+/* Tags - Duplicated Below - Keep only once */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .post-hero h1 {
+    font-size: 1.8rem; /* Further reduced post hero heading on mobile */
+  }
+
+  .post-content h2 {
+    font-size: 1.4rem; /* Reduced post content h2 on mobile */
+  }
+
+  .author-bio {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.8rem; /* Reduced gap in author bio on mobile */
+  }
+
+  .author-image img {
+    width: 60px; /* Further reduced author image size on mobile */
+    height: 60px; /* Further reduced author image size on mobile */
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px; /* Reduced container padding */
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px; /* Reduced search bar margin */
+}
+
+#search-input {
+  padding: 0.8rem; /* Reduced search input padding */
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px; /* Less rounded search input corners */
+  width: 80%;
+}
+
+#search-button {
+  padding: 0.8rem 1.5rem; /* Reduced search button padding */
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0; /* Less rounded search button corners */
+  cursor: pointer;
+  font-weight: 600; /* Slightly bolder search button text */
+}
+
+.blog-posts {
+  margin-bottom: 15px; /* Reduced blog posts margin */
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(320px, 1fr)
+  ); /* Slightly wider blog grid cards */
+  gap: 15px; /* Reduced blog grid gap */
+}
+
+.blog-post {
+  border: 1px solid #ddd; /* Lighter border for blog post */
+  padding: 12px; /* Reduced padding in blog post */
+  border-radius: 4px; /* Less rounded blog post corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtler blog post shadow */
+  background-color: var(--light-bg); /* Light background for blog post */
+}
+
+.blog-post img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 8px; /* Reduced margin below blog post image */
+  border-radius: 4px; /* Less rounded blog post image corners */
+}
+
+.read-more {
+  display: inline-block;
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600; /* Slightly bolder read more link */
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.main-footer {
+  background-color: var(--secondary-color); /* Secondary color for footer */
+  color: var(--light-bg); /* Light text color for footer */
+  text-align: center;
+  padding: 8px 0; /* Reduced footer padding */
+  font-size: 0.9rem; /* Smaller footer font size */
+}
+
+.contact-hero {
+  background-image:
+    linear-gradient(rgba(240, 244, 247, 0.7), rgba(224, 232, 239, 0.7)),
+    url("../img/contact-bg-alt.jpg"); /* Alternate Contact Hero Image - replace with a suitable image */
+}
+
+/* Contact Form Styles */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem; /* Reduced contact form gap */
+  padding: 1.5rem; /* Reduced contact form padding */
+  background: rgba(0, 0, 0, 0.02); /* Very subtle contact form background */
+  border-radius: 8px; /* Less rounded contact form corners */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.4rem; /* Reduced form group label margin */
+  font-weight: 600; /* Slightly bolder form group label */
+  color: var(--text-color); /* Dark text color for form group label */
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.7rem; /* Reduced form group input/textarea padding */
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Less rounded form group input/textarea corners */
+  background-color: var(--light-bg); /* Light background for form inputs */
+  color: var(--text-color);
+  font-family: inherit;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Contact Info Sidebar */
+.contact-info {
+  padding: 1.5rem; /* Reduced contact info padding */
+  background: rgba(0, 0, 0, 0.02); /* Very subtle contact info background */
+  border-radius: 8px; /* Less rounded contact info corners */
+}
+
+.contact-info h3 {
+  margin-bottom: 0.8rem; /* Reduced contact info h3 margin */
+  color: var(--text-color); /* Dark text color for contact info h3 */
+  font-size: 1.1rem; /* Slightly reduced contact info h3 size */
+}
+
+.contact-info p {
+  margin-bottom: 0.6rem; /* Reduced contact info paragraph margin */
+  font-size: 0.9rem; /* Smaller contact info paragraph font size */
+}
+
+.contact-info a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600; /* Slightly bolder contact info link */
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+a {
+  color: var(--accent-color); /* Accent color for default links */
+  text-decoration: none;
+  transition: color 0.2s ease; /* Faster transition for default links */
+}
+
+a:hover {
+  color: #00a7bb; /* Slightly darker teal on hover for default links */
+  text-decoration: underline;
+}
+
+/* Navigation Links */
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s ease; /* Faster transition for nav links */
+}
+
+.nav-links a:hover {
+  color: var(--accent-color);
+}
+
+/* Blog Post Table of Contents Links */
+.post-toc a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s ease; /* Faster transition for post toc links */
+}
+
+.post-toc a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* Read More Links */
+.read-more {
+  display: inline-block;
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Contact Info Links */
+.contact-info a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+/* Newsletter Section Styles - Modified */
+.newsletter-form input.newsletter-input,
+.newsletter-form input {
+  padding: 0.7rem; /* Reduced newsletter input padding */
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Less rounded newsletter input corners */
+  background-color: var(--light-bg); /* Light background for newsletter input */
+  color: var(--text-color);
+  font-family: inherit;
+  width: 100%;
+}
+
+.newsletter-form button {
+  padding: 0.7rem 1.3rem; /* Reduced newsletter button padding */
+  font-weight: 600; /* Slightly bolder newsletter button text */
+}

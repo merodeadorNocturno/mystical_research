@@ -8,11 +8,11 @@ use controllers::{
 };
 use env_logger::{Builder, WriteStyle};
 use log::{info, warn};
-mod constants;
+mod config;
 mod controllers;
 mod models;
 mod utils;
-use crate::utils::env::*;
+use crate::utils::env_utils::*;
 
 const MAX_AGE: usize = 3600;
 

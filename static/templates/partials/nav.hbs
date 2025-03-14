@@ -10,31 +10,36 @@
     </button>
 
     <ul class="nav-links">
-      <li><a href="/">Home</a></li>
+      <li><a href="/" hx-push-url="/">Home</a></li>
       <li><a
           href="about.html"
           hx-get="/about"
           hx-target=".main_container"
+          hx-push-url="/about.html"
         >About</a></li>
       <li><a
           href="topics.html"
           hx-get="/topics"
           hx-target=".main_container"
+          hx-push-url="/topics.html"
         >Topics</a></li>
-      <li><a
+      <!-- <li><a
           href="resources.html"
           hx-get="/resources"
           hx-target=".main_container"
-        >Resources</a></li>
+          hx-push-url="/resources.html"
+        >Resources</a></li> -->
       <li><a
-          href="blog.html"
+          href="blog_home.html"
           hx-get="/blog"
           hx-target=".main_container"
+          hx-push-url="/blog_home.html"
         >Blog</a></li>
       <li><a
           href="contact.html"
           hx-get="/contact"
           hx-target=".main_container"
+          hx-push-url="/contact.html"
         >Contact</a></li>
     </ul>
   </div>
@@ -45,5 +50,8 @@
   = document.querySelector('.hamburger-menu'); const navLinks =
   document.querySelector('.nav-links'); hamburgerMenu.addEventListener('click',
   () => { navLinks.classList.toggle('open');
-  hamburgerMenu.classList.toggle('active'); }); });
+  hamburgerMenu.classList.toggle('active'); });
+  navLinks.addEventListener('click', (event) => { if (event.target.tagName ===
+  'A') { navLinks.classList.remove('open');
+  hamburgerMenu.classList.remove('active'); } }); });
 </script>

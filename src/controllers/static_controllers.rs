@@ -4,7 +4,7 @@ use actix_web::HttpRequest;
 use actix_web::{get, web::ServiceConfig, Error};
 use log::{info, warn};
 
-use crate::utils::env::get_cwd;
+use crate::utils::env_utils::get_cwd;
 
 #[get("/{filename:.*}")]
 async fn scripts_static(req: HttpRequest) -> Result<fs::NamedFile, Error> {

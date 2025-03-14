@@ -1,3 +1,5 @@
+use crate::models::mock::mock_topic_home_page_object;
+use crate::utils::env_utils::{set_env_urls, PageConfiguration};
 use crate::utils::fs_utils::{read_hbs_template, register_templates};
 use actix_web::{
     web::{get, ServiceConfig},
@@ -22,10 +24,12 @@ impl TitleError {
 
 async fn load_topics() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
-    let this_path = Path::new("./src/static");
+    let PageConfiguration { template_path, .. } = set_env_urls();
+
+    let this_path = Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
-    let topics_hbs = "topics";
+    let topics_hbs = "topics/topics";
 
     let section_template = match read_hbs_template(&topics_hbs) {
         Ok(contents) => contents,
@@ -42,11 +46,63 @@ async fn load_topics() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
+async fn load_topics_index_html() -> Result<String, RenderError> {
+    let PageConfiguration { template_path, .. } = set_env_urls();
+
+    let mut handlebars = Handlebars::new();
+    let this_path = Path::new(&template_path);
+
+    register_templates(this_path, &mut handlebars);
+    let contact_hbs = "index/index";
+    let contact_template = match read_hbs_template(&contact_hbs) {
+        Ok(contents) => contents,
+        Err(err) => {
+            error!(
+                "Failed to render contents for contact page: {}",
+                err.to_string()
+            );
+            TitleError::new(err.to_string()).error
+        }
+    };
+
+    let contact_template = match handlebars
+        .render_template(&contact_template, &json!(mock_topic_home_page_object()))
+    {
+        Ok(contents) => contents,
+        Err(err) => {
+            error!(
+                "Failed to render contents for contact page: {}",
+                err.to_string()
+            );
+            TitleError::new(err.to_string()).error
+        }
+    };
+    Ok(contact_template)
+}
+
 pub fn topics_html(cfg: &mut ServiceConfig) {
     cfg.route(
         "/topics",
         get().to(|| async move {
             let topics_template = load_topics().await;
+            match topics_template {
+                Ok(template) => HttpResponse::Ok()
+                    .content_type("text/html")
+                    .body(template),
+                Err(err) => HttpResponse::InternalServerError()
+                    .content_type("text/html")
+                    .body(format!(
+                        "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load topics page: {}</span>",
+                        err.to_string()
+                    )),
+            }
+        }),
+    );
+
+    cfg.route(
+        "/topics.html",
+        get().to(|| async move {
+            let topics_template = load_topics_index_html().await;
             match topics_template {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")

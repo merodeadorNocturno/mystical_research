@@ -1,0 +1,113 @@
+<!-- Main Content -->
+<main class="post-container immersive">
+  <article class="post-content">
+    <!-- Featured Image with Overlay -->
+    <div class="post-featured-image immersive">
+      <img
+        src="static/img/tarot-placeholder.png"
+        alt="{{keywords}}"
+        loading="lazy"
+      />
+      <div class="image-overlay"></div>
+    </div>
+
+    <!-- Introduction -->
+    <section class="post-intro">
+      <p>
+        {{summary}}
+      </p>
+    </section>
+
+    <!-- Interactive Table of Contents -->
+    <aside class="post-toc immersive">
+      <h3>Table of Contents</h3>
+      <ul>
+        {{#each table_of_contents}}
+          <li><a href="#{{this}}">{{this}}</a></li>
+        {{/each}}
+      </ul>
+    </aside>
+
+    <!-- Blog Sections -->
+    <section id="history">
+      <h2>{{title}}</h2>
+      <div class="image-gallery">
+        <img
+          src="/static/img/tarot-placeholder.png"
+          alt="Ancient tarot cards"
+          loading="lazy"
+        />
+        <img
+          src="/static/img/deck-logo.jpg"
+          alt="Historical tarot deck"
+          loading="lazy"
+        />
+      </div>
+    </section>
+
+    <section id="cards">
+      <p>
+        {{{content}}}
+      </p>
+      <div class="card-grid">
+        <div class="card-example">
+          <img
+            src="/static/img/tarot-major-arcana.jpg"
+            alt="Major Arcana"
+            loading="lazy"
+          />
+          <p>Major Arcana</p>
+        </div>
+        <div class="card-example">
+          <img
+            src="/static/img/minor-arcana.jpg"
+            alt="Minor Arcana"
+            loading="lazy"
+          />
+          <p>Minor Arcana</p>
+        </div>
+      </div>
+    </section>
+    <section id="spreads">
+      <h2>Keywords</h2>
+      <p>{{keywords}}</p>
+      <div class="spread-example">
+        <img
+          src="/static/img/tarot-celtic-cross-spread.jpg"
+          alt="Celtic Cross Spread"
+          loading="lazy"
+        />
+        <p>The Celtic Cross is one of the most popular tarot spreads.</p>
+      </div>
+    </section>
+
+    <!--
+    <section id="tips">
+      <h2>Tips for Beginners</h2>
+      <p>
+        Starting your tarot journey can be overwhelming, but here are some
+        tips...
+      </p>
+      <ul class="tips-list">
+        <li>Start with a simple deck.</li>
+        <li>Practice daily readings.</li>
+        <li>Keep a tarot journal.</li>
+      </ul>
+    </section> -->
+  </article>
+
+  <!-- Author Bio -->
+  <aside class="author-bio immersive">
+    <div class="author-image">
+      <img src="/img/author.jpg" alt="Author Name" loading="lazy" />
+    </div>
+    <div class="author-details">
+      <h3>About the Author</h3>
+      <p>
+        <strong>Jane Doe</strong>
+        is a professional tarot reader with over 10 years of experience. She
+        specializes in helping beginners unlock the mysteries of the tarot.
+      </p>
+    </div>
+  </aside>
+</main>

@@ -1,12 +1,14 @@
 use serde::{Deserialize, Serialize};
 
+use super::general_model::PageType;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Index {
     pub url: String,
     pub schema_markup: IndexSchemaMarkup, // Group schema markup related fields
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IndexSchemaMarkup {
     pub site_name: String,
     pub site_description: String,
@@ -15,23 +17,38 @@ pub struct IndexSchemaMarkup {
     pub canonical_url: Option<String>,
 }
 
-impl Index {
-    pub fn new(url: String, site_name: String, site_description: String) -> Self {
-        Index {
-            url,
-            schema_markup: IndexSchemaMarkup {
-                // Initialize schema_markup struct
-                site_name,
-                site_description,
-                main_image_url: None,
-                search_term_string: None,
-                canonical_url: None,
-            },
-        }
-    }
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Title {
+    pub title: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
+pub struct TitleError {
+    pub error: String,
+}
+
+impl TitleError {
+    pub fn new(error: String) -> TitleError {
+        TitleError { error }
+    }
+}
+// impl Index {
+//     pub fn new(url: String, site_name: String, site_description: String) -> Self {
+//         Index {
+//             url,
+//             schema_markup: IndexSchemaMarkup {
+//                 // Initialize schema_markup struct
+//                 site_name,
+//                 site_description,
+//                 main_image_url: None,
+//                 search_term_string: None,
+//                 canonical_url: None,
+//             },
+//         }
+//     }
+// }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IndexBody {
     pub title: String,
     pub description: String,
@@ -40,7 +57,7 @@ pub struct IndexBody {
     pub explore_label: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IndexFeaturedSection {
     pub section_title: String,
     pub section_description: String,
@@ -51,24 +68,26 @@ pub struct IndexFeaturedSection {
     pub section_id: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IndexPage {
     pub body: IndexBody,
     pub schema_markup: IndexSchemaMarkup,
     pub featured: Vec<IndexFeaturedSection>,
     pub header: HeaderData,
+    pub section: PageType,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NavLink {
     pub label: String,
     pub url: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct HeaderData {
     pub site_name: String,
     pub site_description: String,
     pub navigation_links: Vec<NavLink>,
     pub logo_url: Option<String>, // Optional logo URL
+    pub canonical_url: Option<String>,
 }

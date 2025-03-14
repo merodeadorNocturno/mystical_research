@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ex-MX">
+  <!-- {{section}} -->
+  {{> header}}
+  {{# if (eq section 'Home') }}
+    {{> body}}
+  {{else if (eq section 'BlogHome') }}
+      {{> blog_home_html}}
+  {{else if (eq section 'Contact') }}
+      {{> contact_home_html}}
+  {{else if (eq section 'Topics') }}
+      {{> topics_index_html}}
+  {{else if (eq section 'About') }}
+      {{> about_index_html}}
+  {{/ if }}
+</html>

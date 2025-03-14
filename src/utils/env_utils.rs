@@ -2,7 +2,7 @@ use log::{info, LevelFilter};
 use serde::{Deserialize, Serialize};
 use std::{env, io};
 
-use crate::constants::connection::set_environment_variable;
+use crate::config::connection::set_environment_variable;
 
 pub fn get_cwd() -> io::Result<()> {
     let current_dir = env::current_dir()?;
@@ -56,6 +56,10 @@ pub struct PageConfiguration {
     pub server_port: String,
     pub server_protocol: String,
     pub title: String,
+    pub ai_google_api_key: String,
+    pub ai_request_url: String,
+    pub google_model: String,
+    pub template_path: String,
 }
 
 pub fn set_env_urls() -> PageConfiguration {
@@ -66,5 +70,22 @@ pub fn set_env_urls() -> PageConfiguration {
         server_port: set_environment_variable("SERVER_PORT", "8081"),
         server_protocol: set_environment_variable("SERVER_PROTOCOL", "http"),
         title: set_environment_variable("PAGE_TITLE", "CRM"),
+        ai_google_api_key: set_environment_variable("AI_GOOGLE_API_KEY", "some_api_key"),
+        ai_request_url: set_environment_variable(
+            "AI_REQUEST_URL",
+            "https://generativelanguage.googleapis.com/v1beta/models/",
+        ),
+        google_model: set_environment_variable("GOOGLE_MODEL", "gemini-2.0-flash"),
+        template_path: set_environment_variable("TEMPLATE_PATH", "./static/templates"),
     }
+}
+
+pub fn create_ai_request_string() -> String {
+    let PageConfiguration {
+        ai_google_api_key,
+        ai_request_url,
+        google_model,
+        ..
+    } = set_env_urls();
+    format!("{ai_request_url}{google_model}:generateContent?key={ai_google_api_key}")
 }

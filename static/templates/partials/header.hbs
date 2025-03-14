@@ -1,0 +1,46 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{header.site_name}}</title>
+  <meta name="description" content="{{header.site_description}}" />
+  <meta name="keywords" content="{{header.keywords}}" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{header.site_name}}" />
+  <meta property="og:description" content="{{header.site_description}}" />
+  <meta property="og:image" content="{{header.logo_url}}" />
+  <meta property="og:image:alt" content="{{header.logo_url}}" />
+  <!-- Replace with your image URL -->
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{header.site_name}}" />
+  <meta name="twitter:description" content="{{header.site_description}}" />
+  <meta name="twitter:image" content="{{header.logo_url}}" />
+  <!-- Replace with your image URL -->
+
+  <script src="https://unpkg.com/htmx.org@2.0.4" loading="lazy"></script>
+
+  <!-- Canonical URL {{section}}-->
+  <link rel="canonical" href="{{header.canonical_url}}" />
+  <!-- Replace with your domain -->
+
+  <link rel="stylesheet" href="static/css/styles.css" />
+  <link rel="icon" type="image/png" href="img/favicon.png" />
+
+  {{!  Example of where you might include Schema Markup dynamically (JSON-LD) }}
+  <script type="application/ld+json">
+  {{# if (eq section 'Home') }}
+    {{> section_schema}}
+  {{else if (eq section 'BlogHome') }}
+      {{> blog_home_md}}
+  {{else if (eq section 'Contact') }}
+      {{> contact_home_html_md}}
+  {{else if (eq section 'Topics') }}
+      {{> topics_index_html_md}}
+  {{else if (eq section 'About') }}
+      {{> about_index_md}}
+  {{/ if }}
+  </script>
+</head>

@@ -22,10 +22,10 @@ impl TitleError {
 
 async fn load_resources() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
-    let this_path = Path::new("./src/static");
+    let this_path = Path::new("./static/templates");
 
     register_templates(this_path, &mut handlebars);
-    let resources_hbs = "resources";
+    let resources_hbs = "resources/resources";
 
     let section_template = match read_hbs_template(&resources_hbs) {
         Ok(contents) => contents,

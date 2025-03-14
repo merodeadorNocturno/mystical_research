@@ -1,0 +1,826 @@
+:root {
+  --primary-color: #f2a65a; /* Peach/Apricot - Warm and inviting base */
+  --secondary-color: #e07a5f; /* Burnt Coral - Richer warm shade for structure */
+  --accent-color: #ffc13b; /* Golden Yellow - Sunny and vibrant accent */
+  --text-color: #3d2b1f; /* Dark Coffee Brown - Warm and readable text */
+  --light-bg: #f8f0e3; /* Cream Beige - Soft and warm light background */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Merriweather", sans-serif;
+  /* font-family: var(--font-body); */
+  background: var(--primary-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(
+    --secondary-color
+  ); /* Headings inherit secondary color for warmth */
+}
+
+.main-nav {
+  background: var(--secondary-color);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--accent-color);
+}
+
+.hero {
+  height: 70vh;
+  background:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/hero-bg-warm.jpg") center/cover; /* Replace with a warm hero image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 4rem 0;
+}
+
+.card {
+  background: var(--secondary-color);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.newsletter {
+  background: var(--secondary-color);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.newsletter-form {
+  max-width: 500px;
+  margin: 1rem auto;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  background: var(--accent-color);
+  color: var(--text-color); /* Button text color changed to dark brown */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ad-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.ad-banner {
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+@media (max-width: 780px) {
+  .nav-container {
+    flex-direction: row; /* Go back to row for logo and hamburger */
+    justify-content: space-between; /* Space logo and hamburger */
+    align-items: center; /* Vertically align items in the nav container */
+  }
+
+  .logo {
+    margin-bottom: 0; /* Remove bottom margin for logo on mobile */
+  }
+
+  .hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    background-color: transparent; /* Back to transparent background */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger-menu .bar {
+    height: 3px;
+    width: 100%;
+    background-color: var(--text-color); /* Force text color */
+    display: block; /* Ensure it's a block to take full width */
+  }
+
+  .nav-links {
+    display: none; /* Initially hide nav links on mobile */
+    flex-direction: column; /* Stack links vertically when open */
+    position: absolute; /* Position the menu below the navbar */
+    top: 100%; /* Position right below the nav bar */
+    left: 0;
+    background: var(--secondary-color);
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 0; /* Reset margin-top if any */
+    z-index: 999; /* Ensure it's below the nav but above other content */
+  }
+
+  .nav-links.open {
+    display: flex; /* Show nav links when 'open' class is added */
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links a {
+    display: block; /* Make links block elements */
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-links a:last-child {
+    border-bottom: none;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 780px) {
+  .hamburger-menu {
+    display: none;
+  }
+}
+
+/* --- Optional: Hamburger Menu Animation (when active) --- */
+.hamburger-menu.active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* About Page Specific */
+.about-hero {
+  background-image:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/about-bg-warm.jpg"); /* Replace with a warm about background image */
+}
+
+.topics-hero {
+  background-image:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/topics-bg-warm.jpg"); /* Replace with a warm topics background image */
+}
+
+.resources-hero {
+  background-image:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/resources-bg-warm.jpg"); /* Replace with a warm resources background image */
+}
+
+.content-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  padding: 4rem 0;
+}
+
+.timeline-event {
+  border-left: 3px solid var(--accent-color);
+  padding-left: 1rem;
+  margin: 1rem 0;
+}
+
+/* Topics Page Specific */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 4rem 0;
+}
+
+.category-card {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+}
+
+.category-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color); /* Category icon in accent yellow */
+}
+
+/* Immersive Hero */
+.post-hero.immersive {
+  height: 60vh;
+  background:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/tarot-placeholder-warm.jpg")
+      center/cover; /* Replace with a warm immersive hero image */
+}
+
+/* Tags */
+.post-tags {
+  margin-top: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--accent-color);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  color: var(--text-color); /* Tag text in dark brown for contrast on yellow */
+}
+
+/* Image Gallery */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.card-example {
+  text-align: center;
+}
+
+/* Tips List */
+.tips-list {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.tips-list li {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.tips-list li::before {
+  content: "☀️"; /* Sun emoji for a warm feel */
+  position: absolute;
+  left: -1rem;
+  color: var(--accent-color); /* Tips list bullet in accent yellow */
+}
+
+/* === Blog Post Styles === */
+
+/* Post Hero Section */
+.post-hero {
+  height: 40vh;
+  background:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/xico_bg-warm.jpg") center/cover; /* Replace with a warm blog post hero image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-color);
+  padding: 2rem;
+}
+
+.post-hero.immersive {
+  height: 60vh;
+}
+
+.post-hero h1 {
+  font-size: 3rem;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  color: var(--light-bg); /* Hero title in light beige for contrast */
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+  color: var(--light-bg); /* Post meta in light beige for contrast */
+}
+
+/* Post Container */
+.post-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.post-content {
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+/* Featured Image */
+.post-featured-image {
+  margin: 2rem 0;
+}
+
+.post-featured-image img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.post-featured-image.immersive {
+  position: relative;
+}
+
+.post-featured-image.immersive .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+/* Post Introduction */
+.post-intro {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid var(--accent-color);
+  border-radius: 5px;
+}
+
+/* Table of Contents */
+.post-toc {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin: 2rem 0;
+}
+
+.post-toc h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.post-toc ul {
+  list-style: none;
+  padding: 0;
+}
+
+.post-toc li {
+  margin: 0.5rem 0;
+}
+
+.post-toc a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.post-toc a:hover {
+  color: var(--accent-color);
+}
+
+.post-toc.immersive {
+  background: var(--secondary-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Blog Sections */
+.post-content h2 {
+  font-size: 2rem;
+  margin: 3rem 0 1.5rem;
+  color: var(--accent-color); /* Section headings in accent yellow */
+}
+
+.post-content p {
+  margin: 1rem 0;
+}
+
+/* Image Gallery - Duplicated from above, keeping for completeness */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.image-gallery img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Grid - Duplicated from above, keeping for completeness */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.card-example {
+  text-align: center;
+}
+
+.card-example img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Tips List - Duplicated from above, keeping for completeness */
+.tips-list {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.tips-list li {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.tips-list li::before {
+  content: "☀️"; /* Sun emoji - already defined above, keeping for completeness */
+  position: absolute;
+  left: -1rem;
+  color: var(
+    --accent-color
+  ); /* Tips list bullet in accent yellow - already defined above, keeping for completeness */
+}
+
+/* Author Bio */
+.author-bio {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 3rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.author-bio.immersive {
+  background: var(--secondary-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.author-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.author-details p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Tags - Duplicated from above, keeping for completeness */
+.post-tags {
+  margin-top: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--accent-color);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  color: var(
+    --text-color
+  ); /* Tag text in dark brown - already defined above, keeping for completeness */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .post-hero h1 {
+    font-size: 2rem;
+  }
+
+  .post-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .author-bio {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .author-image img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#search-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px; /* Rounded corners */
+  width: 80%; /* Adjust as needed */
+}
+
+#search-button {
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: var(--text-color); /* Search button text color changed to dark brown */
+  border: none;
+  border-radius: 0 5px 5px 0; /* Rounded corners */
+  cursor: pointer;
+}
+
+.blog-posts {
+  margin-bottom: 20px;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.blog-post {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.blog-post img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.read-more {
+  display: inline-block;
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.main-footer {
+  background-color: var(--primary-color);
+  color: var(--light-bg); /* Footer text in light beige for contrast */
+  text-align: center;
+  padding: 10px 0;
+}
+
+.contact-hero {
+  background-image:
+    linear-gradient(rgba(242, 166, 90, 0.8), rgba(224, 122, 95, 0.8)),
+    /* Warm gradient overlay */ url("../img/contact-bg-warm.jpg"); /* Replace with a warm contact background image */
+}
+
+/* Contact Form Styles */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Slightly transparent background */
+  color: var(--text-color);
+  font-family: inherit; /* Inherit font from body */
+}
+
+.form-group textarea {
+  resize: vertical; /* Allow vertical resizing of textarea */
+}
+
+/* Contact Info Sidebar */
+.contact-info {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.contact-info h3 {
+  margin-bottom: 1rem;
+}
+
+.contact-info p {
+  margin-bottom: 0.7rem;
+}
+
+.contact-info a {
+  color: var(--accent-color); /* Use accent color for email link */
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+a {
+  color: var(--accent-color); /* Default link color to match accent */
+  text-decoration: none; /* Remove default underline */
+  transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+
+a:hover {
+  color: #d4a373; /* A slightly muted yellow-orange for hover effect */
+  text-decoration: underline; /* Add underline on hover for better feedback */
+}
+
+/* Navigation Links (already styled, keep these for specificity) */
+.nav-links a {
+  /* These styles are already defined and specific to navigation, so keep them */
+  color: var(--text-color);
+  text-decoration: none; /* Redundant, but keep for clarity if you had it */
+  transition: color 0.3s ease; /* Redundant, but keep for clarity if you had it */
+}
+
+.nav-links a:hover {
+  color: var(--accent-color);
+  /* text-decoration: none;  No underline in nav, as per original design */
+}
+
+/* Blog Post Table of Contents Links (already styled, keep these for specificity) */
+.post-toc a {
+  color: var(--text-color);
+  text-decoration: none; /* Redundant, but keep for clarity if you had it */
+  transition: color 0.3s ease; /* Redundant, but keep for clarity if you had it */
+}
+
+.post-toc a:hover {
+  color: var(--accent-color);
+  text-decoration: underline; /* Keep underline on hover in TOC */
+}
+
+/* Read More Links (already styled specifically in blog_home.html) - adjust if needed */
+.read-more {
+  /* Existing styles for .read-more, adjust if needed */
+  display: inline-block;
+  color: var(--accent-color); /* Already using accent color */
+  text-decoration: none; /* Already no underline by default */
+}
+
+.read-more:hover {
+  text-decoration: underline; /* Already underline on hover */
+}
+
+/* Contact Info Links (already styled specifically in contact.html) - adjust if needed */
+.contact-info a {
+  color: var(--accent-color); /* Already using accent color */
+  text-decoration: none; /* Already no underline by default */
+}
+
+.contact-info a:hover {
+  text-decoration: underline; /* Already underline on hover */
+}
+
+/* Newsletter Section Styles - Modified */
+.newsletter-form input.newsletter-input, /* Targeting with class (if you added class in hbs) */
+.newsletter-form input {
+  /* Targeting input inside newsletter-form directly - simpler and preferred */
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-family: inherit;
+  width: 100%; /* Make input take full width of form */
+}
+
+.newsletter-form button {
+  /* Keep button styling as is or modify if needed */
+  padding: 0.8rem 1.5rem; /* Ensure button padding matches input roughly */
+  color: var(--text-color); /* Button text color changed to dark brown */
+}
