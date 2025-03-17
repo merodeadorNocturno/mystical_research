@@ -1,9 +1,35 @@
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+</div>
+
 <header></header>
 
 <main class="container">
+
   <section class="search-bar">
-    <input type="search" id="search-input" placeholder="Search articles..." />
-    <button type="button" id="search-button">Search</button>
+    <input
+      type="search"
+      id="search-input"
+      placeholder="Search articles..."
+      name="query"
+    />
+    <button
+      type="button"
+      id="search-button"
+      hx-get="/blog/search"
+      hx-target="#search-results-container"
+      hx-include="#search-input"
+      hx-indicator="#search-loading-indicator"
+    >
+      Search
+    </button>
+    <span
+      id="search-loading-indicator"
+      class="htmx-indicator"
+      style="display:none"
+    >
+      Searching...
+    </span>
   </section>
 
   <aside class="ad-container">
@@ -128,6 +154,10 @@
         <a href="/blog/astrology.html" class="read-more">Read More</a>
       </article>
     </div>
+  </section>
+
+  <section id="search-results-container" class="search-results">
+    <!-- Search results will be loaded here by HTMX -->
   </section>
 </main>
 

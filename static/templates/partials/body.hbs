@@ -47,4 +47,26 @@
   </section>
 {{> newsletter_section }}
 {{> footer}}
+<script>
+  document.addEventListener('htmx:beforeRequest', function(event) {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+      loadingOverlay.style.display = 'block'; // Show loading overlay
+    }
+  });
+
+  document.addEventListener('htmx:afterSettle', function(event) {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+      loadingOverlay.style.display = 'none'; // Hide loading overlay after content is loaded
+    }
+  });
+
+  document.addEventListener('htmx:responseError', function(event) {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+      loadingOverlay.style.display = 'none'; // Hide loading overlay on error as well
+    }
+  });
+</script>
 </body>
