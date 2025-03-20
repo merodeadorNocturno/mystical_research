@@ -113,16 +113,16 @@ pub fn mock_blog_home_page_object() -> BlogHomePage {
                     BlogImage {
                         blog_image_url: "https://example.com/images/featured1-image1.png"
                             .to_string(),
-                        blog_image_width: "800".to_string(),
+                        blog_image_width: Some("800".to_string()),
                         blog_image_height: "600".to_string(),
-                        blog_image_alt: "Mock Featured Blog Image 1-1".to_string(),
+                        blog_image_alt: Some("Mock Featured Blog Image 1-1".to_string()),
                     },
                     BlogImage {
                         blog_image_url: "https://example.com/images/featured1-image2.png"
                             .to_string(),
-                        blog_image_width: "400".to_string(),
+                        blog_image_width: Some("400".to_string()),
                         blog_image_height: "300".to_string(),
-                        blog_image_alt: "Mock Featured Blog Image 1-2".to_string(),
+                        blog_image_alt: Some("Mock Featured Blog Image 1-2".to_string()),
                     },
                 ]),
             },
@@ -132,9 +132,9 @@ pub fn mock_blog_home_page_object() -> BlogHomePage {
                 blog_description: "Mock Featured Blog Description 2".to_string(),
                 blog_image_urls: Some(vec![BlogImage {
                     blog_image_url: "https://example.com/images/featured2-image.png".to_string(),
-                    blog_image_width: "600".to_string(),
+                    blog_image_width: Some("600".to_string()),
                     blog_image_height: "450".to_string(),
-                    blog_image_alt: "Mock Featured Blog Image 2-1".to_string(),
+                    blog_image_alt: Some("Mock Featured Blog Image 2-1".to_string()),
                 }]),
             },
         ],

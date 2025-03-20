@@ -82,10 +82,14 @@ async fn load_blog_article() -> Result<String, RenderError> {
     // Use the second paragraph for table of contents, separated by commas.
     // Use the third paragraph for an abstract summary.
     // Use the last paragraph for a comma separated list of keywords.";
-    let token_string = "Pretend you have a PhD in philology and a master's degree in african anthropology.
-      Write an 8 paragraph essay titled
+    let token_string = "Pretend you have a PhD in philology and a master's degree in anthropology.
+      Write an 6 paragraph essay titled
       'The Sensual Language of Moonlight: Dreams, Intuition, and the Mystical Unveiling.'
-      which inspired by the exploration of dreams and the emphasis on inner experience in mystical traditions, this article could examine how the sensory and aesthetic qualities of moonlight are culturally linked to dreams, intuition, and mystical insights. It would explore anthropological accounts of how different societies interpret moonlit nights as conducive to altered states of consciousness, sensual awakenings, or encounters with the mystical. The article could consider how the symbolic imagery associated with the moon in dreams is understood as a form of mystical communication.
+      Focus on the exploration of dreams, inner experience and emphasis on sensuality and mystical traditions,
+      this article should examine how the sensory, sexual, and aesthetic qualities of moonlight are culturally linked to dreams,
+      intuition, and mystical insights. It would explore anthropological accounts of how different societies interpret moonlit nights as conducive to altered states of consciousness, sensual awakenings, or encounters with the mystical.
+      The article could consider how the symbolic imagery associated with the moon in dreams is understood as a form of mystical communication.
+      Avoid making statements that are not supported by evidence or research. e.g. 'The cool touch of moonlight on the skin' is not acceptable.
       Use the first paragraph for the title.
       Use the second paragraph for table of contents, separated by commas.
       Use the third paragraph for an abstract summary.

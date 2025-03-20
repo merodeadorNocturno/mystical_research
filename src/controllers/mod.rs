@@ -1,5 +1,6 @@
 pub mod about_controller;
 pub mod ai_controller;
+pub mod blog_api_controller;
 pub mod blog_controller;
 pub mod contact_controller;
 pub mod index_controller;

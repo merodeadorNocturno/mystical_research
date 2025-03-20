@@ -21,7 +21,7 @@ pub fn create_blog_structure_from_response(response: &str) -> BlogStructure {
         .map(|s| s.trim().to_string())
         .collect();
 
-    println!(" TOC .::{:?}::.", table_of_contents);
+    // println!(" TOC .::{:?}::.", table_of_contents);
 
     BlogStructure {
         title: sections[0].clone(),
