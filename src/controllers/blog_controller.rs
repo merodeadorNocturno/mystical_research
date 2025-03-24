@@ -82,13 +82,11 @@ async fn load_blog_article() -> Result<String, RenderError> {
     // Use the second paragraph for table of contents, separated by commas.
     // Use the third paragraph for an abstract summary.
     // Use the last paragraph for a comma separated list of keywords.";
-    let token_string = "Pretend you have a PhD in philology and a master's degree in anthropology.
-      Write an 6 paragraph essay titled
-      'The Sensual Language of Moonlight: Dreams, Intuition, and the Mystical Unveiling.'
-      Focus on the exploration of dreams, inner experience and emphasis on sensuality and mystical traditions,
-      this article should examine how the sensory, sexual, and aesthetic qualities of moonlight are culturally linked to dreams,
-      intuition, and mystical insights. It would explore anthropological accounts of how different societies interpret moonlit nights as conducive to altered states of consciousness, sensual awakenings, or encounters with the mystical.
-      The article could consider how the symbolic imagery associated with the moon in dreams is understood as a form of mystical communication.
+    let token_string = "You are an expert in philology, linguistics, and the Talmud.
+      Please write a 13 paragraph essay trying to map and connect each of the sefiroth to each of the choirs of angels in christianity.
+      Please try to create different hypotheses on how the sefiroth and choirs of angels can be connected. Try exploring gematria and atbash ciphers.
+      Also, try to use real knowledge of the Talmud and the Kabbalah and biblical sources that are relevant to the choirs of angels.
+  Avoid making statements that are not supported by evidence or research. e.g. 'The cool touch of moonlight on the skin' is not acceptable.
       Avoid making statements that are not supported by evidence or research. e.g. 'The cool touch of moonlight on the skin' is not acceptable.
       Use the first paragraph for the title.
       Use the second paragraph for table of contents, separated by commas.

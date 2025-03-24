@@ -2,7 +2,7 @@ use crate::db::blog_db::BlogDB;
 use crate::db::config_db::Database;
 use crate::models::{
     ai_model::{AiResponse, BlogStructure, GenerateContentResponse},
-    blog_model::{BlogArticle, BlogArticleBuilder},
+    blog_model::BlogArticle,
     general_model::PageType,
 };
 use crate::utils::{
@@ -18,11 +18,8 @@ use actix_web::{
     web::{Data, Json, Path, Query, ServiceConfig},
     HttpResponse,
 };
-use chrono::Utc;
-use log::{error, info};
+use log::error;
 use serde::Deserialize;
-use std::time::SystemTime;
-use uuid::Uuid;
 use validator::Validate;
 
 #[derive(Debug, Deserialize)]
@@ -30,7 +27,7 @@ struct SearchQuery {
     q: String, // The search query will be in a parameter named 'q'
 }
 
-#[get("/blog/search")]
+#[get("/blogs/search")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
 async fn search_content(
     db: Data<Database>,
@@ -47,7 +44,7 @@ async fn search_content(
     }
 }
 
-#[get("/blog/ai/creator")]
+#[get("/blogs/ai/creator")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
 async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
     // Use actix_web::Error for clarity
@@ -55,18 +52,16 @@ async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error
     let mut ai_response: GenerateContentResponse = GenerateContentResponse::new(vec![]);
     let mut _ai_error: String = String::new();
 
-    let token_string = "Pretend you have a PhD in philology and a master's degree in anthropology.
-      Write an 6 paragraph essay titled
-      'The Sensual Language of Moonlight: Dreams, Intuition, and the Mystical Unveiling.'
-      Focus on the exploration of dreams, inner experience and emphasis on sensuality and mystical traditions,
-      this article should examine how the sensory, sexual, and aesthetic qualities of moonlight are culturally linked to dreams,
-      intuition, and mystical insights. It would explore anthropological accounts of how different societies interpret moonlit nights as conducive to altered states of consciousness, sensual awakenings, or encounters with the mystical.
-      The article could consider how the symbolic imagery associated with the moon in dreams is understood as a form of mystical communication.
-      Avoid making statements that are not supported by evidence or research. e.g. 'The cool touch of moonlight on the skin' is not acceptable.
-      Use the first paragraph for the title.
-      Use the second paragraph for table of contents, separated by commas.
-      Use the third paragraph for an abstract summary.
-      Use the last paragraph for a comma separated list of keywords.";
+    let token_string = "You have a PhD in biblical studies with a master's degree in Linguistics. Also you are a cat lover.
+  Write a 10 paragraph essay titled
+  'A Comparative Analysis of Domestic Cat Breeds and the Nine Choirs of Angels in Christian Angelology'
+  Focus on the characteristics of each choir of Angels and the socially accepted behaviors of different cat breeds.
+  The article should consider how the symbolic imagery of cats associated with the symbolism of angels in Christianity is interpreted in their physical characteristics and behaviors.
+  Avoid making statements that are not supported by evidence or research. e.g. 'The cool touch of moonlight on the skin' is not acceptable.
+  Use the first paragraph for the title.
+  Use the second paragraph for table of contents, separated by commas.
+  Use the third paragraph for an abstract summary.
+  Use the last paragraph for a comma separated list of keywords.";
 
     let ai_request = create_ai_request(token_string);
 
@@ -123,7 +118,24 @@ async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error
     }
 }
 
+#[get("/blogs")]
+#[tracing::instrument(name = "Show Blog Articles", skip(db))]
+async fn all_active_blogs(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
+    let active_blogs = Database::find_all(&db).await;
+
+    match active_blogs {
+        Some(blogs) => Ok(HttpResponse::Ok().status(StatusCode::OK).json(blogs)),
+        None => {
+            error!("Failed to fetch active blogs");
+            Ok(HttpResponse::InternalServerError()
+                .status(StatusCode::INTERNAL_SERVER_ERROR)
+                .json("Failed to fetch active blogs"))
+        }
+    }
+}
+
 pub fn blog_api_routes(cfg: &mut ServiceConfig) {
     cfg.service(search_content);
     cfg.service(ai_creator);
+    cfg.service(all_active_blogs);
 }

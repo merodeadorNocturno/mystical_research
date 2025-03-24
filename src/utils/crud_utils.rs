@@ -1,10 +1,11 @@
 use crate::db::config_db::Database;
 use crate::models::general_model::*;
+use crate::utils::general_utils::get_uuid;
 use actix_web::web::Data;
 use chrono::Local;
 use log::error;
 use serde::{de::DeserializeOwned, Serialize};
-use surrealdb::{Error, Uuid};
+use surrealdb::Error;
 
 pub async fn util_find_all<T: DeserializeOwned>(
     db: &Data<Database>,
@@ -47,7 +48,7 @@ pub async fn util_add_one<T>(db: &Data<Database>, record: T, table_name: &str) -
 where
     T: DeserializeOwned + Serialize + Send + Sync + 'static,
 {
-    let uuid_v7 = Uuid::now_v7();
+    let uuid_v7 = get_uuid();
     let added_t_record = db
         .client
         .create((table_name, &uuid_v7.to_string()))
@@ -76,7 +77,7 @@ pub async fn util_update_record<T: DeserializeOwned + Serialize>(
 where
     T: DeserializeOwned + Serialize + Send + Sync + 'static,
 {
-    let t_id = Uuid::now_v7();
+    let t_id = get_uuid();
     let t_to_update: Result<Option<T>, Error> =
         db.client.select((table_name, &t_id.to_string())).await;
 
@@ -141,7 +142,7 @@ pub async fn util_fulltext_search<T: DeserializeOwned + Serialize>(
 ) -> Option<Vec<T>> {
     let surreal_query = format!(
         "SELECT * FROM {table_name}
-        WHERE {search_fields};"
+        WHERE {search_fields} AND deleted = false;"
     );
     let query_t_result = db.client.query(surreal_query).await;
 

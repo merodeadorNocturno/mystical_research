@@ -1,10 +1,9 @@
 use crate::db::config_db::{check_field, Database};
 use crate::models::blog_model::BlogArticle;
 use crate::utils::crud_utils::*;
-use crate::utils::general_utils::{create_or_conditional, get_uuid};
+use crate::utils::general_utils::create_or_conditional;
 use actix_web::web::Data;
 use async_trait::async_trait;
-use chrono::Local;
 use log::error;
 // use surrealdb::{opt::PatchOp, Datetime, Error,};
 
@@ -63,6 +62,8 @@ impl BlogDB for Database {
             "keywords".to_string(),
             "table_of_contents".to_string(),
             "author".to_string(),
+            "title".to_string(),
+            "content".to_string(),
         ];
         let search_fields = create_or_conditional(&search_term, fields);
         util_fulltext_search(&db, BLOG_TABLE, &search_fields).await

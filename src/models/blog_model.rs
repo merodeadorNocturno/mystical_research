@@ -2,7 +2,6 @@ use crate::models::ai_model::BlogStructure;
 use crate::models::index_model::HeaderData;
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-use surrealdb::sql::Thing;
 
 use super::general_model::PageType;
 
@@ -108,10 +107,6 @@ impl BlogArticleBuilder {
         Self::default()
     }
 
-    // pub fn id(mut self, id: Thing) -> Self {
-    //     self.id = Some(id);
-    //     self
-    // }
     pub fn title(mut self, title: String) -> Self {
         self.title = Some(title);
         self

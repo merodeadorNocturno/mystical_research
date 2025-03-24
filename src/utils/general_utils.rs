@@ -1,10 +1,9 @@
-use uuid::Uuid;
+use surrealdb::Uuid;
 
 pub fn get_uuid() -> String {
-    let mut buffer = Uuid::encode_buffer();
-    let new_id = Uuid::new_v4().simple().encode_lower(&mut buffer);
+    let uuid_v7 = Uuid::now_v7();
 
-    String::from(new_id)
+    String::from(uuid_v7)
 }
 
 pub fn create_or_conditional(search_term: &str, fields: Vec<String>) -> String {
