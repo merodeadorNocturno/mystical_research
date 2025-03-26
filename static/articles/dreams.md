@@ -3,14 +3,28 @@ The valley unfolds like a painting brushed with breath and mist. Early summer de
 Early sunlight spills gold through the clouds, only to be dissolved into a muted twilight as it bathes the Jizō statues lining the main road to the village.
 Tora (とら) was already cooking breakfast for herself and her brother, Ritsu (りつ). Without warning, Ritsu snatched a zaru (a bamboo colander) and, with lightning speed, swung it toward Tora's head. Without even glancing back, Tora unfurled a makisu (a bamboo mat), catching the zaru mid-swing. As siblings in their late teens, they found endless amusement in testing each other's martial arts prowess.
 
-Tora smirked without stopping her cooking. "You still lack speed, Ritsu." She swung the zaru back at him, and he barely dodged it. "You're getting better, Ritsu," she said, smiling. "But you still need to work on your balance." She paused, her eyes briefly closing as she assessed the aroma of the cooking dish with a practiced sniff.
+Tora smirked without stopping her cooking. "You still lack speed, Ritsu." She swung the zaru back at him, and he barely dodged it.
+
+Ritsu Ducked dramatically. "Whoa! Hey! Just warming up, Big Sis! Don't get cocky!"
+
+"You're getting better, Ritsu," she said, smiling. "But you still need to work on your balance." She paused, her eyes briefly closing as she assessed the aroma of the cooking dish with a practiced sniff.
 
 Ritsu: (Mocking her serious voice) 'You still lack speed, Ritsu… And oooh, you still need to work on your balance!
 
-Tora: Do you remember when Fater...
+Tora: (Chuckles lightly, tastes food) Mm. Your 'footwork' is getting better. Still wobbling like a newborn fawn though.
+
+Ritsu: (Mimicking dramatically, striking a pose) 'Still wobbling like a newborn fawn~!' Yeah, yeah, I heard you!
+
+Tora: Heh. Just like Father used to say about...
 The rest of the sentence died in her throat as the sounds of the village erupted – a cacophony that quickly resolved into terrified screams, angry shouts, and the heart-wrenching cries of the people – abruptly shattering the morning's peace.
 
-Ritsu: Bandits!
+Ritsu: What was that? Bandits?! No, there's something else. It's not just bandits..
+Ritsu's smile faded as he realized the gravity of the situation. He was now instantly alert as his head snapped up.
+
+Tora waved her hand asking Ritsu to remain silent and narrowed her eyes assessing the situation.
+
+Tora: Swords!
+
 They raced into their bedroom, shoved tables aside to reveal a false wall, and grabbed their katanas.
 Then both siblings burst out of the house, their swords glinting in the morning light amidst the chaos and confusion.
 
