@@ -24,12 +24,6 @@ Angels Project is a modern web application focused on mystical and spiritual res
 - Schema-based record validation
 - Full-text search capabilities
 
-## API Endpoints
-
-- `/blogs` - Get all active blog articles
-- `/blogs/search` - Search blog content by query
-- `/blogs/ai/creator` - Generate new blog content using AI
-
 ## Pages
 
 - `/` - Home page
@@ -108,7 +102,7 @@ These routes serve HTML content, rendering pages using Handlebars templates.
 
     ```bash
     git clone https://github.com/merodeadorNocturno/mystical_research
-    cd angels
+    cd mystical_research
     ```
 
 2.  **Environment Configuration:**
