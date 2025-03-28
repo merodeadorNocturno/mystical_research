@@ -51,7 +51,7 @@ where
     let uuid_v7 = get_uuid();
     let added_t_record = db
         .client
-        .create((table_name, &uuid_v7.to_string()))
+        .create((table_name, &uuid_v7))
         .content(record)
         .await;
 

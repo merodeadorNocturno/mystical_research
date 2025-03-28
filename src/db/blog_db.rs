@@ -1,10 +1,9 @@
-use crate::db::config_db::{check_field, Database};
+use crate::db::config_db::Database;
 use crate::models::blog_model::BlogArticle;
 use crate::utils::crud_utils::*;
 use crate::utils::general_utils::create_or_conditional;
 use actix_web::web::Data;
 use async_trait::async_trait;
-use log::error;
 // use surrealdb::{opt::PatchOp, Datetime, Error,};
 
 const BLOG_TABLE: &str = "blog_article";
@@ -24,11 +23,6 @@ pub trait BlogDB {
 #[async_trait]
 impl BlogDB for Database {
     async fn find_all(db: &Data<Database>) -> Option<Vec<BlogArticle>> {
-        if let Err(e) = check_field(db, BLOG_TABLE, "title", None) {
-            error!("Schema validation error: {}", e);
-            return None;
-        }
-
         util_find_active_records(db, BLOG_TABLE).await
     }
 

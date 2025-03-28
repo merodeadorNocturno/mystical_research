@@ -52,16 +52,20 @@ async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error
     let mut ai_response: GenerateContentResponse = GenerateContentResponse::new(vec![]);
     let mut _ai_error: String = String::new();
 
-    let token_string = "You have a PhD in biblical studies with a master's degree in Linguistics. Also you are a cat lover.
-  Write a 10 paragraph essay titled
-  'A Comparative Analysis of Domestic Cat Breeds and the Nine Choirs of Angels in Christian Angelology'
-  Focus on the characteristics of each choir of Angels and the socially accepted behaviors of different cat breeds.
-  The article should consider how the symbolic imagery of cats associated with the symbolism of angels in Christianity is interpreted in their physical characteristics and behaviors.
-  Avoid making statements that are not supported by evidence or research. e.g. 'The cool touch of moonlight on the skin' is not acceptable.
-  Use the first paragraph for the title.
-  Use the second paragraph for table of contents, separated by commas.
-  Use the third paragraph for an abstract summary.
-  Use the last paragraph for a comma separated list of keywords.";
+    let token_string = "Write a dialogue between two long-time friends passionately discussing music in the Classical and Romantics periods.
+        One friend is a PhD in Literature, whose expertise lies in analyzing the literature and artistic movements of the Romantic period.
+        The other friend is a seasoned musician with decades of hands-on experience in directing orchestras to play Classical period pieces.
+        Their conversation unfolds on a stage in an history and aesthetics conference sponsored by a famous british university,
+        and they explore themes such as the movement's historical context,
+        its relationship with each other, public perception,
+        and the interplay between social movements and aesthetics.
+        Despite their differing perspectives,
+        their mutual respect and camaraderie allow for a thoughtful and nuanced exchange,
+        peppered with humor, witty banter, and personal anecdotes.
+Use the first paragraph for the title.
+Use the second paragraph for table of contents, separated by commas.
+Use the third paragraph for an abstract summary.
+Use the last paragraph for a comma separated list of keywords.";
 
     let ai_request = create_ai_request(token_string);
 
@@ -97,7 +101,7 @@ async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error
         .page_type(PageType::BlogPost)
         .deleted(false)
         .author("BaggiE BomziE".to_string())
-        .image_urls(String::from("article1.png, article2.png, article3.png"))
+        .image_urls("article1.png".to_string())
         .created_at(&surrealdb_now)
         .updated_at(&surrealdb_now)
         .published_at(&surrealdb_now)

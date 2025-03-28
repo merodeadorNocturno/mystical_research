@@ -2,6 +2,7 @@ use crate::models::ai_model::BlogStructure;
 use crate::models::index_model::HeaderData;
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
+use surrealdb::sql::Thing;
 
 use super::general_model::PageType;
 
@@ -63,7 +64,7 @@ pub struct BlogFeaturedSection {
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct BlogArticle {
-    // pub id: Option<Thing>,
+    pub id: Option<Thing>,
     pub title: Option<String>,
     pub summary: Option<String>,
     pub keywords: Option<String>,
@@ -106,7 +107,6 @@ impl BlogArticleBuilder {
     pub fn new() -> Self {
         Self::default()
     }
-
     pub fn title(mut self, title: String) -> Self {
         self.title = Some(title);
         self
@@ -158,7 +158,7 @@ impl BlogArticleBuilder {
 
     pub fn build(self) -> BlogArticle {
         BlogArticle {
-            // id: Some(self.id.expect("id must be set")),
+            id: None,
             author: Some(self.author.expect("header must be set")),
             title: Some(self.title.expect("title must be set")),
             image_urls: Some(self.image_urls.expect("body must be set")),
@@ -176,6 +176,14 @@ impl BlogArticleBuilder {
             published_at: Some(self.published_at.expect("updated_at must be set")),
         }
     }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct BlogPreview {
+    pub id: String,
+    pub title: String,
+    pub summary: String,
+    pub image_url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

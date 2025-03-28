@@ -1,22 +1,27 @@
+use crate::db::blog_db::BlogDB;
+use crate::db::config_db::Database;
 use crate::models::{
     ai_model::{AiResponse, GenerateContentResponse},
+    blog_model::BlogPreview,
     mock::mock_blog_home_page_object,
 };
 use crate::utils::{
     ai_utils::{create_ai_request, generate_content},
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
+    general_utils::trim_to_words,
     response_utils::create_blog_structure_from_response,
 };
 use actix_web::{
-    web::{get, ServiceConfig},
+    web::{get, Data, ServiceConfig},
     HttpResponse,
 };
 use handlebars::{Handlebars, RenderError};
-use log::error;
+use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::path::Path;
+// use tracing::warn;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct TitleError {
@@ -149,21 +154,95 @@ async fn load_blog_html() -> Result<String, RenderError> {
     Ok(section_blog_home_template)
 }
 
+async fn load_blog_index_from_db(db: &Data<Database>) -> Result<String, RenderError> {
+    let mut handlebars = Handlebars::new();
+    let PageConfiguration { template_path, .. } = set_env_urls();
+
+    let this_path = Path::new(&template_path);
+
+    register_templates(this_path, &mut handlebars);
+    let blog_home_hbs_path = "blog/blog_home";
+
+    let articles_opt = Database::find_all(db).await;
+
+    let blog_previews: Vec<BlogPreview> = match articles_opt {
+        Some(articles) => {
+            info!("Fetched {} blog articles from DB", articles.len());
+            articles
+                .into_iter()
+                .filter_map(|article| {
+                    match (
+                        article.id,
+                        article.title,
+                        article.summary,
+                        article.image_urls,
+                    ) {
+                        (Some(id), Some(title), Some(summary), Some(image_url)) => {
+                            let id_str = id.id.to_string();
+
+                            Some(BlogPreview {
+                                id: id_str,
+                                title,
+                                summary: format!(
+                                    "{}...",
+                                    String::from(trim_to_words(&summary, 14))
+                                ),
+                                image_url,
+                            })
+                        }
+                        _ => {
+                            warn!("Invalid blog article data");
+                            None
+                        }
+                    }
+                })
+                .collect()
+        }
+        None => {
+            error!("Failed to fetch blog articles from DB");
+            Vec::new()
+        }
+    };
+
+    let template_content = match read_hbs_template(&blog_home_hbs_path) {
+        Ok(contents) => contents,
+        Err(err) => {
+            error!("Failed to read blog home template: {}", err);
+            return Err(RenderError::from(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                format!("Template not found: {}", blog_home_hbs_path),
+            )));
+        }
+    };
+
+    let context_data = json!({"posts": blog_previews,});
+
+    match handlebars.render_template(&template_content, &context_data) {
+        Ok(rendered_html) => Ok(rendered_html),
+        Err(e) => {
+            error!("Failed to render blog home template: {}", e);
+            Err(e) // Propagate the render error
+        }
+    }
+}
+
 pub fn blog_home_html(cfg: &mut ServiceConfig) {
     cfg.route(
         "/blog",
-        get().to(|| async move {
-            let blog_home_template = load_blog_index().await;
-            match blog_home_template {
+        get().to(|db: Data<Database>| async move {
+            match load_blog_index_from_db(&db).await {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
                     .body(template),
-                Err(err) => HttpResponse::InternalServerError()
+                Err(err) => {
+                    error!("Error rendering blog index with DB: {}", err);
+                    HttpResponse::InternalServerError()
                     .content_type("text/html")
                     .body(format!(
                         "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>",
                         err.to_string()
-                    )),
+                    ))
+                }
             }
         }),
     );
