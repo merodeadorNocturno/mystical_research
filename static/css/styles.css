@@ -646,17 +646,6 @@ h6 {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.blog-post img {
-    display: block; /* Ensures the image behaves like a block element */
-    width: 100%; /* Make image fill the width of its container */
-    aspect-ratio: 4 / 3; /* Force a 4:3 aspect ratio */
-    object-fit: cover; /* Scale the image while preserving aspect ratio, cropping if necessary to fill the box */
-    /* Keep existing desirable styles */
-    height: auto; /* Remove or comment out explicit height if it exists, aspect-ratio handles it */
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
 .read-more {
     display: inline-block;
     color: var(--accent-color);
@@ -902,23 +891,15 @@ a:hover {
        if the container's padding-bottom isn't enough */
 }
 
-.blog-posts .blog-post img {
-    /* --- Add absolute positioning --- */
-    position: absolute;
-    bottom: 10px; /* Distance from the bottom edge (respects container padding) */
-    left: 10px; /* Distance from the left edge (respects container padding) */
-
-    /* --- Define a specific size for the corner image --- */
-    /* Remove width: 100% and aspect-ratio */
-    width: 80px; /* Example fixed width */
-    height: 60px; /* Example fixed height (or use height: auto if width sets aspect) */
-    object-fit: cover; /* Ensure image covers the defined dimensions */
-
-    /* Keep other desired styles */
-    display: block;
+.blog-post img {
+    display: block; /* Ensures the image behaves like a block element */
+    width: 100%; /* Make image fill the width of its container */
+    aspect-ratio: 4 / 3; /* Force a 4:3 aspect ratio */
+    object-fit: cover; /* Scale the image while preserving aspect ratio, cropping if necessary to fill the box */
+    /* Keep existing desirable styles */
+    height: auto; /* Remove or comment out explicit height if it exists, aspect-ratio handles it */
+    margin-bottom: 10px;
     border-radius: 5px;
-    /* margin-bottom: 10px; <- Remove margin, positioning handles placement */
-    z-index: 1; /* Optional: Ensure image is above background but potentially below other specific elements if needed */
 }
 
 .blog-posts .blog-post {
@@ -939,12 +920,12 @@ a:hover {
     min-height: 200px; /* Adjust as needed */
 }
 
-.search-results .blog-post img {
+/* .search-results .blog-post img {
     max-width: 100%;
     height: auto;
     border-radius: 5px;
     margin-bottom: 10px;
-}
+} */
 
 .search-results .blog-post h3 {
     font-size: 1.2em;

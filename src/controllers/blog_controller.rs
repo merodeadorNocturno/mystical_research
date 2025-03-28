@@ -2,7 +2,7 @@ use crate::db::blog_db::BlogDB;
 use crate::db::config_db::Database;
 use crate::models::{
     ai_model::{AiResponse, GenerateContentResponse},
-    blog_model::BlogPreview,
+    blog_model::{BlogArticle, BlogPreview},
     mock::mock_blog_home_page_object,
 };
 use crate::utils::{
@@ -116,15 +116,13 @@ async fn load_blog_article() -> Result<String, RenderError> {
     };
 
     let ai_response_from_google = &ai_response.candidates[0].content.parts[0].text;
-
     let blog_structure = create_blog_structure_from_response(ai_response_from_google);
-
     let section_template = handlebars.render_template(&section_template, &json!(blog_structure))?;
 
     Ok(section_template)
 }
 
-async fn load_blog_html() -> Result<String, RenderError> {
+async fn load_blog_html(db: &Data<Database>) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
@@ -132,6 +130,9 @@ async fn load_blog_html() -> Result<String, RenderError> {
 
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs = "index/index";
+
+    let articles_opt = Database::find_all(db).await;
+    let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
     let blog_home_template = match read_hbs_template(&blog_home_hbs) {
         Ok(template) => template,
@@ -141,15 +142,18 @@ async fn load_blog_html() -> Result<String, RenderError> {
         }
     };
 
-    let section_blog_home_template = match handlebars
-        .render_template(&blog_home_template, &json!(&mock_blog_home_page_object()))
-    {
-        Ok(template) => template,
-        Err(err) => {
-            eprintln!("Failed to render blog home template: {}", err);
-            String::new()
-        }
-    };
+    let context_data = json!({ "posts": blog_previews, "section": "BlogHome" });
+
+    let section_blog_home_template =
+        match handlebars.render_template(&blog_home_template, &context_data) {
+            Ok(template) => template,
+            Err(err) => {
+                eprintln!("Failed to render blog home template: {}", err);
+                String::new()
+            }
+        };
+
+    println!("{}", &section_blog_home_template);
 
     Ok(section_blog_home_template)
 }
@@ -164,45 +168,7 @@ async fn load_blog_index_from_db(db: &Data<Database>) -> Result<String, RenderEr
     let blog_home_hbs_path = "blog/blog_home";
 
     let articles_opt = Database::find_all(db).await;
-
-    let blog_previews: Vec<BlogPreview> = match articles_opt {
-        Some(articles) => {
-            info!("Fetched {} blog articles from DB", articles.len());
-            articles
-                .into_iter()
-                .filter_map(|article| {
-                    match (
-                        article.id,
-                        article.title,
-                        article.summary,
-                        article.image_urls,
-                    ) {
-                        (Some(id), Some(title), Some(summary), Some(image_url)) => {
-                            let id_str = id.id.to_string();
-
-                            Some(BlogPreview {
-                                id: id_str,
-                                title,
-                                summary: format!(
-                                    "{}...",
-                                    String::from(trim_to_words(&summary, 14))
-                                ),
-                                image_url,
-                            })
-                        }
-                        _ => {
-                            warn!("Invalid blog article data");
-                            None
-                        }
-                    }
-                })
-                .collect()
-        }
-        None => {
-            error!("Failed to fetch blog articles from DB");
-            Vec::new()
-        }
-    };
+    let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
     let template_content = match read_hbs_template(&blog_home_hbs_path) {
         Ok(contents) => contents,
@@ -267,8 +233,8 @@ pub fn blog_home_html(cfg: &mut ServiceConfig) {
 
     cfg.route(
       "/blog_home.html",
-      get().to(|| async move {
-        let blog_home_template = load_blog_html().await;
+      get().to(|db: Data<Database>| async move {
+        let blog_home_template = load_blog_html(&db).await;
         match blog_home_template {
             Ok(template) => HttpResponse::Ok()
                 .content_type("text/html")
@@ -282,4 +248,45 @@ pub fn blog_home_html(cfg: &mut ServiceConfig) {
         }
       })
     );
+}
+
+fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPreview> {
+    match articles {
+        Some(articles) => {
+            info!("Fetched {} blog articles from DB", articles.len());
+            articles
+                .into_iter()
+                .filter_map(|article| {
+                    match (
+                        article.id,
+                        article.title,
+                        article.summary,
+                        article.image_urls,
+                    ) {
+                        (Some(id), Some(title), Some(summary), Some(image_url)) => {
+                            let id_str = id.id.to_string();
+
+                            Some(BlogPreview {
+                                id: id_str,
+                                title,
+                                summary: format!(
+                                    "{}...",
+                                    String::from(trim_to_words(&summary, 14))
+                                ),
+                                image_url,
+                            })
+                        }
+                        _ => {
+                            warn!("Invalid blog article data");
+                            None
+                        }
+                    }
+                })
+                .collect()
+        }
+        None => {
+            error!("Failed to fetch blog articles from DB");
+            Vec::new()
+        }
+    }
 }

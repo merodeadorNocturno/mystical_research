@@ -9,134 +9,91 @@
   <header></header>
 
   <main class="container">
-    <section class="search-bar">
-      <input type="search" id="search-input" placeholder="Search articles..." />
-      <button type="button" id="search-button">Search</button>
-    </section>
-
-    <aside class="ad-container">
-      <div class="ad-content">
-        <!-- Ad placeholder -->
-        <div class="ad-banner">Sponsored Content</div>
-      </div>
-    </aside>
-
-    <section class="blog-posts">
-      <h2>Latest Blog Posts</h2>
-      <div class="blog-grid">
-        <!-- Blog Post 1 -->
-        <article
-          class="blog-post"
-          hx-get="/blog/article"
-          hx-target=".main_container"
-        >
-          <img
-            src="/static/img/article1.png"
-            alt="Blog Post 1 Image"
-            loading="lazy"
-            title="Tarot Card Reading"
+        <section class="search-bar">
+          <input
+              type="search"
+              id="search-input"
+              placeholder="Search articles..."
+              name="query"
           />
-          <h3>The Art of Tarot Reading</h3>
-          <p>
-            Learn the ancient art of tarot reading and uncover the secrets of
-            the cards.
-          </p>
-          <a href="/blog/tarot-reading.html" class="read-more">Read More</a>
-        </article>
+          <button
+              type="button"
+              id="search-button"
+              hx-get="/blog/search"
+              {{! Ensure this endpoint exists and works }}
+              hx-target="#search-results-container"
+              hx-include="#search-input"
+              hx-indicator="#search-loading-indicator"
+          >
+              Search
+          </button>
+          <span
+              id="search-loading-indicator"
+              class="htmx-indicator"
+              style="display:none"
+          >
+              Searching...
+          </span>
+      </section>
 
-        <!-- Blog Post 2 -->
-        <article
-          class="blog-post"
-          hx-get="/blog/article"
-          hx-target=".main_container"
-        >
-          <img
-            src="/static/img/article2.png"
-            alt="Blog Post 2 Image"
-            loading="lazy"
-            title="Tarot Card Reading"
-          />
-          <h3>What is the best Astral Chart</h3>
-          <p>
-            What is the best Astral Chart for you and how to identify impostors
-          </p>
-          <a href="/blog/astrology.html" class="read-more">Read More</a>
-        </article>
+      <aside class="ad-container">
+          <div class="ad-content">
+              <div class="ad-banner">Sponsored Content</div>
+          </div>
+      </aside>
 
-        <!-- Blog Post 3 -->
+      <section class="blog-posts">
+          <h2>Latest Blog Posts</h2>
+          {{#if posts}}
+              {{! Check if the posts array exists and is not empty }}
+              <div class="blog-grid">
+                  {{#each posts}}
+                      {{! Loop through each post in the 'posts' array }}
+                      <article
+                          class="blog-post"
+                          {{! --- Option 1: Use HTMX to load article content --- }}
+                          hx-get="/blog/article/{{this.id}}"
+                          {{! Point to a specific article endpoint }}
+                          hx-target=".main_container"
+                          {{! Or wherever you want to load it }}
+                          {{! --- Option 2: Use a standard link --- }}
+                          onclick="window.location.href='/blog/article/{{this.id}}';"
+                          style="cursor: pointer;"
+                      >
+                          <img
+                              src="/static/img/{{this.image_url}}"
+                              {{! Use dynamic image URL }}
+                              alt="{{this.title}}"
+                              {{! Use dynamic alt text }}
+                              loading="lazy"
+                              title="{{this.title}}"
+                              {{! Use dynamic title }}
+                              {{! Optional: Placeholder on error }}
+                              onerror="this.onerror=null; this.src='/static/img/placeholder.png';"
+                          />
+                          <h3>{{this.title}}</h3>
+                          {{! Use dynamic title }}
+                          <p>{{this.summary}}</p>
+                          {{! Use dynamic summary }}
 
-        <article
-          class="blog-post"
-          hx-get="/blog/article"
-          hx-target=".main_container"
-        >
-          <img
-            src="/static/img/article3.png"
-            alt="Blog Post 1 Image"
-            loading="lazy"
-            title="Tarot Card Reading"
-          />
-          <h3>The Art of Tarot Reading</h3>
-          <p>
-            Learn the ancient art of tarot reading and uncover the secrets of
-            the cards.
-          </p>
-          <a href="/blog/tarot-reading.html" class="read-more">Read More</a>
-        </article>
+                          {{! Link to the full article page }}
+                          <a
+                              href="/blog/article/{{this.id}}"
+                              class="read-more"
+                          >Read More</a>
+                          {{! Standard link is often better for SEO }}
+                      </article>
+                  {{/each}}
+              </div>
+          {{else}}
+              <p>No blog posts found.</p>
+              {{! Message when no posts are available }}
+          {{/if}}
+      </section>
 
-        <!-- Blog Post 4 -->
-        <article
-          class="blog-post"
-          hx-get="/blog/article"
-          hx-target=".main_container"
-        >
-          <img
-            src="/static/img/article4.png"
-            alt="Blog Post 2 Image"
-            loading="lazy"
-            title="Tarot Card Reading"
-          />
-          <h3>Connecting with your Sexual Chakra</h3>
-          <p>Discover the best ways to unclog this amazing Chakra</p>
-          <a href="/blog/astrology.html" class="read-more">Read More</a>
-        </article>
-
-        <!-- Blog Post 5 -->
-
-        <article
-          class="blog-post"
-          hx-get="/blog/article"
-          hx-target=".main_container"
-        >
-          <img
-            title="Tarot Card Reading"
-            src="/static/img/article5.png"
-            alt="Blog Post 5 Image"
-            loading="lazy"
-          />
-          <h3>The Harsh Scorpio Season</h3>
-          <p>Why is Scorpio season so hard in many other zodiacs?</p>
-          <a href="/blog/tarot-reading.html" class="read-more">Read More</a>
-        </article>
-
-        <!-- Blog Post 6 -->
-        <article
-          class="blog-post"
-          hx-get="/blog/article"
-          hx-target=".main_container"
-        >
-          <img
-            title="Tarot Card Reading"
-            src="/static/img/article6.png"
-            alt="Blog Post 6 Image"
-            loading="lazy"
-          />
-          <h3>Angel or Demon</h3>
-          <p>Discover what entities are influencing the people who is clos</p>
-          <a href="/blog/astrology.html" class="read-more">Read More</a>
-        </article>
-      </div>
-    </section>
+      <section id="search-results-container" class="search-results">
+          <!-- Search results will be loaded here by HTMX -->
+      </section>
   </main>
 
   <aside class="ad-container">
