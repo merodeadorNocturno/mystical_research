@@ -7,10 +7,10 @@ use crate::models::{
 };
 use crate::utils::{
     ai_utils::{create_ai_request, generate_content},
+    general_utils::generate_slug_with_random_suffix,
     response_utils::create_blog_structure_from_response,
 };
 use actix_web::{
-    delete,
     error::ErrorNotFound,
     get,
     http::StatusCode,
@@ -20,6 +20,7 @@ use actix_web::{
 };
 use log::error;
 use serde::Deserialize;
+use serde_json::to_string;
 use validator::Validate;
 
 #[derive(Debug, Deserialize)]
@@ -47,8 +48,6 @@ async fn search_content(
 #[get("/blogs/ai/creator")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
 async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
-    // Use actix_web::Error for clarity
-
     let mut ai_response: GenerateContentResponse = GenerateContentResponse::new(vec![]);
     let mut _ai_error: String = String::new();
 
@@ -91,10 +90,12 @@ Use the last paragraph for a comma separated list of keywords.";
 
     let blog_structure: BlogStructure =
         create_blog_structure_from_response(ai_response_from_google);
+    let title = blog_structure.title;
 
     let blog_article: BlogArticle = BlogArticle::builder()
-        .title(blog_structure.title)
+        .title(String::from(&title))
         .summary(blog_structure.summary)
+        .slug(generate_slug_with_random_suffix(&title))
         .content(blog_structure.content)
         .keywords(blog_structure.keywords.join(","))
         .table_of_contents(blog_structure.table_of_contents.join(","))
@@ -138,8 +139,32 @@ async fn all_active_blogs(db: Data<Database>) -> Result<HttpResponse, actix_web:
     }
 }
 
+#[get("/blogs/{id}")]
+#[tracing::instrument(
+    name = "Get One Blog Article",    // 1. Descriptive span name
+    skip(db),                 // 2. Skip logging the database connection pool
+    fields(thing_id = %id)    // 3. Record the 'id' path parameter
+)]
+async fn get_blog_article(
+    db: Data<Database>,
+    id: Path<String>,
+) -> Result<HttpResponse, actix_web::Error> {
+    let blog_article = Database::find_one(&db, id.to_string()).await;
+
+    match blog_article {
+        Some(blog) => Ok(HttpResponse::Ok().status(StatusCode::OK).json(blog)),
+        None => {
+            error!("Failed to fetch blog article");
+            Ok(HttpResponse::NotFound()
+                .status(StatusCode::NOT_FOUND)
+                .json("Blog article not found"))
+        }
+    }
+}
+
 pub fn blog_api_routes(cfg: &mut ServiceConfig) {
     cfg.service(search_content);
     cfg.service(ai_creator);
     cfg.service(all_active_blogs);
+    cfg.service(get_blog_article);
 }

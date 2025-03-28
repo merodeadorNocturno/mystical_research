@@ -41,6 +41,11 @@ async fn main() -> std::io::Result<()> {
     let my_db = Database::init().await.expect("CANT_CONNECT_TO_DB");
     let db_data = Data::new(my_db);
 
+    info!(
+        "DB up and running:: {} :: {}",
+        db_data.db_name, db_data.name_space
+    );
+
     let server_address_conf: String = format!("{server_address}:{server_port}");
 
     HttpServer::new(move || {

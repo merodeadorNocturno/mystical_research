@@ -3,7 +3,6 @@ use crate::db::config_db::Database;
 use crate::models::{
     ai_model::{AiResponse, GenerateContentResponse},
     blog_model::{BlogArticle, BlogPreview},
-    mock::mock_blog_home_page_object,
 };
 use crate::utils::{
     ai_utils::{create_ai_request, generate_content},
@@ -32,30 +31,6 @@ impl TitleError {
     pub fn new(error: String) -> TitleError {
         TitleError { error }
     }
-}
-
-async fn load_blog_index() -> Result<String, RenderError> {
-    let mut handlebars = Handlebars::new();
-    let PageConfiguration { template_path, .. } = set_env_urls();
-
-    let this_path = Path::new(&template_path);
-
-    register_templates(this_path, &mut handlebars);
-    let blog_home_hbs = "blog/blog_home";
-
-    let section_template = match read_hbs_template(&blog_home_hbs) {
-        Ok(contents) => contents,
-        Err(err) => {
-            error!(
-                "Failed to render contents for blog home page: {}",
-                err.to_string()
-            );
-            TitleError::new(err.to_string()).error
-        }
-    };
-
-    let section_template = handlebars.render_template(&section_template, &json!({}))?;
-    Ok(section_template)
 }
 
 async fn load_blog_article() -> Result<String, RenderError> {
@@ -152,8 +127,6 @@ async fn load_blog_html(db: &Data<Database>) -> Result<String, RenderError> {
                 String::new()
             }
         };
-
-    println!("{}", &section_blog_home_template);
 
     Ok(section_blog_home_template)
 }
@@ -262,18 +235,19 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
                         article.title,
                         article.summary,
                         article.image_urls,
+                        article.slug,
                     ) {
-                        (Some(id), Some(title), Some(summary), Some(image_url)) => {
+                        (Some(id), Some(title), Some(summary), Some(image_url), Some(slug)) => {
                             let id_str = id.id.to_string();
-
                             Some(BlogPreview {
                                 id: id_str,
-                                title,
+                                image_url,
+                                slug,
                                 summary: format!(
                                     "{}...",
                                     String::from(trim_to_words(&summary, 14))
                                 ),
-                                image_url,
+                                title,
                             })
                         }
                         _ => {

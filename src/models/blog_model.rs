@@ -66,10 +66,10 @@ pub struct BlogFeaturedSection {
 pub struct BlogArticle {
     pub id: Option<Thing>,
     pub title: Option<String>,
-    pub summary: Option<String>,
-    pub keywords: Option<String>,
-    pub content: Option<String>,
     pub table_of_contents: Option<String>,
+    pub summary: Option<String>,
+    pub content: Option<String>,
+    pub keywords: Option<String>,
     pub page_type: Option<PageType>,
     pub deleted: Option<bool>,
     pub author: Option<String>,
@@ -77,6 +77,7 @@ pub struct BlogArticle {
     pub created_at: Option<surrealdb::Datetime>,
     pub updated_at: Option<surrealdb::Datetime>,
     pub published_at: Option<surrealdb::Datetime>,
+    pub slug: Option<String>,
 }
 
 impl BlogArticle {
@@ -98,6 +99,7 @@ pub struct BlogArticleBuilder {
     deleted: Option<bool>,
     author: Option<String>,
     image_urls: Option<String>,
+    slug: Option<String>,
     created_at: Option<surrealdb::Datetime>,
     updated_at: Option<surrealdb::Datetime>,
     published_at: Option<surrealdb::Datetime>,
@@ -121,6 +123,10 @@ impl BlogArticleBuilder {
     }
     pub fn summary(mut self, summary: String) -> Self {
         self.summary = Some(summary);
+        self
+    }
+    pub fn slug(mut self, slug: String) -> Self {
+        self.slug = Some(slug);
         self
     }
     pub fn keywords(mut self, keywords: String) -> Self {
@@ -164,6 +170,7 @@ impl BlogArticleBuilder {
             image_urls: Some(self.image_urls.expect("body must be set")),
             content: Some(self.content.expect("content must be set")),
             summary: Some(self.summary.expect("summary must be set")),
+            slug: Some(self.slug.expect("slug must be set")),
             keywords: Some(self.keywords.expect("keywords must be set")),
             table_of_contents: Some(
                 self.table_of_contents
@@ -184,6 +191,7 @@ pub struct BlogPreview {
     pub title: String,
     pub summary: String,
     pub image_url: String,
+    pub slug: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

@@ -51,14 +51,14 @@
                     <article
                         class="blog-post"
                         {{! --- Option 1: Use HTMX to load article content --- }}
-                        hx-get="/blog/article/{{this.id}}"
+                        hx-get="/blog/article/{{this.slug}}"
                         {{! Point to a specific article endpoint }}
                         hx-target=".main_container"
                         {{! Or wherever you want to load it }}
                         {{! --- Option 2: Use a standard link --- }}
-                        onclick="window.location.href='/blog/article/{{this.id}}';"
                         style="cursor: pointer;"
                     >
+                        <!-- onclick="window.location.href='/blog/article/{{this.slug}}';" -->
                         <img
                             src="/static/img/{{this.image_url}}"
                             {{! Use dynamic image URL }}
@@ -77,7 +77,7 @@
 
                         {{! Link to the full article page }}
                         <a
-                            href="/blog/article/{{this.id}}"
+                            href="/blog/article/{{this.slug}}"
                             class="read-more"
                         >Read More</a>
                         {{! Standard link is often better for SEO }}

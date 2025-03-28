@@ -1,10 +1,8 @@
 use super::schema_db::Schema;
 use crate::config::connection::set_environment_variable;
-use actix_web::web::Data;
 use surrealdb::{
     engine::remote::ws::{Client, Ws},
     opt::auth::Root,
-    sql::Value,
     Error, Surreal,
 };
 
