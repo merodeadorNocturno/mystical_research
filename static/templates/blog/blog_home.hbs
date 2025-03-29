@@ -77,7 +77,8 @@
 
                         {{! Link to the full article page }}
                         <a
-                            href="/blog/article/{{this.slug}}"
+                            hx-get="/blog/search"
+                            hx-target=".main_container"
                             class="read-more"
                         >Read More</a>
                         {{! Standard link is often better for SEO }}

@@ -18,6 +18,7 @@ pub trait BlogDB {
     async fn find_all_deleted(db: &Data<Database>) -> Option<Vec<BlogArticle>>;
     async fn delete_one(db: &Data<Database>, id: String) -> Option<Vec<BlogArticle>>;
     async fn search_content(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>>;
+    async fn search_slug_id(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>>;
 }
 
 #[async_trait]
@@ -60,6 +61,11 @@ impl BlogDB for Database {
             "content".to_string(),
         ];
         let search_fields = create_or_conditional(&search_term, fields);
+        util_fulltext_search(&db, BLOG_TABLE, &search_fields).await
+    }
+
+    async fn search_slug_id(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>> {
+        let search_fields = format!("slug = '{search_term}'");
         util_fulltext_search(&db, BLOG_TABLE, &search_fields).await
     }
 }

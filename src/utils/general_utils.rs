@@ -84,3 +84,7 @@ pub fn generate_slug_with_random_suffix(title: &str) -> String {
     // 6. Format the final slug string
     format!("{}_{}.html", slug_base, random_suffix)
 }
+
+pub fn string_to_vec_string(cs_string: String) -> Vec<String> {
+    cs_string.split(',').map(|s| s.to_string()).collect()
+}

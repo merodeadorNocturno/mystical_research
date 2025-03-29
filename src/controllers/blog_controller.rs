@@ -8,18 +8,17 @@ use crate::utils::{
     ai_utils::{create_ai_request, generate_content},
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
-    general_utils::trim_to_words,
+    general_utils::{string_to_vec_string, trim_to_words},
     response_utils::create_blog_structure_from_response,
 };
 use actix_web::{
-    web::{get, Data, ServiceConfig},
-    HttpResponse,
+    web::{get, Data, Path, ServiceConfig},
+    HttpRequest, HttpResponse,
 };
 use handlebars::{Handlebars, RenderError};
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::path::Path;
 // use tracing::warn;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -37,7 +36,7 @@ async fn load_blog_article() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
-    let this_path = Path::new(&template_path);
+    let this_path = std::path::Path::new(&template_path);
 
     let mut ai_response: GenerateContentResponse = GenerateContentResponse::new(vec![]);
     let mut _ai_error: String = String::new();
@@ -101,7 +100,7 @@ async fn load_blog_html(db: &Data<Database>) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
-    let this_path = Path::new(&template_path);
+    let this_path = std::path::Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs = "index/index";
@@ -135,7 +134,7 @@ async fn load_blog_index_from_db(db: &Data<Database>) -> Result<String, RenderEr
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
-    let this_path = Path::new(&template_path);
+    let this_path = std::path::Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs_path = "blog/blog_home";
@@ -161,6 +160,59 @@ async fn load_blog_index_from_db(db: &Data<Database>) -> Result<String, RenderEr
         Err(e) => {
             error!("Failed to render blog home template: {}", e);
             Err(e) // Propagate the render error
+        }
+    }
+}
+
+async fn load_article_by_slug(
+    query_string: Path<String>,
+    db: &Data<Database>,
+) -> Result<String, RenderError> {
+    let search_term = query_string.into_inner();
+    let mut handlebars = Handlebars::new();
+    let PageConfiguration { template_path, .. } = set_env_urls();
+
+    let this_path = std::path::Path::new(&template_path);
+    register_templates(this_path, &mut handlebars);
+    let blog_article_hbs_path = "blog/blog_article_og";
+
+    let article = Database::search_slug_id(db, search_term).await;
+
+    let template_content = match read_hbs_template(&blog_article_hbs_path) {
+        Ok(contents) => contents,
+        Err(err) => {
+            error!("Failed to read blog article template: {}", err);
+            return Err(RenderError::from(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                format!("Template not found: {}", blog_article_hbs_path),
+            )));
+        }
+    };
+
+    let this_article = match article {
+        Some(article_in_db) => article_in_db,
+        None => vec![],
+    };
+
+    let mut context_data = json!({});
+
+    if this_article.len() > 0 {
+        let table_of_contents =
+            string_to_vec_string(this_article[0].table_of_contents.clone().unwrap());
+        let keywords = string_to_vec_string(this_article[0].keywords.clone().unwrap());
+
+        context_data = json!({
+            "article": this_article[0],
+            "table_of_contents": table_of_contents,
+            "keywords": keywords
+        });
+    }
+
+    match handlebars.render_template(&template_content, &context_data) {
+        Ok(rendered_html) => Ok(rendered_html),
+        Err(e) => {
+            error!("Failed to render blog article template: {}", e);
+            Err(e)
         }
     }
 }
@@ -220,6 +272,25 @@ pub fn blog_home_html(cfg: &mut ServiceConfig) {
                 )),
         }
       })
+    );
+
+    cfg.route(
+        "/blog/article/{slug}",
+        get().to(|_req: HttpRequest, slug, db: Data<Database>| async move {
+            let blog_article_template = load_article_by_slug(slug, &db).await;
+            match blog_article_template {
+                Ok(article) => HttpResponse::Ok()
+                    .content_type("text/html")
+                    .body(article),
+                Err(err) => HttpResponse::InternalServerError()
+                    .content_type("text/html")
+                    .append_header(("HX-Trigger", "error_enterprise_table"))
+                    .body(format!(
+                        "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>",
+                        err.to_string()
+                    )),
+            }
+        })
     );
 }
 
