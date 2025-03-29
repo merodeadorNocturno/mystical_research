@@ -83,7 +83,6 @@ Use the last paragraph for a comma separated list of keywords.";
         }
     };
 
-    // let now_system_time: SystemTime = SystemTime::from(Utc::now());
     let surrealdb_now: surrealdb::Datetime = surrealdb::Datetime::from(chrono::Utc::now());
 
     let ai_response_from_google = &ai_response.candidates[0].content.parts[0].text;

@@ -75,11 +75,11 @@ impl Schema {
         Ok(Schema { tables })
     }
 
-    pub fn get_table(&self, table_name: &str) -> Option<&TableDefinition> {
-        self.tables.get(table_name)
-    }
+    // pub fn get_table(&self, table_name: &str) -> Option<&TableDefinition> {
+    //     self.tables.get(table_name)
+    // }
 
-    pub fn get_field(&self, table_name: &str, field_name: &str) -> Option<&FieldDefinition> {
-        self.tables.get(table_name)?.fields.get(field_name)
-    }
+    // pub fn get_field(&self, table_name: &str, field_name: &str) -> Option<&FieldDefinition> {
+    //     self.tables.get(table_name)?.fields.get(field_name)
+    // }
 }
