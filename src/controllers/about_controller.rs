@@ -29,7 +29,7 @@ impl TitleError {
     }
 }
 
-async fn load_about() -> Result<String, RenderError> {
+async fn htmx_about() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -53,7 +53,7 @@ async fn load_about() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-async fn load_about_index_html() -> Result<String, RenderError> {
+async fn about_html() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -87,11 +87,11 @@ async fn load_about_index_html() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-pub fn about_html(cfg: &mut ServiceConfig) {
+pub fn about_controller(cfg: &mut ServiceConfig) {
     cfg.route(
-      "/about",
+      "/htmx/about",
       get().to(|| async move {
-        let mr_help_template = load_about().await;
+        let mr_help_template = htmx_about().await;
         match mr_help_template {
             Ok(template) => HttpResponse::Ok()
               .content_type("text/html")
@@ -107,7 +107,7 @@ pub fn about_html(cfg: &mut ServiceConfig) {
     cfg.route(
       "/about.html",
       get().to(|| async move {
-        let mr_help_template = load_about_index_html().await;
+        let mr_help_template = about_html().await;
         match mr_help_template {
             Ok(template) => HttpResponse::Ok()
               .content_type("text/html")

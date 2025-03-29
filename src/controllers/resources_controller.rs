@@ -20,7 +20,7 @@ impl TitleError {
     }
 }
 
-async fn load_resources() -> Result<String, RenderError> {
+async fn htmx_resources() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let this_path = Path::new("./static/templates");
 
@@ -42,11 +42,11 @@ async fn load_resources() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-pub fn resources_html(cfg: &mut ServiceConfig) {
+pub fn resources_controller(cfg: &mut ServiceConfig) {
     cfg.route(
-        "/resources",
+        "/htmx/resources",
         get().to(|| async move {
-            let resources_template = load_resources().await;
+            let resources_template = htmx_resources().await;
             match resources_template {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")

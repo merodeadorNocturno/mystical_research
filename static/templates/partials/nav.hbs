@@ -1,57 +1,57 @@
 <nav class="main-nav">
-  <div class="nav-container">
-    <div class="logo">🔮 Mystical Research</div>
+    <div class="nav-container">
+        <div class="logo">🔮 Mystical Research</div>
 
-    {{! Hamburger Menu }}
-    <button class="hamburger-menu" aria-label="Toggle Navigation">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
+        {{! Hamburger Menu }}
+        <button class="hamburger-menu" aria-label="Toggle Navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
 
-    <ul class="nav-links">
-      <li><a href="/" hx-push-url="/">Home</a></li>
-      <li><a
-          href="about.html"
-          hx-get="/about"
-          hx-target=".main_container"
-          hx-push-url="/about.html"
-        >About</a></li>
-      <li><a
-          href="topics.html"
-          hx-get="/topics"
-          hx-target=".main_container"
-          hx-push-url="/topics.html"
-        >Topics</a></li>
-      <!-- <li><a
+        <ul class="nav-links">
+            <li><a href="/" hx-push-url="/">Home</a></li>
+            <li><a
+                    href="about.html"
+                    hx-get="/htmx/about"
+                    hx-target=".main_container"
+                    hx-push-url="/about.html"
+                >About</a></li>
+            <li><a
+                    href="topics.html"
+                    hx-get="/htmx/topics"
+                    hx-target=".main_container"
+                    hx-push-url="/topics.html"
+                >Topics</a></li>
+            <!-- <li><a
           href="resources.html"
-          hx-get="/resources"
+          hx-get="/htmx/resources"
           hx-target=".main_container"
           hx-push-url="/resources.html"
         >Resources</a></li> -->
-      <li><a
-          href="blog_home.html"
-          hx-get="/blog"
-          hx-target=".main_container"
-          hx-push-url="/blog_home.html"
-        >Blog</a></li>
-      <li><a
-          href="contact.html"
-          hx-get="/contact"
-          hx-target=".main_container"
-          hx-push-url="/contact.html"
-        >Contact</a></li>
-    </ul>
-  </div>
+            <li><a
+                    href="blog_home.html"
+                    hx-get="/htmx/blog"
+                    hx-target=".main_container"
+                    hx-push-url="/blog_home.html"
+                >Blog</a></li>
+            <li><a
+                    href="contact.html"
+                    hx-get="/htmx/contact"
+                    hx-target=".main_container"
+                    hx-push-url="/contact.html"
+                >Contact</a></li>
+        </ul>
+    </div>
 </nav>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() { const hamburgerMenu
-  = document.querySelector('.hamburger-menu'); const navLinks =
-  document.querySelector('.nav-links'); hamburgerMenu.addEventListener('click',
-  () => { navLinks.classList.toggle('open');
-  hamburgerMenu.classList.toggle('active'); });
-  navLinks.addEventListener('click', (event) => { if (event.target.tagName ===
-  'A') { navLinks.classList.remove('open');
-  hamburgerMenu.classList.remove('active'); } }); });
+    document.addEventListener('DOMContentLoaded', function() { const
+    hamburgerMenu = document.querySelector('.hamburger-menu'); const navLinks =
+    document.querySelector('.nav-links');
+    hamburgerMenu.addEventListener('click', () => {
+    navLinks.classList.toggle('open'); hamburgerMenu.classList.toggle('active');
+    }); navLinks.addEventListener('click', (event) => { if (event.target.tagName
+    === 'A') { navLinks.classList.remove('open');
+    hamburgerMenu.classList.remove('active'); } }); });
 </script>

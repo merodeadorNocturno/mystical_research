@@ -21,7 +21,7 @@ struct TitleError {
     pub error: String,
 }
 
-async fn load_blog_html(db: &Data<Database>) -> Result<String, RenderError> {
+async fn blog_home_html(db: &Data<Database>) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
@@ -55,7 +55,7 @@ async fn load_blog_html(db: &Data<Database>) -> Result<String, RenderError> {
     Ok(section_blog_home_template)
 }
 
-async fn load_blog_index_from_db(db: &Data<Database>) -> Result<String, RenderError> {
+async fn htmx_blog(db: &Data<Database>) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -89,7 +89,7 @@ async fn load_blog_index_from_db(db: &Data<Database>) -> Result<String, RenderEr
     }
 }
 
-async fn load_article_by_slug(
+async fn htmx_blog_article_slug(
     query_string: Path<String>,
     db: &Data<Database>,
 ) -> Result<String, RenderError> {
@@ -142,11 +142,11 @@ async fn load_article_by_slug(
     }
 }
 
-pub fn blog_home_html(cfg: &mut ServiceConfig) {
+pub fn blog_html_controller(cfg: &mut ServiceConfig) {
     cfg.route(
-        "/blog",
+        "/htmx/blog",
         get().to(|db: Data<Database>| async move {
-            match load_blog_index_from_db(&db).await {
+            match htmx_blog(&db).await {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
                     .body(template),
@@ -166,7 +166,7 @@ pub fn blog_home_html(cfg: &mut ServiceConfig) {
     cfg.route(
       "/blog_home.html",
       get().to(|db: Data<Database>| async move {
-        let blog_home_template = load_blog_html(&db).await;
+        let blog_home_template = blog_home_html(&db).await;
         match blog_home_template {
             Ok(template) => HttpResponse::Ok()
                 .content_type("text/html")
@@ -183,9 +183,9 @@ pub fn blog_home_html(cfg: &mut ServiceConfig) {
     );
 
     cfg.route(
-        "/blog/article/{slug}",
+        "/htmx/blog/article/{slug}",
         get().to(|_req: HttpRequest, slug, db: Data<Database>| async move {
-            let blog_article_template = load_article_by_slug(slug, &db).await;
+            let blog_article_template = htmx_blog_article_slug(slug, &db).await;
             match blog_article_template {
                 Ok(article) => HttpResponse::Ok()
                     .content_type("text/html")

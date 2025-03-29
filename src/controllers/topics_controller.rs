@@ -22,7 +22,7 @@ impl TitleError {
     }
 }
 
-async fn load_topics() -> Result<String, RenderError> {
+async fn htmx_topics() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -46,7 +46,7 @@ async fn load_topics() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-async fn load_topics_index_html() -> Result<String, RenderError> {
+async fn topics_html() -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
@@ -80,11 +80,11 @@ async fn load_topics_index_html() -> Result<String, RenderError> {
     Ok(contact_template)
 }
 
-pub fn topics_html(cfg: &mut ServiceConfig) {
+pub fn topics_controller(cfg: &mut ServiceConfig) {
     cfg.route(
-        "/topics",
+        "/htmx/topics",
         get().to(|| async move {
-            let topics_template = load_topics().await;
+            let topics_template = htmx_topics().await;
             match topics_template {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
@@ -102,7 +102,7 @@ pub fn topics_html(cfg: &mut ServiceConfig) {
     cfg.route(
         "/topics.html",
         get().to(|| async move {
-            let topics_template = load_topics_index_html().await;
+            let topics_template = topics_html().await;
             match topics_template {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")

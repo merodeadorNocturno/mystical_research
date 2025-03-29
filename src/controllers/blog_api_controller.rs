@@ -14,14 +14,14 @@ use actix_web::{
     error::ErrorNotFound,
     get,
     http::StatusCode,
-    patch, post,
+    // patch, post,
     web::{Data, Json, Path, Query, ServiceConfig},
     HttpResponse,
 };
 use log::error;
 use serde::Deserialize;
-use serde_json::to_string;
-use validator::Validate;
+// use serde_json::to_string;
+// use validator::Validate;
 
 #[derive(Debug, Deserialize)]
 struct SearchQuery {

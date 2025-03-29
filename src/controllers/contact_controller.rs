@@ -24,7 +24,7 @@ impl TitleError {
     }
 }
 
-async fn load_contact_index() -> Result<String, RenderError> {
+async fn htmx_contact() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -48,7 +48,7 @@ async fn load_contact_index() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-async fn load_contact_index_html() -> Result<String, RenderError> {
+async fn contact_html() -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
@@ -84,11 +84,11 @@ async fn load_contact_index_html() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-pub fn contact_html(cfg: &mut ServiceConfig) {
+pub fn contact_controller(cfg: &mut ServiceConfig) {
     cfg.route(
-        "/contact",
+        "/htmx/contact",
         get().to(|| async move {
-            let contact_template = load_contact_index().await;
+            let contact_template = htmx_contact().await;
             match contact_template {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
@@ -106,7 +106,7 @@ pub fn contact_html(cfg: &mut ServiceConfig) {
     cfg.route(
         "/contact.html",
         get().to(|| async move {
-            let contact_home_template = load_contact_index_html().await;
+            let contact_home_template = contact_html().await;
             match contact_home_template {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")

@@ -2,10 +2,10 @@ use crate::utils::env_utils::*;
 use actix_cors::Cors;
 use actix_web::{middleware, web::Data, App, HttpServer};
 use controllers::{
-    about_controller::about_html, blog_api_controller::blog_api_routes,
-    blog_controller::blog_home_html, contact_controller::contact_html,
-    index_controller::index_html, resources_controller::resources_html,
-    static_controllers::static_controllers, topics_controller::topics_html,
+    about_controller::about_controller, blog_api_controller::blog_api_routes,
+    blog_controller::blog_html_controller, contact_controller::contact_controller,
+    index_controller::index_controller, resources_controller::resources_controller,
+    static_controllers::static_controllers, topics_controller::topics_controller,
 };
 use db::config_db::Database;
 use env_logger::{Builder, WriteStyle};
@@ -55,12 +55,12 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::NormalizePath::trim())
             .app_data(db_data.clone())
             .configure(blog_api_routes)
-            .configure(index_html)
-            .configure(about_html)
-            .configure(resources_html)
-            .configure(topics_html)
-            .configure(contact_html)
-            .configure(blog_home_html)
+            .configure(index_controller)
+            .configure(about_controller)
+            .configure(resources_controller)
+            .configure(topics_controller)
+            .configure(contact_controller)
+            .configure(blog_html_controller)
             .configure(static_controllers)
     })
     .bind(server_address_conf)
