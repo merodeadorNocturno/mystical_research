@@ -99,7 +99,7 @@ async fn blog_article_slug(
             "article": this_article[0],
             "table_of_contents": table_of_contents,
             "keywords": keywords,
-            "section": "BlogArticle",
+            "section": this_article[0].page_type.clone().unwrap(),
             "header": {
                 "canonical_url": this_article[0].slug.clone().unwrap(),
                 "site_title": this_article[0].title.clone().unwrap(),

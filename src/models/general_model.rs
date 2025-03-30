@@ -8,7 +8,7 @@ pub enum PageType {
     Contact,
     NotFound,
     BlogHome,
-    BlogPost,
+    BlogArticle,
     Topics,
     Resources,
 }

@@ -15,7 +15,13 @@ use actix_web::{
     get,
     http::StatusCode,
     // patch, post,
-    web::{Data, Json, Path, Query, ServiceConfig},
+    web::{
+        Data,
+        // Json,
+        Path,
+        Query,
+        ServiceConfig,
+    },
     HttpResponse,
 };
 use log::error;
@@ -98,7 +104,7 @@ Use the last paragraph for a comma separated list of keywords.";
         .content(blog_structure.content)
         .keywords(blog_structure.keywords.join(","))
         .table_of_contents(blog_structure.table_of_contents.join(","))
-        .page_type(PageType::BlogPost)
+        .page_type(PageType::BlogArticle)
         .deleted(false)
         .author("BaggiE BomziE".to_string())
         .image_urls("article1.png".to_string())
