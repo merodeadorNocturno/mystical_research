@@ -1,9 +1,9 @@
-{ "@context": "https://schema.org", "@type": "ContactPage", "name": "{{schema_markup.site_name}}",
-"description": "{{schema_markup.site_description}}", "url": "{{schema_markup.canonical_url}}",
+{ "@context": "https://schema.org", "@type": "ContactPage", "name": "{{linked_data.site_name}}",
+"description": "{{linked_data.site_description}}", "url": "{{linked_data.canonical_url}}",
 "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint",
-"urlTemplate": "{{schema_markup.canonical_url}}search?q={{search_term_string}}"
-}, "query-input": "required name=search_term_string" }, "mainEntity": { "@type":
-"Organization", "name": "{{schema_markup.site_name}}", "url": "{{header.canonical_url}}",
-"logo": { "@type": "ImageObject", "url": "{{schema_markup.site_logo_url}}" },
+"urlTemplate": "{{linked_data.canonical_url}}search?q={{search_term_string}}" },
+"query-input": "required name=search_term_string" }, "mainEntity": { "@type":
+"Organization", "name": "{{linked_data.site_name}}", "url": "{{header.canonical_url}}",
+"logo": { "@type": "ImageObject", "url": "{{linked_data.site_logo_url}}" },
 "contactPoint": { "@type": "ContactPoint", "contactType": "customer service",
 "email": "{{contact_email}}", "telephone": "{{contact_phone}}" } } }

@@ -9,7 +9,7 @@ use super::general_model::PageType;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct BlogHomePage {
     pub body: BlogBody,
-    pub schema_markup: BlogHomeSchemaMarkup,
+    pub linked_data: BlogHomeSchemaMarkup,
     pub featured: Vec<BlogFeaturedSection>,
     pub header: HeaderData,
     pub section: PageType,

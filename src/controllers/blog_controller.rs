@@ -42,7 +42,14 @@ async fn blog_home_html(db: &Data<Database>) -> Result<String, RenderError> {
         }
     };
 
-    let context_data = json!({ "posts": blog_previews, "section": "BlogHome" });
+    let context_data = json!({
+        "posts": blog_previews,
+        "section": "BlogHome",
+        "linked_data": {
+            "description": "A collection of mystical and artistic explorations.",
+            "logo_url": "/static/img/hero-bg.png",
+            "blog_posts": &blog_previews,
+    } });
 
     let section_blog_home_template =
         match handlebars.render_template(&blog_home_template, &context_data) {
@@ -106,7 +113,7 @@ async fn blog_article_slug(
                 "site_description": this_article[0].summary.clone().unwrap(),
                 "logo_url": this_article[0].image_urls.clone().unwrap(),
             },
-            "schema_markup": linked_data_blog_article(&this_article[0]),
+            "linked_data": linked_data_blog_article(&this_article[0]),
         });
     }
 

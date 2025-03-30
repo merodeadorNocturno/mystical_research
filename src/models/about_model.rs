@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct AboutHomePage {
     pub body: AboutBody,
-    pub schema_markup: AboutHomeSchemaMarkup,
+    pub linked_data: AboutHomeSchemaMarkup,
     pub header: HeaderData,
     pub section: PageType,
 }

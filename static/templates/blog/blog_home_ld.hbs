@@ -1,10 +1,34 @@
-{ "@context": "https://schema.org", "@type": "Blog",
-"url":"https://mysticalresearch.com/blog", "name": "{{schema_markup.blog_title}}",
-"description": "{{schema_markup.blog_description}}", "publisher": { "@type":
-"Organization", "name": "Mystical Research", "url":
-"https://mysticalresearch.com/", "logo": { "@type": "ImageObject", "url":
-"https://mysticalresearch.com/img/{{schema_markup.blog_logo_url}}" } },
-"potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint",
-"urlTemplate":
-"https://mysticalresearch.com/blog/search?q={blog_search_term_string}" },
-"query-input": "required name=search_term_string" } }
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "url":"https://mysticalresearch.com/blog_home.html",
+  "name": "Mystical Research Blog",
+  "description": "{{linked_data.description}}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mystical Research",
+    "url": "https://mysticalresearch.com/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mysticalresearch.com/{{linked_data.logo_url}}"
+    }
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://mysticalresearch.com/blog/search?q={blog_search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+    "blogPosts": [
+        {{#each posts}}
+        {
+        "@type": "BlogPosting",
+        "headline": "{{this.title}}",
+        "description": "{{this.summary}}",
+        "url": "https://mysticalresearch.com/blog/article/{{this.slug}}"
+        },
+        {{/each}}
+    ]
+}

@@ -5,7 +5,7 @@ use super::general_model::PageType;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Index {
     pub url: String,
-    pub schema_markup: IndexSchemaMarkup, // Group schema markup related fields
+    pub linked_data: IndexSchemaMarkup, // Group schema markup related fields
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -36,8 +36,8 @@ impl TitleError {
 //     pub fn new(url: String, site_name: String, site_description: String) -> Self {
 //         Index {
 //             url,
-//             schema_markup: IndexSchemaMarkup {
-//                 // Initialize schema_markup struct
+//             linked_data: IndexSchemaMarkup {
+//                 // Initialize linked_data struct
 //                 site_name,
 //                 site_description,
 //                 main_image_url: None,
@@ -71,7 +71,7 @@ pub struct IndexFeaturedSection {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IndexPage {
     pub body: IndexBody,
-    pub schema_markup: IndexSchemaMarkup,
+    pub linked_data: IndexSchemaMarkup,
     pub featured: Vec<IndexFeaturedSection>,
     pub header: HeaderData,
     pub section: PageType,

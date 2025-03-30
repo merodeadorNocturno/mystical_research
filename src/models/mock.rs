@@ -8,7 +8,7 @@ use crate::models::{
     topics_model::{TopicCategory, TopicHomePage, TopicHomeSchemaMarkup},
 };
 
-pub fn mock_index_schema_markup() -> IndexSchemaMarkup {
+pub fn mock_index_linked_data() -> IndexSchemaMarkup {
     IndexSchemaMarkup {
         site_name: "My Awesome Site".to_string(),
         site_description: "This is a description of my awesome site for search engines."
@@ -44,7 +44,7 @@ pub fn mock_index_featured_section(image_url: String) -> IndexFeaturedSection {
 pub fn mock_index() -> Index {
     Index {
         url: "/".to_string(),
-        schema_markup: mock_index_schema_markup(),
+        linked_data: mock_index_linked_data(),
     }
 }
 
@@ -96,7 +96,7 @@ pub fn mock_blog_home_page_object() -> BlogHomePage {
             author: "Mock Author Name".to_string(),
             image_urls: Some(vec!["https://example.com/images/body_image.png".to_string()]),
         },
-        schema_markup: BlogHomeSchemaMarkup {
+        linked_data: BlogHomeSchemaMarkup {
             blog_title: "Mock Blog Home Title".to_string(),
             blog_description: "Mock Blog Home Description".to_string(),
             blog_name: "Mock Blog Name".to_string(),
@@ -170,7 +170,7 @@ pub fn mock_contact_home_page_object() -> ContactHomePage {
         contact_email: "info@mysticweb.com".to_string(),
         contact_phone: "+1-555-MYSTIC".to_string(),
         contact_address: "123 Celestial Way\nMystic Falls, CA 90001".to_string(),
-        schema_markup: ContactHomeSchemaMarkup {
+        linked_data: ContactHomeSchemaMarkup {
             contact_page_title: "Contact Us - Mystical Research".to_string(),
             site_description: "Get in touch with us for any inquiries or support.".to_string(),
             canonical_url: "https://mysticalresearch.com/contact.html".to_string(),
@@ -186,7 +186,7 @@ pub fn mock_contact_home_page_object() -> ContactHomePage {
 pub fn mock_topic_home_page_object() -> TopicHomePage {
     TopicHomePage {
         header: mock_header_data(),
-        schema_markup: TopicHomeSchemaMarkup {
+        linked_data: TopicHomeSchemaMarkup {
             topic_page_title: "Explore Mystical Topics - Angels Project".to_string(),
             site_description: "Dive into a wide range of mystical and spiritual topics."
                 .to_string(),
@@ -241,7 +241,7 @@ pub fn mock_about_home_page_object() -> AboutHomePage {
                 ],
             },
         },
-        schema_markup: AboutHomeSchemaMarkup {
+        linked_data: AboutHomeSchemaMarkup {
             about_page_title: "About Us - Angels Project".to_string(),
             site_description: "Learn about Angels Project and our mission to empower innovation."
                 .to_string(),

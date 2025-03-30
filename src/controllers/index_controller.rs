@@ -2,7 +2,7 @@ use crate::models::{
     general_model::PageType,
     index_model::{IndexPage, TitleError},
     mock::{
-        mock_header_data, mock_index_body, mock_index_featured_section, mock_index_schema_markup,
+        mock_header_data, mock_index_body, mock_index_featured_section, mock_index_linked_data,
     },
 };
 use crate::utils::{
@@ -38,7 +38,7 @@ async fn index_html() -> Result<String, RenderError> {
         }
     };
 
-    let schema_markup = mock_index_schema_markup();
+    let linked_data = mock_index_linked_data();
     let body = mock_index_body();
     let header = mock_header_data();
     let mut featured = Vec::new();
@@ -51,7 +51,7 @@ async fn index_html() -> Result<String, RenderError> {
         &section_template,
         &json!(&IndexPage {
             body,
-            schema_markup,
+            linked_data,
             featured,
             header,
             section: PageType::Home,

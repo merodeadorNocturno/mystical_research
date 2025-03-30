@@ -10,7 +10,7 @@ pub struct ContactHomePage {
     pub contact_email: String,
     pub contact_phone: String,
     pub contact_address: String,
-    pub schema_markup: ContactHomeSchemaMarkup,
+    pub linked_data: ContactHomeSchemaMarkup,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
