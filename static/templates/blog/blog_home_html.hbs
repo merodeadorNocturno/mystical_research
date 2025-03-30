@@ -49,16 +49,10 @@
               <div class="blog-grid">
                   {{#each posts}}
                       {{! Loop through each post in the 'posts' array }}
-                      <article
-                          class="blog-post"
-                          {{! --- Option 1: Use HTMX to load article content --- }}
-                          hx-get="/blog/article/{{this.id}}"
-                          {{! Point to a specific article endpoint }}
-                          hx-target=".main_container"
-                          {{! Or wherever you want to load it }}
-                          {{! --- Option 2: Use a standard link --- }}
-                          onclick="window.location.href='/blog/article/{{this.id}}';"
-                          style="cursor: pointer;"
+                      <a
+                          href="/blog/article/{{this.slug}}"
+                          class="blog-post blog-post-link"
+                          title="Read more about {{this.title}}"
                       >
                           <img
                               src="/static/img/{{this.image_url}}"
@@ -70,19 +64,21 @@
                               {{! Use dynamic title }}
                               {{! Optional: Placeholder on error }}
                               onerror="this.onerror=null; this.src='/static/img/placeholder.png';"
+                              class="blog-post-image"
                           />
+                          <div class="blog-post-content">
                           <h3>{{this.title}}</h3>
                           {{! Use dynamic title }}
                           <p>{{this.summary}}</p>
                           {{! Use dynamic summary }}
-
+                          </div>
                           {{! Link to the full article page }}
-                          <a
-                              href="/blog/article/{{this.id}}"
+                          <!-- <a
+                              href="/blog/article/{{this.slug}}"
                               class="read-more"
-                          >Read More</a>
+                          >Read More</a> -->
                           {{! Standard link is often better for SEO }}
-                      </article>
+                      </a>
                   {{/each}}
               </div>
           {{else}}

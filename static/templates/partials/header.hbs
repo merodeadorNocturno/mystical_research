@@ -26,7 +26,7 @@
   <link rel="canonical" href="{{header.canonical_url}}" />
   <!-- Replace with your domain -->
 
-  <link rel="stylesheet" href="static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/styles.css" />
   <link rel="icon" type="image/png" href="img/favicon.png" />
 
   <script defer>
@@ -42,6 +42,8 @@
     {{> section_schema}}
   {{else if (eq section 'BlogHome') }}
       {{> blog_home_md}}
+  {{else if (eq section 'BlogArticle') }}
+      {{> blog_article_md}}
   {{else if (eq section 'Contact') }}
       {{> contact_home_html_md}}
   {{else if (eq section 'Topics') }}

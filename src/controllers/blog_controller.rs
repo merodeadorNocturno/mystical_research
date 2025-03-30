@@ -5,6 +5,7 @@ use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
     general_utils::{string_to_vec_string, trim_to_words},
+    schema_markup::schema_markup_blog_article,
 };
 use actix_web::{
     web::{get, Data, Path, ServiceConfig},
@@ -53,6 +54,72 @@ async fn blog_home_html(db: &Data<Database>) -> Result<String, RenderError> {
         };
 
     Ok(section_blog_home_template)
+}
+
+async fn blog_article_slug(
+    article_slug: Path<String>,
+    db: &Data<Database>,
+) -> Result<String, RenderError> {
+    let PageConfiguration { template_path, .. } = set_env_urls();
+    let search_term = article_slug.into_inner();
+    info!("Rendering blog article slug {}", search_term);
+
+    let mut handlebars = Handlebars::new();
+    let this_path = std::path::Path::new(&template_path);
+
+    register_templates(this_path, &mut handlebars);
+    let blog_article_hbs = "index/index";
+
+    let article_result = Database::search_slug_id(db, search_term).await;
+
+    let blog_article_template = match read_hbs_template(&blog_article_hbs) {
+        Ok(template) => template,
+        Err(err) => {
+            error!("Failed to read blog article template: {}", err);
+            return Err(RenderError::from(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                format!("Template not found: {}", blog_article_hbs),
+            )));
+        }
+    };
+
+    let this_article = match article_result {
+        Some(article) => article,
+        None => vec![],
+    };
+
+    let mut context_data = json!({});
+
+    if this_article.len() > 0 {
+        let table_of_contents =
+            string_to_vec_string(this_article[0].table_of_contents.clone().unwrap());
+        let keywords = string_to_vec_string(this_article[0].keywords.clone().unwrap());
+
+        context_data = json!({
+            "article": this_article[0],
+            "table_of_contents": table_of_contents,
+            "keywords": keywords,
+            "section": "BlogArticle",
+            "header": {
+                "canonical_url": this_article[0].slug.clone().unwrap(),
+                "site_title": this_article[0].title.clone().unwrap(),
+                "site_description": this_article[0].summary.clone().unwrap(),
+                "logo_url": this_article[0].image_urls.clone().unwrap(),
+            },
+            "schema_markup": schema_markup_blog_article(&this_article[0]),
+        });
+    }
+
+    match handlebars.render_template(&blog_article_template, &context_data) {
+        Ok(rendered) => Ok(rendered),
+        Err(err) => {
+            error!("Failed to render blog article template: {}", err);
+            return Err(RenderError::from(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                format!("Failed to render template: {}", blog_article_hbs),
+            )));
+        }
+    }
 }
 
 async fn htmx_blog(db: &Data<Database>) -> Result<String, RenderError> {
@@ -199,6 +266,27 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
                     )),
             }
         })
+    );
+
+    cfg.route(
+        "/blog/article/{slug}",
+        get().to(
+            |_req: HttpRequest, slug, db: Data<Database>| async move {
+                let blog_article_template = blog_article_slug(slug, &db).await;
+                match blog_article_template {
+                    Ok(article) => HttpResponse::Ok()
+                        .content_type("text/html")
+                        .body(article),
+                    Err(err) => HttpResponse::InternalServerError()
+                        .content_type("text/html")
+                        .append_header(("HX-Trigger", "error_enterprise_table"))
+                        .body(format!(
+                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>",
+                            err.to_string()
+                        )),
+                }
+            }
+        )
     );
 }
 

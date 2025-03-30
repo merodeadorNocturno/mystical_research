@@ -6,6 +6,8 @@
     {{> body}}
   {{else if (eq section 'BlogHome') }}
       {{> blog_home_html}}
+  {{else if (eq section 'BlogArticle') }}
+      {{> blog_article_slug}}
   {{else if (eq section 'Contact') }}
       {{> contact_home_html}}
   {{else if (eq section 'Topics') }}
