@@ -28,7 +28,7 @@
         "headline": "{{this.title}}",
         "description": "{{this.summary}}",
         "url": "https://mysticalresearch.com/blog/article/{{this.slug}}"
-        },
+        } {{#if @last}}{{else}},{{/if}}
         {{/each}}
     ]
 }
