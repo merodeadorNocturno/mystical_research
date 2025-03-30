@@ -36,7 +36,7 @@ struct SearchQuery {
 
 #[get("/blogs/search")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
-async fn search_content(
+async fn blogs_search(
     db: Data<Database>,
     query: Query<SearchQuery>,
 ) -> Result<HttpResponse, actix_web::Error> {
@@ -53,7 +53,7 @@ async fn search_content(
 
 #[get("/blogs/ai/creator")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
-async fn ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
+async fn blogs_ai_creator(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
     let mut ai_response: GenerateContentResponse = GenerateContentResponse::new(vec![]);
     let mut _ai_error: String = String::new();
 
@@ -130,7 +130,7 @@ Use the last paragraph for a comma separated list of keywords.";
 
 #[get("/blogs")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
-async fn all_active_blogs(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
+async fn blogs(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
     let active_blogs = Database::find_all(&db).await;
 
     match active_blogs {
@@ -150,10 +150,7 @@ async fn all_active_blogs(db: Data<Database>) -> Result<HttpResponse, actix_web:
     skip(db),                 // 2. Skip logging the database connection pool
     fields(thing_id = %id)    // 3. Record the 'id' path parameter
 )]
-async fn get_blog_article(
-    db: Data<Database>,
-    id: Path<String>,
-) -> Result<HttpResponse, actix_web::Error> {
+async fn blogs_id(db: Data<Database>, id: Path<String>) -> Result<HttpResponse, actix_web::Error> {
     let blog_article = Database::find_one(&db, id.to_string()).await;
 
     match blog_article {
@@ -167,9 +164,29 @@ async fn get_blog_article(
     }
 }
 
-pub fn blog_api_routes(cfg: &mut ServiceConfig) {
-    cfg.service(search_content);
-    cfg.service(ai_creator);
-    cfg.service(all_active_blogs);
-    cfg.service(get_blog_article);
+#[get("/blogs/article/{slug}")]
+#[tracing::instrument(name = "Get Blog Article By Slug", skip(db), fields(slug = %slug))]
+async fn blogs_article_slug(
+    db: Data<Database>,
+    slug: Path<String>,
+) -> Result<HttpResponse, actix_web::Error> {
+    let blog_article = Database::search_slug_id(&db, slug.to_string()).await;
+
+    match blog_article {
+        Some(blog) => Ok(HttpResponse::Ok().status(StatusCode::OK).json(blog)),
+        None => {
+            error!("Failed to fetch blog article");
+            Ok(HttpResponse::NotFound()
+                .status(StatusCode::NOT_FOUND)
+                .json("Blog article not found"))
+        }
+    }
+}
+
+pub fn blog_api_controller(cfg: &mut ServiceConfig) {
+    cfg.service(blogs);
+    cfg.service(blogs_id);
+    cfg.service(blogs_ai_creator);
+    cfg.service(blogs_article_slug);
+    cfg.service(blogs_search);
 }

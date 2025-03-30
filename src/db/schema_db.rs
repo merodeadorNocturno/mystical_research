@@ -72,8 +72,6 @@ impl Schema {
             }
         }
 
-        println!("Tables: {:?}", &tables);
-
         Ok(Schema { tables })
     }
 

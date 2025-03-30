@@ -12,7 +12,7 @@ pub struct BlogArticleLD {
     author: String,
 }
 
-pub fn schema_markup_blog_article(article: &BlogArticle) -> BlogArticleLD {
+pub fn linked_data_blog_article(article: &BlogArticle) -> BlogArticleLD {
     let article_ld = article.clone();
 
     BlogArticleLD {

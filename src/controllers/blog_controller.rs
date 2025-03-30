@@ -5,7 +5,7 @@ use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
     general_utils::{string_to_vec_string, trim_to_words},
-    schema_markup::schema_markup_blog_article,
+    linked_data::linked_data_blog_article,
 };
 use actix_web::{
     web::{get, Data, Path, ServiceConfig},
@@ -106,7 +106,7 @@ async fn blog_article_slug(
                 "site_description": this_article[0].summary.clone().unwrap(),
                 "logo_url": this_article[0].image_urls.clone().unwrap(),
             },
-            "schema_markup": schema_markup_blog_article(&this_article[0]),
+            "schema_markup": linked_data_blog_article(&this_article[0]),
         });
     }
 
@@ -211,6 +211,46 @@ async fn htmx_blog_article_slug(
 
 pub fn blog_html_controller(cfg: &mut ServiceConfig) {
     cfg.route(
+        "/blog/article/{slug}",
+        get().to(
+            |_req: HttpRequest, slug, db: Data<Database>| async move {
+                let blog_article_template = blog_article_slug(slug, &db).await;
+                match blog_article_template {
+                    Ok(article) => HttpResponse::Ok()
+                        .content_type("text/html")
+                        .body(article),
+                    Err(err) => HttpResponse::InternalServerError()
+                        .content_type("text/html")
+                        .append_header(("HX-Trigger", "error_enterprise_table"))
+                        .body(format!(
+                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>",
+                            err.to_string()
+                        )),
+                }
+            }
+        )
+    );
+
+    cfg.route(
+        "/blog_home.html",
+        get().to(|db: Data<Database>| async move {
+        let blog_home_template = blog_home_html(&db).await;
+        match blog_home_template {
+            Ok(template) => HttpResponse::Ok()
+                .content_type("text/html")
+                .body(template),
+            Err(err) => HttpResponse::InternalServerError()
+                .content_type("text/html")
+                .body(format!(
+                    "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>",
+                    err.to_string()
+                )
+            ),
+        }
+        })
+    );
+
+    cfg.route(
         "/htmx/blog",
         get().to(|db: Data<Database>| async move {
             match htmx_blog(&db).await {
@@ -231,25 +271,6 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
     );
 
     cfg.route(
-      "/blog_home.html",
-      get().to(|db: Data<Database>| async move {
-        let blog_home_template = blog_home_html(&db).await;
-        match blog_home_template {
-            Ok(template) => HttpResponse::Ok()
-                .content_type("text/html")
-                .body(template),
-            Err(err) => HttpResponse::InternalServerError()
-                .content_type("text/html")
-                .body(format!(
-                    "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>",
-                    err.to_string()
-                )
-            ),
-        }
-      })
-    );
-
-    cfg.route(
         "/htmx/blog/article/{slug}",
         get().to(|_req: HttpRequest, slug, db: Data<Database>| async move {
             let blog_article_template = htmx_blog_article_slug(slug, &db).await;
@@ -266,27 +287,6 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
                     )),
             }
         })
-    );
-
-    cfg.route(
-        "/blog/article/{slug}",
-        get().to(
-            |_req: HttpRequest, slug, db: Data<Database>| async move {
-                let blog_article_template = blog_article_slug(slug, &db).await;
-                match blog_article_template {
-                    Ok(article) => HttpResponse::Ok()
-                        .content_type("text/html")
-                        .body(article),
-                    Err(err) => HttpResponse::InternalServerError()
-                        .content_type("text/html")
-                        .append_header(("HX-Trigger", "error_enterprise_table"))
-                        .body(format!(
-                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>",
-                            err.to_string()
-                        )),
-                }
-            }
-        )
     );
 }
 

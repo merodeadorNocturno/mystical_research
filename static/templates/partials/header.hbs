@@ -4,7 +4,7 @@
   <title>{{header.site_name}}</title>
   <meta name="description" content="{{header.site_description}}" />
   <meta name="keywords" content="{{header.keywords}}" />
-
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{{header.site_name}}" />
@@ -27,7 +27,7 @@
   <!-- Replace with your domain -->
 
   <link rel="stylesheet" href="/static/css/styles.css" />
-  <link rel="icon" type="image/png" href="img/favicon.png" />
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
 
   <script defer>
   document.addEventListener('htmx:afterSwap', function(event) {
@@ -41,15 +41,15 @@
   {{# if (eq section 'Home') }}
     {{> section_schema}}
   {{else if (eq section 'BlogHome') }}
-      {{> blog_home_md}}
+      {{> blog_home_ld}}
   {{else if (eq section 'BlogArticle') }}
-      {{> blog_article_md}}
+      {{> blog_article_ld}}
   {{else if (eq section 'Contact') }}
-      {{> contact_home_html_md}}
+      {{> contact_home_html_ld}}
   {{else if (eq section 'Topics') }}
-      {{> topics_index_html_md}}
+      {{> topics_index_html_ld}}
   {{else if (eq section 'About') }}
-      {{> about_index_md}}
+      {{> about_index_ld}}
   {{/ if }}
   </script>
 </head>

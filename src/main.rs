@@ -2,7 +2,7 @@ use crate::utils::env_utils::*;
 use actix_cors::Cors;
 use actix_web::{middleware, web::Data, App, HttpServer};
 use controllers::{
-    about_controller::about_controller, blog_api_controller::blog_api_routes,
+    about_controller::about_controller, blog_api_controller::blog_api_controller,
     blog_controller::blog_html_controller, contact_controller::contact_controller,
     index_controller::index_controller, resources_controller::resources_controller,
     static_controllers::static_controllers, topics_controller::topics_controller,
@@ -54,7 +54,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .wrap(middleware::NormalizePath::trim())
             .app_data(db_data.clone())
-            .configure(blog_api_routes)
+            .configure(blog_api_controller)
             .configure(index_controller)
             .configure(about_controller)
             .configure(resources_controller)
