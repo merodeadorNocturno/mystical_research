@@ -22,7 +22,10 @@ struct TitleError {
     pub error: String,
 }
 
-async fn blog_home_html(db: &Data<Database>) -> Result<String, RenderError> {
+async fn blog_home_html(
+    number_of_records: Option<Path<usize>>,
+    db: &Data<Database>,
+) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
@@ -31,7 +34,10 @@ async fn blog_home_html(db: &Data<Database>) -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs = "index/index";
 
-    let articles_opt = Database::find_all(db).await;
+    let articles_opt = match number_of_records {
+        Some(num) => Database::find_all(db, Some(num)).await,
+        None => Database::find_all(db, None).await,
+    };
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
     let blog_home_template = match read_hbs_template(&blog_home_hbs) {

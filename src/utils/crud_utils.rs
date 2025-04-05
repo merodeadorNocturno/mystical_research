@@ -116,8 +116,15 @@ where
 pub async fn util_find_active_records<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,
     table_name: &str,
+    number_of_records: Option<usize>,
 ) -> Option<Vec<T>> {
-    let surreal_query = format!("SELECT * FROM {} WHERE deleted = false", table_name);
+    let surreal_query = match number_of_records {
+        Some(number) => format!(
+            "SELECT * FROM {} WHERE deleted = false LIMIT {}",
+            table_name, number
+        ),
+        None => format!("SELECT * FROM {} WHERE deleted = false", table_name),
+    };
     let query_t_result = db.client.query(surreal_query).await;
 
     match query_t_result {
