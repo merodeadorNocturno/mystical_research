@@ -8,7 +8,7 @@ use crate::utils::{
     linked_data::linked_data_blog_article,
 };
 use actix_web::{
-    web::{get, Data, Path, ServiceConfig},
+    web::{get, Data, Path, Query, ServiceConfig},
     HttpRequest, HttpResponse,
 };
 use handlebars::{Handlebars, RenderError};
@@ -23,10 +23,11 @@ struct TitleError {
 }
 
 async fn blog_home_html(
-    number_of_records: Option<Path<usize>>,
+    query: Query<BlogHomeQuery>,
     db: &Data<Database>,
 ) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
+    let r: Option<usize> = query.r;
 
     let mut handlebars = Handlebars::new();
     let this_path = std::path::Path::new(&template_path);
@@ -34,7 +35,7 @@ async fn blog_home_html(
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs = "index/index";
 
-    let articles_opt = match number_of_records {
+    let articles_opt = match r {
         Some(num) => Database::find_all(db, Some(num)).await,
         None => Database::find_all(db, None).await,
     };
@@ -144,7 +145,7 @@ async fn htmx_blog(db: &Data<Database>) -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs_path = "blog/blog_home";
 
-    let articles_opt = Database::find_all(db).await;
+    let articles_opt = Database::find_all(db, None).await;
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
     let template_content = match read_hbs_template(&blog_home_hbs_path) {
@@ -228,58 +229,27 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
         get().to(
             |_req: HttpRequest, slug, db: Data<Database>| async move {
                 let blog_article_template = blog_article_slug(slug, &db).await;
-                match blog_article_template {
-                    Ok(article) => HttpResponse::Ok()
-                        .content_type("text/html")
-                        .body(article),
-                    Err(err) => HttpResponse::InternalServerError()
-                        .content_type("text/html")
-                        .append_header(("HX-Trigger", "error_enterprise_table"))
-                        .body(format!(
-                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>",
-                            err.to_string()
-                        )),
-                }
-            }
-        )
+                respond_to_html_result(
+                    blog_article_template,
+                    "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>")
+                })
     );
 
     cfg.route(
         "/blog_home.html",
-        get().to(|db: Data<Database>| async move {
-        let blog_home_template = blog_home_html(&db).await;
-        match blog_home_template {
-            Ok(template) => HttpResponse::Ok()
-                .content_type("text/html")
-                .body(template),
-            Err(err) => HttpResponse::InternalServerError()
-                .content_type("text/html")
-                .body(format!(
-                    "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>",
-                    err.to_string()
-                )
-            ),
-        }
-        })
+        get().to(|query: Query<BlogHomeQuery>, db: Data<Database>| async move {
+            let blog_home_template = blog_home_html(query, &db).await;
+            respond_to_html_result(
+                blog_home_template,
+                "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>")
+            })
     );
 
     cfg.route(
         "/htmx/blog",
         get().to(|db: Data<Database>| async move {
-            match htmx_blog(&db).await {
-                Ok(template) => HttpResponse::Ok()
-                    .content_type("text/html")
-                    .body(template),
-                Err(err) => {
-                    error!("Error rendering blog index with DB: {}", err);
-                    HttpResponse::InternalServerError()
-                    .content_type("text/html")
-                    .body(format!(
-                        "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>",
-                        err.to_string()
-                    ))
-                }
-            }
+            let htmx_result = htmx_blog(&db).await;
+            respond_to_html_result(htmx_result, "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>")
         }),
     );
 
@@ -287,18 +257,10 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
         "/htmx/blog/article/{slug}",
         get().to(|_req: HttpRequest, slug, db: Data<Database>| async move {
             let blog_article_template = htmx_blog_article_slug(slug, &db).await;
-            match blog_article_template {
-                Ok(article) => HttpResponse::Ok()
-                    .content_type("text/html")
-                    .body(article),
-                Err(err) => HttpResponse::InternalServerError()
-                    .content_type("text/html")
-                    .append_header(("HX-Trigger", "error_enterprise_table"))
-                    .body(format!(
-                        "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>",
-                        err.to_string()
-                    )),
-            }
+            respond_to_html_result(
+                blog_article_template,
+                "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>"
+            )
         })
     );
 }
@@ -341,6 +303,35 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
         None => {
             error!("Failed to fetch blog articles from DB");
             Vec::new()
+        }
+    }
+}
+
+// Define a struct to capture the query parameters for blog_home
+#[derive(Deserialize, Debug)] // <-- Must derive Deserialize
+struct BlogHomeQuery {
+    // Field name matches the query parameter name "number_of_records"
+    // Option<usize> makes it optional. Serde handles parsing.
+    r: Option<usize>,
+}
+
+fn respond_to_html_result(
+    result: Result<String, RenderError>,
+    error_message_prefix: &str,
+) -> HttpResponse {
+    match result {
+        Ok(template) => HttpResponse::Ok()
+            .content_type("text/html; charset=utf-8")
+            .body(template),
+        Err(err) => {
+            error!("{}: {}", error_message_prefix, err);
+            HttpResponse::InternalServerError()
+                .content_type("text/html; charset=utf-8")
+                .body(format!(
+                    "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>{}: {}</span>",
+                    error_message_prefix,
+                    err
+                ))
         }
     }
 }

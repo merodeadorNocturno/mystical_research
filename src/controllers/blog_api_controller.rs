@@ -131,7 +131,7 @@ Use the last paragraph for a comma separated list of keywords.";
 #[get("/blogs")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
 async fn blogs(db: Data<Database>) -> Result<HttpResponse, actix_web::Error> {
-    let active_blogs = Database::find_all(&db).await;
+    let active_blogs = Database::find_all(&db, None).await;
 
     match active_blogs {
         Some(blogs) => Ok(HttpResponse::Ok().status(StatusCode::OK).json(blogs)),
