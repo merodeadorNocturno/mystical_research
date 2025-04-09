@@ -15,7 +15,6 @@ use handlebars::{Handlebars, RenderError};
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-// use tracing::warn;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct TitleError {
@@ -27,7 +26,7 @@ async fn blog_home_html(
     db: &Data<Database>,
 ) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
-    let r: Option<usize> = query.r;
+    let number_of_results: Option<usize> = query.r;
 
     let mut handlebars = Handlebars::new();
     let this_path = std::path::Path::new(&template_path);
@@ -35,7 +34,7 @@ async fn blog_home_html(
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs = "index/index";
 
-    let articles_opt = match r {
+    let articles_opt = match number_of_results {
         Some(num) => Database::find_all(db, Some(num)).await,
         None => Database::find_all(db, None).await,
     };
@@ -136,7 +135,10 @@ async fn blog_article_slug(
     }
 }
 
-async fn htmx_blog(db: &Data<Database>) -> Result<String, RenderError> {
+async fn htmx_blog(
+    query: Query<BlogHomeQuery>,
+    db: &Data<Database>,
+) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -145,7 +147,11 @@ async fn htmx_blog(db: &Data<Database>) -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs_path = "blog/blog_home";
 
-    let articles_opt = Database::find_all(db, None).await;
+    let articles_opt = match query.r {
+        Some(number) => Database::find_all(db, Some(number)).await,
+        None => Database::find_all(db, None).await,
+    };
+
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
     let template_content = match read_hbs_template(&blog_home_hbs_path) {
@@ -226,31 +232,33 @@ async fn htmx_blog_article_slug(
 pub fn blog_html_controller(cfg: &mut ServiceConfig) {
     cfg.route(
         "/blog/article/{slug}",
-        get().to(
-            |_req: HttpRequest, slug, db: Data<Database>| async move {
-                let blog_article_template = blog_article_slug(slug, &db).await;
-                respond_to_html_result(
-                    blog_article_template,
-                    "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>")
-                })
+        get().to(|_req: HttpRequest, slug, db: Data<Database>| async move {
+            let blog_article_template = blog_article_slug(slug, &db).await;
+            respond_to_html_result(
+                blog_article_template,
+                "There was an error when trying to retrieve the blog article",
+            )
+        }),
     );
 
     cfg.route(
         "/blog_home.html",
-        get().to(|query: Query<BlogHomeQuery>, db: Data<Database>| async move {
-            let blog_home_template = blog_home_html(query, &db).await;
-            respond_to_html_result(
-                blog_home_template,
-                "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>")
-            })
+        get().to(
+            |query: Query<BlogHomeQuery>, db: Data<Database>| async move {
+                let blog_home_template = blog_home_html(query, &db).await;
+                respond_to_html_result(blog_home_template, "Error retrieving blog home page")
+            },
+        ),
     );
 
     cfg.route(
         "/htmx/blog",
-        get().to(|db: Data<Database>| async move {
-            let htmx_result = htmx_blog(&db).await;
-            respond_to_html_result(htmx_result, "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog home page: {}</span>")
-        }),
+        get().to(
+            |query: Query<BlogHomeQuery>, db: Data<Database>| async move {
+                let htmx_result = htmx_blog(query, &db).await;
+                respond_to_html_result(htmx_result, "Failed to retrieve htmx blog")
+            },
+        ),
     );
 
     cfg.route(
@@ -259,9 +267,9 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
             let blog_article_template = htmx_blog_article_slug(slug, &db).await;
             respond_to_html_result(
                 blog_article_template,
-                "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load blog article: {}</span>"
+                "Could not retrieve htmx blog article",
             )
-        })
+        }),
     );
 }
 
@@ -273,16 +281,13 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
                 .into_iter()
                 .filter_map(|article| {
                     match (
-                        article.id,
                         article.title,
                         article.summary,
                         article.image_urls,
                         article.slug,
                     ) {
-                        (Some(id), Some(title), Some(summary), Some(image_url), Some(slug)) => {
-                            let id_str = id.id.to_string();
+                        (Some(title), Some(summary), Some(image_url), Some(slug)) => {
                             Some(BlogPreview {
-                                id: id_str,
                                 image_url,
                                 slug,
                                 summary: format!(
@@ -307,11 +312,8 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
     }
 }
 
-// Define a struct to capture the query parameters for blog_home
 #[derive(Deserialize, Debug)] // <-- Must derive Deserialize
 struct BlogHomeQuery {
-    // Field name matches the query parameter name "number_of_records"
-    // Option<usize> makes it optional. Serde handles parsing.
     r: Option<usize>,
 }
 

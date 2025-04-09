@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::general_model::PageType;
+use super::{blog_model::BlogPreview, general_model::PageType};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Index {
@@ -72,7 +72,7 @@ pub struct IndexFeaturedSection {
 pub struct IndexPage {
     pub body: IndexBody,
     pub linked_data: IndexSchemaMarkup,
-    pub featured: Vec<IndexFeaturedSection>,
+    pub featured: Vec<BlogPreview>,
     pub header: HeaderData,
     pub section: PageType,
 }

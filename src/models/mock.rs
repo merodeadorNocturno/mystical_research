@@ -1,10 +1,10 @@
 use crate::models::{
     about_model::{AboutBody, AboutHomePage, AboutHomeSchemaMarkup, AboutItem, AboutStructure},
-    ai_model::BlogStructure,
-    blog_model::*,
+    // ai_model::BlogStructure,
+    // blog_model::*,
     contact_models::{ContactHomePage, ContactHomeSchemaMarkup},
     general_model::PageType,
-    index_model::{HeaderData, Index, IndexBody, IndexFeaturedSection, IndexSchemaMarkup, NavLink},
+    index_model::{HeaderData, IndexBody, IndexSchemaMarkup, NavLink},
     topics_model::{TopicCategory, TopicHomePage, TopicHomeSchemaMarkup},
 };
 
@@ -21,32 +21,32 @@ pub fn mock_index_linked_data() -> IndexSchemaMarkup {
 
 pub fn mock_index_body() -> IndexBody {
     IndexBody {
-        title: "Welcome to My Awesome Site!".to_string(),
-        description: "Explore the amazing features and content we have to offer.".to_string(),
-        explore_url: "/explore".to_string(),
-        learn_more_url: "/learn-more".to_string(),
+        title: "Welcome to Mystical Research!".to_string(),
+        description: "Explore where the mundane and the mystical intertwine".to_string(),
+        explore_url: "/blog_home.html".to_string(),
+        learn_more_url: "/about.html".to_string(),
         explore_label: "Discover More".to_string(),
     }
 }
 
-pub fn mock_index_featured_section(image_url: String) -> IndexFeaturedSection {
-    IndexFeaturedSection {
-        section_title: "Featured Section Title".to_string(),
-        section_description: "This is a brief description of the featured section.".to_string(),
-        section_content: "This is the main content of the featured section. You can put more detailed information here.".to_string(),
-        section_image_url: Some(format!("/static/img/{image_url}")),
-        section_alt_text: Some("Image for the featured section".to_string()),
-        section_link_url: Some("/featured-link".to_string()),
-        section_id: "featured-1".to_string(),
-    }
-}
+// pub fn mock_index_featured_section(image_url: String) -> IndexFeaturedSection {
+//     IndexFeaturedSection {
+//         section_title: "Featured Section Title".to_string(),
+//         section_description: "This is a brief description of the featured section.".to_string(),
+//         section_content: "This is the main content of the featured section. You can put more detailed information here.".to_string(),
+//         section_image_url: Some(format!("/static/img/{image_url}")),
+//         section_alt_text: Some("Image for the featured section".to_string()),
+//         section_link_url: Some("/featured-link".to_string()),
+//         section_id: "featured-1".to_string(),
+//     }
+// }
 
-pub fn mock_index() -> Index {
-    Index {
-        url: "/".to_string(),
-        linked_data: mock_index_linked_data(),
-    }
-}
+// pub fn mock_index() -> Index {
+//     Index {
+//         url: "/".to_string(),
+//         linked_data: mock_index_linked_data(),
+//     }
+// }
 
 pub fn mock_header_data() -> HeaderData {
     HeaderData {
@@ -83,84 +83,84 @@ pub fn mock_header_data() -> HeaderData {
     }
 }
 
-pub fn mock_blog_home_page_object() -> BlogHomePage {
-    BlogHomePage {
-        body: BlogBody {
-            structure: BlogStructure {
-                 title: "Blog Title".to_string(),
-                 table_of_contents: vec!["Introduction".to_string(), "The Problem of Evil".to_string(), "Divine Command Theory".to_string(), "Justification of Violence".to_string(), "Religious Discrimination".to_string(), "Abstract Concepts".to_string()],
-                 summary: "Blog Summary".to_string(),
-                 content: "This article provides a critical overview of common ethical challenges that arise from theological doctrines and religious practices. We'll examine issues like the problem of evil, divine command theory, the justification of violence in the name of religion, and the potential for religious beliefs to be used to justify discrimination and oppression. Furthermore, we'll consider the inherent contradictions that can emerge when abstract theological concepts are applied to the complexities of everyday life, forcing a re-evaluation of traditional interpretations and demanding a more nuanced approach to ethical decision-making within religious frameworks.".to_string(),
-                 keywords: vec!["Ethics".to_string(), "Theology".to_string(), "Religion".to_string()],
-            }, // Using the mock BlogStructure
-            author: "Mock Author Name".to_string(),
-            image_urls: Some(vec!["https://example.com/images/body_image.png".to_string()]),
-        },
-        linked_data: BlogHomeSchemaMarkup {
-            blog_title: "Mock Blog Home Title".to_string(),
-            blog_description: "Mock Blog Home Description".to_string(),
-            blog_name: "Mock Blog Name".to_string(),
-            blog_url: "https://example.com/blog".to_string(),
-            blog_logo_url: "https://example.com/images/blog_logo.png".to_string(),
-            blog_search_action: "/search?q={search_term_string}".to_string(),
-        },
-        featured: vec![
-            BlogFeaturedSection {
-                blog_id: "mock-blog-id-1".to_string(),
-                blog_title: "Mock Featured Blog Title 1".to_string(),
-                blog_description: "Mock Featured Blog Description 1".to_string(),
-                blog_image_urls: Some(vec![
-                    BlogImage {
-                        blog_image_url: "https://example.com/images/featured1-image1.png"
-                            .to_string(),
-                        blog_image_width: Some("800".to_string()),
-                        blog_image_height: "600".to_string(),
-                        blog_image_alt: Some("Mock Featured Blog Image 1-1".to_string()),
-                    },
-                    BlogImage {
-                        blog_image_url: "https://example.com/images/featured1-image2.png"
-                            .to_string(),
-                        blog_image_width: Some("400".to_string()),
-                        blog_image_height: "300".to_string(),
-                        blog_image_alt: Some("Mock Featured Blog Image 1-2".to_string()),
-                    },
-                ]),
-            },
-            BlogFeaturedSection {
-                blog_id: "mock-blog-id-2".to_string(),
-                blog_title: "Mock Featured Blog Title 2".to_string(),
-                blog_description: "Mock Featured Blog Description 2".to_string(),
-                blog_image_urls: Some(vec![BlogImage {
-                    blog_image_url: "https://example.com/images/featured2-image.png".to_string(),
-                    blog_image_width: Some("600".to_string()),
-                    blog_image_height: "450".to_string(),
-                    blog_image_alt: Some("Mock Featured Blog Image 2-1".to_string()),
-                }]),
-            },
-        ],
-        header: HeaderData {
-            site_name: "Mock Site".to_string(),
-            site_description: "Mock Site Description".to_string(),
-            navigation_links: vec![
-                NavLink {
-                    label: "Home".to_string(),
-                    url: "/".to_string(),
-                },
-                NavLink {
-                    label: "Blog".to_string(),
-                    url: "/blog".to_string(),
-                },
-                NavLink {
-                    label: "About".to_string(),
-                    url: "/about".to_string(),
-                },
-            ],
-            logo_url: Some("https://example.com/images/logo.png".to_string()),
-            canonical_url: Some("https://example.com/blog".to_string()),
-        },
-        section: PageType::BlogHome,
-    }
-}
+// pub fn mock_blog_home_page_object() -> BlogHomePage {
+//     BlogHomePage {
+//         body: BlogBody {
+//             structure: BlogStructure {
+//                  title: "Blog Title".to_string(),
+//                  table_of_contents: vec!["Introduction".to_string(), "The Problem of Evil".to_string(), "Divine Command Theory".to_string(), "Justification of Violence".to_string(), "Religious Discrimination".to_string(), "Abstract Concepts".to_string()],
+//                  summary: "Blog Summary".to_string(),
+//                  content: "This article provides a critical overview of common ethical challenges that arise from theological doctrines and religious practices. We'll examine issues like the problem of evil, divine command theory, the justification of violence in the name of religion, and the potential for religious beliefs to be used to justify discrimination and oppression. Furthermore, we'll consider the inherent contradictions that can emerge when abstract theological concepts are applied to the complexities of everyday life, forcing a re-evaluation of traditional interpretations and demanding a more nuanced approach to ethical decision-making within religious frameworks.".to_string(),
+//                  keywords: vec!["Ethics".to_string(), "Theology".to_string(), "Religion".to_string()],
+//             }, // Using the mock BlogStructure
+//             author: "Mock Author Name".to_string(),
+//             image_urls: Some(vec!["https://example.com/images/body_image.png".to_string()]),
+//         },
+//         linked_data: BlogHomeSchemaMarkup {
+//             blog_title: "Mock Blog Home Title".to_string(),
+//             blog_description: "Mock Blog Home Description".to_string(),
+//             blog_name: "Mock Blog Name".to_string(),
+//             blog_url: "https://example.com/blog".to_string(),
+//             blog_logo_url: "https://example.com/images/blog_logo.png".to_string(),
+//             blog_search_action: "/search?q={search_term_string}".to_string(),
+//         },
+//         featured: vec![
+//             BlogFeaturedSection {
+//                 blog_id: "mock-blog-id-1".to_string(),
+//                 blog_title: "Mock Featured Blog Title 1".to_string(),
+//                 blog_description: "Mock Featured Blog Description 1".to_string(),
+//                 blog_image_urls: Some(vec![
+//                     BlogImage {
+//                         blog_image_url: "https://example.com/images/featured1-image1.png"
+//                             .to_string(),
+//                         blog_image_width: Some("800".to_string()),
+//                         blog_image_height: "600".to_string(),
+//                         blog_image_alt: Some("Mock Featured Blog Image 1-1".to_string()),
+//                     },
+//                     BlogImage {
+//                         blog_image_url: "https://example.com/images/featured1-image2.png"
+//                             .to_string(),
+//                         blog_image_width: Some("400".to_string()),
+//                         blog_image_height: "300".to_string(),
+//                         blog_image_alt: Some("Mock Featured Blog Image 1-2".to_string()),
+//                     },
+//                 ]),
+//             },
+//             BlogFeaturedSection {
+//                 blog_id: "mock-blog-id-2".to_string(),
+//                 blog_title: "Mock Featured Blog Title 2".to_string(),
+//                 blog_description: "Mock Featured Blog Description 2".to_string(),
+//                 blog_image_urls: Some(vec![BlogImage {
+//                     blog_image_url: "https://example.com/images/featured2-image.png".to_string(),
+//                     blog_image_width: Some("600".to_string()),
+//                     blog_image_height: "450".to_string(),
+//                     blog_image_alt: Some("Mock Featured Blog Image 2-1".to_string()),
+//                 }]),
+//             },
+//         ],
+//         header: HeaderData {
+//             site_name: "Mock Site".to_string(),
+//             site_description: "Mock Site Description".to_string(),
+//             navigation_links: vec![
+//                 NavLink {
+//                     label: "Home".to_string(),
+//                     url: "/".to_string(),
+//                 },
+//                 NavLink {
+//                     label: "Blog".to_string(),
+//                     url: "/blog".to_string(),
+//                 },
+//                 NavLink {
+//                     label: "About".to_string(),
+//                     url: "/about".to_string(),
+//                 },
+//             ],
+//             logo_url: Some("https://example.com/images/logo.png".to_string()),
+//             canonical_url: Some("https://example.com/blog".to_string()),
+//         },
+//         section: PageType::BlogHome,
+//     }
+// }
 
 pub fn mock_contact_home_page_object() -> ContactHomePage {
     ContactHomePage {

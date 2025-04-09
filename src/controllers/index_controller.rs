@@ -1,16 +1,18 @@
+use crate::db::blog_db::BlogDB;
+use crate::db::config_db::Database;
 use crate::models::{
+    blog_model::BlogPreview,
     general_model::PageType,
     index_model::{IndexPage, TitleError},
-    mock::{
-        mock_header_data, mock_index_body, mock_index_featured_section, mock_index_linked_data,
-    },
+    mock::{mock_header_data, mock_index_body, mock_index_linked_data},
 };
 use crate::utils::{
     env_utils::*,
     fs_utils::{read_hbs_template, register_templates},
+    general_utils::trim_to_words,
 };
 use actix_web::{
-    web::{get, ServiceConfig},
+    web::{get, Data, ServiceConfig},
     HttpResponse,
 };
 use handlebars::{Handlebars, RenderError};
@@ -18,7 +20,7 @@ use log::error;
 use serde_json::json;
 use std::path::Path;
 
-async fn index_html() -> Result<String, RenderError> {
+async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -38,14 +40,39 @@ async fn index_html() -> Result<String, RenderError> {
         }
     };
 
+    // IndexBody {
+    //     title: "Welcome to My Awesome Site!".to_string(),
+    //     description: "Explore the amazing features and content we have to offer.".to_string(),
+    //     explore_url: "/explore".to_string(),
+    //     learn_more_url: "/learn-more".to_string(),
+    //     explore_label: "Discover More".to_string(),
+    // }
+
     let linked_data = mock_index_linked_data();
     let body = mock_index_body();
     let header = mock_header_data();
-    let mut featured = Vec::new();
+    // let mut featured = Vec::new();
+    let number_of_records: usize = 3;
 
-    featured.push(mock_index_featured_section("article1.png".to_string()));
-    featured.push(mock_index_featured_section("article2.png".to_string()));
-    featured.push(mock_index_featured_section("article3.png".to_string()));
+    let result = Database::find_random_articles(db, Some(number_of_records)).await;
+
+    let featured_results = match result {
+        Some(articles) => articles,
+        None => Vec::new(),
+    };
+
+    let mut featured: Vec<BlogPreview> = Vec::new();
+    for this_feature in featured_results {
+        featured.push(BlogPreview {
+            title: this_feature.title.unwrap(),
+            summary: format!(
+                "{}...",
+                String::from(trim_to_words(&this_feature.summary.unwrap(), 16))
+            ),
+            image_url: this_feature.image_urls.unwrap(),
+            slug: this_feature.slug.unwrap(),
+        })
+    }
 
     let section_template = handlebars.render_template(
         &section_template,
@@ -63,8 +90,8 @@ async fn index_html() -> Result<String, RenderError> {
 pub fn index_controller(cfg: &mut ServiceConfig) {
     cfg.route(
       "/",
-      get().to(|| async move {
-        let mr_help_template = index_html().await;
+      get().to(|db: Data<Database>| async move {
+        let mr_help_template = index_html(&db).await;
         match mr_help_template {
             Ok(template) => HttpResponse::Ok()
               .content_type("text/html")

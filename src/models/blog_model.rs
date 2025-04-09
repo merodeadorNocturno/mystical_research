@@ -187,7 +187,6 @@ impl BlogArticleBuilder {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlogPreview {
-    pub id: String,
     pub title: String,
     pub summary: String,
     pub image_url: String,
@@ -198,7 +197,7 @@ pub struct BlogPreview {
 pub struct BlogArticleBody {
     pub structure: BlogStructure,
     pub author: String,
-    pub image_urls: Option<Vec<String>>,
+    pub image_urls: Option<String>,
     pub content_sections: Vec<BlogSection>, // Added content sections to map to template structure
 }
 

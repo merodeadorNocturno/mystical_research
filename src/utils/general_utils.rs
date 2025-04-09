@@ -21,16 +21,16 @@ pub fn create_or_conditional(search_term: &str, fields: Vec<String>) -> String {
     or_conditional
 }
 
-pub fn trim_to_char_slice(full_string: &str, max_chars: usize) -> &str {
-    match full_string.char_indices().nth(max_chars) {
-        // If the character exists, `index` is its starting byte index.
-        // Slice up to that index.
-        Some((index, _)) => &full_string[..index],
-        // If the character doesn't exist (string is shorter than max_chars),
-        // return the whole string slice.
-        None => full_string,
-    }
-}
+// pub fn trim_to_char_slice(full_string: &str, max_chars: usize) -> &str {
+//     match full_string.char_indices().nth(max_chars) {
+//         // If the character exists, `index` is its starting byte index.
+//         // Slice up to that index.
+//         Some((index, _)) => &full_string[..index],
+//         // If the character doesn't exist (string is shorter than max_chars),
+//         // return the whole string slice.
+//         None => full_string,
+//     }
+// }
 
 pub fn trim_to_words(full_string: &str, num_words: usize) -> String {
     // 1. Split the string into an iterator of subslices separated by whitespace.

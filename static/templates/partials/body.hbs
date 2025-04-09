@@ -8,8 +8,20 @@
         <h1>{{body.title}}</h1>
         <p>{{body.description}}</p>
         <div class="cta-buttons" style="margin-top: 10px">
-          <a href="#explore" class="btn">Start Journey</a>
-          <a href="#learn" class="btn btn-outline">Learn More</a>
+          <a
+              href="blog_home.html"
+              hx-get="/htmx/blog"
+              hx-target=".main_container"
+              hx-push-url="/blog_home.html"
+              class="btn"
+          >Start Journey</a>
+          <a
+              href="about.html"
+              hx-get="/htmx/about"
+              hx-target=".main_container"
+              hx-push-url="/about.html"
+              class="btn btn-outline"
+          >Learn More</a>
         </div>
       </div>
     </header>
@@ -26,13 +38,21 @@
     <main class="container">
       <section class="featured-grid">
         {{#each featured}}
-          <article class="card" hx-get="/blog/article" hx-target=".main_container">
+          <article
+              class="card"
+              hx-get="/htmx/blog/article/{{this.slug}}"
+              hx-target=".main_container"
+              style="cursor: pointer;"
+          >
             <div
               class="card-image"
-              style="background-image: url(&quot;{{section_image_url}}&quot;)"
+              style="background-image: url(&quot;/static/img/{{image_url}}&quot;)"
             ></div>
-            <h3>{{section_title}}</h3>
-            <p>{{section_description}}</p>
+            <div style="margin: 0.5em;">
+              <h3>{{title}}</h3>
+              <p>{{summary}}</p>
+            </div>
+
           </article>
         {{/each}}
       </section>
