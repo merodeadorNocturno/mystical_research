@@ -1,6 +1,9 @@
 use crate::db::blog_db::BlogDB;
 use crate::db::config_db::Database;
-use crate::models::blog_model::{BlogArticle, BlogPreview};
+use crate::models::{
+    blog_model::{BlogArticle, BlogPreview},
+    general_model::SearchQuery,
+};
 use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
@@ -229,6 +232,47 @@ async fn htmx_blog_article_slug(
     }
 }
 
+async fn htmx_blog_search(
+    query: Query<SearchQuery>,
+    db: &Data<Database>,
+) -> Result<String, RenderError> {
+    let PageConfiguration { template_path, .. } = set_env_urls();
+
+    let mut handlebars = Handlebars::new();
+    let this_path = std::path::Path::new(&template_path);
+
+    register_templates(this_path, &mut handlebars);
+    let blog_home_hbs = "blog/blog_home_search";
+
+    let search_result: Option<Vec<BlogArticle>> = match &query.q {
+        Some(term) => Database::search_content(&db, String::from(term)).await,
+        None => None,
+    };
+
+    let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(search_result);
+
+    let template_content = match read_hbs_template(&blog_home_hbs) {
+        Ok(contents) => contents,
+        Err(err) => {
+            error!("Failed to read blog home template: {}", err);
+            return Err(RenderError::from(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                format!("Template not found: {}", blog_home_hbs),
+            )));
+        }
+    };
+
+    let context_data = json!({"posts": blog_previews,});
+
+    match handlebars.render_template(&template_content, &context_data) {
+        Ok(rendered_html) => Ok(rendered_html),
+        Err(e) => {
+            error!("Failed to render blog home template: {}", e);
+            Err(e) // Propagate the render error
+        }
+    }
+}
+
 pub fn blog_html_controller(cfg: &mut ServiceConfig) {
     cfg.route(
         "/blog/article/{slug}",
@@ -268,6 +312,17 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
             respond_to_html_result(
                 blog_article_template,
                 "Could not retrieve htmx blog article",
+            )
+        }),
+    );
+
+    cfg.route(
+        "/htmx/blog/search",
+        get().to(|query: Query<SearchQuery>, db: Data<Database>| async move {
+            let htmx_result = htmx_blog_search(query, &db).await;
+            respond_to_html_result(
+                htmx_result,
+                "An error occurred when consulting the database",
             )
         }),
     );

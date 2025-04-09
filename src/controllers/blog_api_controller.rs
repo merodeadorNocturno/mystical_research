@@ -3,7 +3,7 @@ use crate::db::config_db::Database;
 use crate::models::{
     ai_model::{AiResponse, BlogStructure, GenerateContentResponse},
     blog_model::BlogArticle,
-    general_model::PageType,
+    general_model::{PageType, SearchQuery},
 };
 use crate::utils::{
     ai_utils::{create_ai_request, generate_content},
@@ -25,14 +25,8 @@ use actix_web::{
     HttpResponse,
 };
 use log::error;
-use serde::Deserialize;
 // use serde_json::to_string;
 // use validator::Validate;
-
-#[derive(Debug, Deserialize)]
-struct SearchQuery {
-    q: String, // The search query will be in a parameter named 'q'
-}
 
 #[get("/blogs/search")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
@@ -41,8 +35,12 @@ async fn blogs_search(
     query: Query<SearchQuery>,
 ) -> Result<HttpResponse, actix_web::Error> {
     // Use actix_web::Error for clarity
-    let search_term = String::from(&query.q);
-    let blog_articles = Database::search_content(&db, search_term).await;
+    let blog_articles = match &query.q {
+        Some(term) => Database::search_content(&db, term.to_string()).await,
+        None => None,
+    };
+
+    // let blog_articles = Database::search_content(&db, search_term).await;
     match blog_articles {
         Some(articles_found) => Ok(HttpResponse::Ok()
             .status(StatusCode::OK)

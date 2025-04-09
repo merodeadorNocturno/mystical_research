@@ -23,3 +23,8 @@ pub struct Deleted {
 pub struct UpdatedAt {
     pub updated_at: DateTime<Local>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct SearchQuery {
+    pub q: Option<String>, // The search query will be in a parameter named 'q'
+}
