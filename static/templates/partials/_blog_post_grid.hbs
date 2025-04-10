@@ -1,0 +1,38 @@
+<!-- mystical_research/static/templates/blog/_blog_post_grid.hbs -->
+
+{{#if search_term}}
+    <h2>Search Results for "{{search_term}}"</h2>
+{{else}}
+    <h2>Latest Blog Posts</h2>
+{{/if}}
+
+{{#if posts}}
+    <div class="blog-grid">
+        {{#each posts}}
+            <a
+                href="/blog/article/{{this.slug}}"
+                class="blog-post blog-post-link"
+                title="Read more about {{this.title}}"
+            >
+                <img
+                    src="/static/img/{{this.image_url}}"
+                    alt="{{this.title}}"
+                    loading="lazy"
+                    title="{{this.title}}"
+                    onerror="this.onerror=null; this.src='/static/img/placeholder.png';"
+                    class="blog-post-image"
+                />
+                <div class="blog-post-content">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.summary}}</p>
+                </div>
+            </a>
+        {{/each}}
+    </div>
+{{else}}
+    {{#if search_term}}
+        <p>No results found for "{{search_term}}".</p>
+    {{else}}
+        <p>No blog posts found.</p>
+    {{/if}}
+{{/if}}

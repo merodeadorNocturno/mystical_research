@@ -27,7 +27,7 @@ async fn htmx_resources() -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let resources_hbs = "resources/resources";
 
-    let section_template = match read_hbs_template(&resources_hbs) {
+    let section_template = match read_hbs_template(resources_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -55,7 +55,7 @@ pub fn resources_controller(cfg: &mut ServiceConfig) {
                     .content_type("text/html")
                     .body(format!(
                         "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load resources page: {}</span>",
-                        err.to_string()
+                        err
                     )),
             }
         }),

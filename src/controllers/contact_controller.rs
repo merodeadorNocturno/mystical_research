@@ -33,7 +33,7 @@ async fn htmx_contact() -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let contact_hbs = "contact/contact";
 
-    let section_template = match read_hbs_template(&contact_hbs) {
+    let section_template = match read_hbs_template(contact_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -57,7 +57,7 @@ async fn contact_html() -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let contact_hbs = "index/index";
 
-    let contact_home_template = match read_hbs_template(&contact_hbs) {
+    let contact_home_template = match read_hbs_template(contact_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -97,7 +97,7 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
                     .content_type("text/html")
                     .body(format!(
                         "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load contact page: {}</span>",
-                        err.to_string()
+                        err
                     )),
             }
         }),
@@ -115,7 +115,7 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
                     .content_type("text/html")
                     .body(format!(
                         "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load contact page: {}</span>",
-                        err.to_string()
+                        err
                     )),
             }
         }),

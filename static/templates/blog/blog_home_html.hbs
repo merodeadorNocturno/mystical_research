@@ -9,24 +9,33 @@
   <header></header>
 
   <main class="container">
-        <section class="search-bar">
+      <section class="search-bar">
           <input
               type="search"
               id="search-input"
               placeholder="Search articles..."
               name="q"
+              hx-get="/htmx/blog/search"
+              hx-trigger="keyup[target.value==''] changed delay:500ms"
+              hx-target=".blog-posts"
           />
           <button
               type="button"
               id="search-button"
               hx-get="/htmx/blog/search"
               {{! Ensure this endpoint exists and works }}
-              hx-target="#search-results-container"
+              hx-target=".blog-posts"
               hx-include="#search-input"
               hx-indicator="#search-loading-indicator"
           >
               Search
           </button>
+          <button
+              type="button"
+              id="clear-search"
+              style="display:none;"
+              onclick="document.getElementById('search-input').value=''; htmx.trigger('#search-input', 'keyup'); this.style.display='none';"
+          >X</button>
           <span
               id="search-loading-indicator"
               class="htmx-indicator"

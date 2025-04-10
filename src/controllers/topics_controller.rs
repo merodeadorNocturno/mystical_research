@@ -31,7 +31,7 @@ async fn htmx_topics() -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let topics_hbs = "topics/topics";
 
-    let section_template = match read_hbs_template(&topics_hbs) {
+    let section_template = match read_hbs_template(topics_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -54,7 +54,7 @@ async fn topics_html() -> Result<String, RenderError> {
 
     register_templates(this_path, &mut handlebars);
     let contact_hbs = "index/index";
-    let contact_template = match read_hbs_template(&contact_hbs) {
+    let contact_template = match read_hbs_template(contact_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -93,7 +93,7 @@ pub fn topics_controller(cfg: &mut ServiceConfig) {
                     .content_type("text/html")
                     .body(format!(
                         "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load topics page: {}</span>",
-                        err.to_string()
+                        err
                     )),
             }
         }),
@@ -111,7 +111,7 @@ pub fn topics_controller(cfg: &mut ServiceConfig) {
                     .content_type("text/html")
                     .body(format!(
                         "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load topics page: {}</span>",
-                        err.to_string()
+                        err
                     )),
             }
         }),

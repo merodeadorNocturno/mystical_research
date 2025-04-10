@@ -24,7 +24,7 @@ fn get_backend_url() -> String {
     let mut backend_port = set_environment_variable("BACKEND_PORT", "8080");
     let backend_protocol = set_environment_variable("BACKEND_PROTOCOL", "http");
 
-    if backend_port != "80".to_string() && backend_port != "".to_string() {
+    if backend_port != *"80" && backend_port != *"" {
         backend_port = format!(":{}", &backend_port);
     } else {
         backend_port = "".to_string();

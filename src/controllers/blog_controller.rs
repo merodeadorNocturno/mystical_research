@@ -43,7 +43,7 @@ async fn blog_home_html(
     };
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
-    let blog_home_template = match read_hbs_template(&blog_home_hbs) {
+    let blog_home_template = match read_hbs_template(blog_home_hbs) {
         Ok(template) => template,
         Err(err) => {
             eprintln!("Failed to read blog home template: {}", err);
@@ -88,7 +88,7 @@ async fn blog_article_slug(
 
     let article_result = Database::search_slug_id(db, search_term).await;
 
-    let blog_article_template = match read_hbs_template(&blog_article_hbs) {
+    let blog_article_template = match read_hbs_template(blog_article_hbs) {
         Ok(template) => template,
         Err(err) => {
             error!("Failed to read blog article template: {}", err);
@@ -99,14 +99,14 @@ async fn blog_article_slug(
         }
     };
 
-    let this_article = match article_result {
-        Some(article) => article,
-        None => vec![],
-    };
+    let this_article = article_result.unwrap_or_default();
+    //     Some(article) => article,
+    //     None => vec![],
+    // };
 
     let mut context_data = json!({});
 
-    if this_article.len() > 0 {
+    if !this_article.is_empty() {
         let table_of_contents =
             string_to_vec_string(this_article[0].table_of_contents.clone().unwrap());
         let keywords = string_to_vec_string(this_article[0].keywords.clone().unwrap());
@@ -130,10 +130,10 @@ async fn blog_article_slug(
         Ok(rendered) => Ok(rendered),
         Err(err) => {
             error!("Failed to render blog article template: {}", err);
-            return Err(RenderError::from(std::io::Error::new(
+            Err(RenderError::from(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 format!("Failed to render template: {}", blog_article_hbs),
-            )));
+            )))
         }
     }
 }
@@ -157,7 +157,7 @@ async fn htmx_blog(
 
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
-    let template_content = match read_hbs_template(&blog_home_hbs_path) {
+    let template_content = match read_hbs_template(blog_home_hbs_path) {
         Ok(contents) => contents,
         Err(err) => {
             error!("Failed to read blog home template: {}", err);
@@ -193,7 +193,7 @@ async fn htmx_blog_article_slug(
 
     let article = Database::search_slug_id(db, search_term).await;
 
-    let template_content = match read_hbs_template(&blog_article_hbs_path) {
+    let template_content = match read_hbs_template(blog_article_hbs_path) {
         Ok(contents) => contents,
         Err(err) => {
             error!("Failed to read blog article template: {}", err);
@@ -204,14 +204,11 @@ async fn htmx_blog_article_slug(
         }
     };
 
-    let this_article = match article {
-        Some(article_in_db) => article_in_db,
-        None => vec![],
-    };
+    let this_article = article.unwrap_or_default();
 
     let mut context_data = json!({});
 
-    if this_article.len() > 0 {
+    if !this_article.is_empty() {
         let table_of_contents =
             string_to_vec_string(this_article[0].table_of_contents.clone().unwrap());
         let keywords = string_to_vec_string(this_article[0].keywords.clone().unwrap());
@@ -242,27 +239,39 @@ async fn htmx_blog_search(
     let this_path = std::path::Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
-    let blog_home_hbs = "blog/blog_home_search";
+    let blog_grid_hbs = "blog/_blog_post_grid";
 
-    let search_result: Option<Vec<BlogArticle>> = match &query.q {
-        Some(term) => Database::search_content(&db, String::from(term)).await,
-        None => None,
+    let search_term = query.q.clone().unwrap_or_default(); // Get the search term
+
+    let search_result: Option<Vec<BlogArticle>> = if !search_term.is_empty() {
+        Database::search_content(db, search_term.clone()).await // Pass cloned term
+    } else {
+        None // Or maybe return latest posts if search is empty? Decide behavior.
+             // Let's assume empty search term means no results for now.
     };
 
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(search_result);
 
-    let template_content = match read_hbs_template(&blog_home_hbs) {
+    let template_content = match read_hbs_template(blog_grid_hbs) {
         Ok(contents) => contents,
         Err(err) => {
-            error!("Failed to read blog home template: {}", err);
+            error!("Failed to read blog grid partial template: {}", err);
             return Err(RenderError::from(std::io::Error::new(
                 std::io::ErrorKind::NotFound,
-                format!("Template not found: {}", blog_home_hbs),
+                format!("Template not found: {}", &blog_grid_hbs), // <<< Use correct path variable
             )));
         }
     };
 
-    let context_data = json!({"posts": blog_previews,});
+    let context_data = json!(
+    {
+        "posts": blog_previews,
+        "search_term": if search_term.is_empty() {
+            None
+        } else {
+            Some(&search_term)
+        }
+    });
 
     match handlebars.render_template(&template_content, &context_data) {
         Ok(rendered_html) => Ok(rendered_html),
@@ -345,10 +354,7 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
                             Some(BlogPreview {
                                 image_url,
                                 slug,
-                                summary: format!(
-                                    "{}...",
-                                    String::from(trim_to_words(&summary, 14))
-                                ),
+                                summary: format!("{}...", trim_to_words(&summary, 14)),
                                 title,
                             })
                         }

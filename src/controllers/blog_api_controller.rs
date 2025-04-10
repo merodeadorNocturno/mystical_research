@@ -83,7 +83,7 @@ Use the last paragraph for a comma separated list of keywords.";
                 "Failed to generate content for blog article: {}",
                 err.to_string()
             );
-            _ai_error = format!("Failed to generate article content: {}", err.to_string());
+            _ai_error = format!("Failed to generate article content: {}", err);
         }
     };
 

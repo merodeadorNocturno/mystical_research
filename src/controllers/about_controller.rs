@@ -38,7 +38,7 @@ async fn htmx_about() -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let about_hbs = "about/about";
 
-    let section_template = match read_hbs_template(&about_hbs) {
+    let section_template = match read_hbs_template(about_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -61,7 +61,7 @@ async fn about_html() -> Result<String, RenderError> {
 
     register_templates(this_path, &mut handlebars);
     let topics_index_hbs = "index/index";
-    let section_template = match read_hbs_template(&topics_index_hbs) {
+    let section_template = match read_hbs_template(topics_index_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -101,7 +101,7 @@ pub fn about_controller(cfg: &mut ServiceConfig) {
               .content_type("text/html")
               .append_header(("HX-Trigger", "help_table"))
               .body(format!("<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load title: {}</span>",
-              err.to_string())),
+              err)),
         }
     }));
     cfg.route(
@@ -117,7 +117,7 @@ pub fn about_controller(cfg: &mut ServiceConfig) {
               .content_type("text/html")
               .append_header(("HX-Trigger", "help_table"))
               .body(format!("<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load title: {}</span>",
-              err.to_string())),
+              err)),
         }
     }));
 }

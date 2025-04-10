@@ -17,7 +17,7 @@ pub fn read_hbs_template(file_name: &str) -> Result<String, Error> {
         Ok(contents) => Ok(contents),
         Err(e) => {
             error!("Error reading template:: {}", e.to_string());
-            Err(Error::from(e))
+            Err(e)
         }
     }
 }

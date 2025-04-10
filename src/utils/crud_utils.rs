@@ -244,7 +244,7 @@ pub async fn util_fulltext_search<T: DeserializeOwned + Serialize>(
 //     }
 // }
 
-pub async fn util_find_random_articles<T: DeserializeOwned + Serialize>(
+pub async fn util_find_random_articles<T>(
     db: &Data<Database>,
     table_name: &str,
     number_of_elements: Option<usize>,

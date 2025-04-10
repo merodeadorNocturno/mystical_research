@@ -71,18 +71,18 @@ impl BlogDB for Database {
             "content".to_string(),
         ];
         let search_fields = create_or_conditional(&search_term, fields);
-        util_fulltext_search(&db, BLOG_TABLE, &search_fields).await
+        util_fulltext_search(db, BLOG_TABLE, &search_fields).await
     }
 
     async fn search_slug_id(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>> {
         let search_fields = format!("slug = '{search_term}'");
-        util_fulltext_search(&db, BLOG_TABLE, &search_fields).await
+        util_fulltext_search(db, BLOG_TABLE, &search_fields).await
     }
 
     async fn find_random_articles(
         db: &Data<Database>,
         number_of_records: Option<usize>,
     ) -> Option<Vec<BlogArticle>> {
-        util_find_random_articles(&db, BLOG_TABLE, number_of_records).await
+        util_find_random_articles(db, BLOG_TABLE, number_of_records).await
     }
 }

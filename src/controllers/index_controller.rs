@@ -29,7 +29,7 @@ async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
     register_templates(this_path, &mut handlebars);
     let index_hbs = "index/index";
 
-    let section_template = match read_hbs_template(&index_hbs) {
+    let section_template = match read_hbs_template(index_hbs) {
         Ok(contents) => contents,
         Err(err) => {
             error!(
@@ -56,19 +56,16 @@ async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
 
     let result = Database::find_random_articles(db, Some(number_of_records)).await;
 
-    let featured_results = match result {
-        Some(articles) => articles,
-        None => Vec::new(),
-    };
+    let featured_results = result.unwrap_or_default();
+    //     Some(articles) => articles,
+    //     None => Vec::new(),
+    // };
 
     let mut featured: Vec<BlogPreview> = Vec::new();
     for this_feature in featured_results {
         featured.push(BlogPreview {
             title: this_feature.title.unwrap(),
-            summary: format!(
-                "{}...",
-                String::from(trim_to_words(&this_feature.summary.unwrap(), 16))
-            ),
+            summary: format!("{}...", trim_to_words(&this_feature.summary.unwrap(), 16)),
             image_url: this_feature.image_urls.unwrap(),
             slug: this_feature.slug.unwrap(),
         })
@@ -101,7 +98,7 @@ pub fn index_controller(cfg: &mut ServiceConfig) {
               .content_type("text/html")
               .append_header(("HX-Trigger", "help_table"))
               .body(format!("<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load title: {}</span>",
-              err.to_string())),
+              err)),
         }
     }));
 }

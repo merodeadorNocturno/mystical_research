@@ -1,0 +1,52 @@
+{{#if search_term}}
+    <h2>Search Results for "{{search_term}}"</h2>
+{{else}}
+    <h2>Latest Blog Posts</h2>
+{{/if}}
+
+{{#if posts}}
+    {{! Check if the posts array exists and is not empty }}
+    <div class="blog-grid">
+        {{#each posts}}
+            {{! Loop through each post in the 'posts' array }}
+            <article
+                class="blog-post"
+                {{! --- Option 1: Use HTMX to load article content --- }}
+                hx-get="/htmx/blog/article/{{this.slug}}"
+                {{! Point to a specific article endpoint }}
+                hx-target=".main_container"
+                {{! Or wherever you want to load it }}
+                {{! --- Option 2: Use a standard link --- }}
+                style="cursor: pointer;"
+            >
+                <!-- onclick="window.location.href='/blog/article/{{this.slug}}';" -->
+                <img
+                    src="/static/img/{{this.image_url}}"
+                    {{! Use dynamic image URL }}
+                    alt="{{this.title}}"
+                    {{! Use dynamic alt text }}
+                    loading="lazy"
+                    title="{{this.title}}"
+                    {{! Use dynamic title }}
+                    {{! Optional: Placeholder on error }}
+                    onerror="this.onerror=null; this.src='/static/img/placeholder.png';"
+                />
+                <h3>{{this.title}}</h3>
+                {{! Use dynamic title }}
+                <p>{{this.summary}}</p>
+                {{! Use dynamic summary }}
+
+                {{! Link to the full article page }}
+                <a
+                    hx-get="/blog/search"
+                    hx-target=".main_container"
+                    class="read-more"
+                >Read More</a>
+                {{! Standard link is often better for SEO }}
+            </article>
+        {{/each}}
+    </div>
+{{else}}
+    <p>No blog posts found.</p>
+    {{! Message when no posts are available }}
+{{/if}}
