@@ -6,6 +6,38 @@
     --light-bg: #f9f9f9;
 }
 
+.htmx-indicator {
+    display: none;
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+}
+
+.htmx-request .htmx-indicator {
+    display: inline; /* Or block, flex etc */
+    opacity: 1;
+}
+
+.htmx-request.htmx-indicator {
+    display: inline; /* Or block, flex etc */
+    opacity: 1;
+}
+
+.form-response {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+}
+.form-response.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.form-response.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -669,7 +701,7 @@ h6 {
             rgba(42, 9, 68, 0.8),
             rgba(58, 24, 95, 0.8)
         ),
-        url("../img/contact-bg.jpg"); /* You might need to create or use a relevant background image */
+        url("../img/cards.png"); /* You might need to create or use a relevant background image */
 }
 
 /* Contact Form Styles */

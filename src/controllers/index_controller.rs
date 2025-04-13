@@ -40,14 +40,6 @@ async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
         }
     };
 
-    // IndexBody {
-    //     title: "Welcome to My Awesome Site!".to_string(),
-    //     description: "Explore the amazing features and content we have to offer.".to_string(),
-    //     explore_url: "/explore".to_string(),
-    //     learn_more_url: "/learn-more".to_string(),
-    //     explore_label: "Discover More".to_string(),
-    // }
-
     let linked_data = mock_index_linked_data();
     let body = mock_index_body();
     let header = mock_header_data();
@@ -57,9 +49,6 @@ async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
     let result = Database::find_random_articles(db, Some(number_of_records)).await;
 
     let featured_results = result.unwrap_or_default();
-    //     Some(articles) => articles,
-    //     None => Vec::new(),
-    // };
 
     let mut featured: Vec<BlogPreview> = Vec::new();
     for this_feature in featured_results {

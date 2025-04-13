@@ -25,8 +25,6 @@ use actix_web::{
     HttpResponse,
 };
 use log::error;
-// use serde_json::to_string;
-// use validator::Validate;
 
 #[get("/blogs/search")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
@@ -34,13 +32,11 @@ async fn blogs_search(
     db: Data<Database>,
     query: Query<SearchQuery>,
 ) -> Result<HttpResponse, actix_web::Error> {
-    // Use actix_web::Error for clarity
     let blog_articles = match &query.q {
         Some(term) => Database::search_content(&db, term.to_string()).await,
         None => None,
     };
 
-    // let blog_articles = Database::search_content(&db, search_term).await;
     match blog_articles {
         Some(articles_found) => Ok(HttpResponse::Ok()
             .status(StatusCode::OK)

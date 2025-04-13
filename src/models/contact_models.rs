@@ -22,3 +22,15 @@ pub struct ContactHomeSchemaMarkup {
     pub site_logo_url: String,
     pub search_action_target: String, // For search action URL template
 }
+
+#[derive(Deserialize, Debug, Serialize)] // Added Serialize for potential logging/DB
+                                         // #[derive(Deserialize, Debug, Serialize, Validate)] // If using validator crate
+pub struct ContactFormData {
+    // #[validate(length(min = 1, message = "Name cannot be empty"))]
+    pub name: String,
+    // #[validate(email(message = "Invalid email format"))]
+    pub email: String,
+    pub subject: Option<String>, // Subject might be optional
+    // #[validate(length(min = 10, message = "Message must be at least 10 characters"))]
+    pub message: String,
+}

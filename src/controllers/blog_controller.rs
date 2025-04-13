@@ -100,9 +100,6 @@ async fn blog_article_slug(
     };
 
     let this_article = article_result.unwrap_or_default();
-    //     Some(article) => article,
-    //     None => vec![],
-    // };
 
     let mut context_data = json!({});
 
