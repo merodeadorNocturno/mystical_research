@@ -1,5 +1,7 @@
+-- TABLE DEFINITION FOR blog_article
 DEFINE TABLE IF NOT EXISTS blog_article SCHEMAFULL;
 
+-- FIELD DEFINITION FOR blog_article
 DEFINE FIELD IF NOT EXISTS id ON blog_article TYPE record;
 DEFINE FIELD IF NOT EXISTS title ON blog_article TYPE option<string>;
 DEFINE FIELD IF NOT EXISTS table_of_contents ON blog_article TYPE option<string>;
@@ -15,6 +17,17 @@ DEFINE FIELD IF NOT EXISTS updated_at ON blog_article TYPE option<datetime>;
 DEFINE FIELD IF NOT EXISTS published_at ON blog_article TYPE option<datetime>;
 DEFINE FIELD IF NOT EXISTS slug ON blog_article TYPE option<string>;
 
+-- TABLE DEFINITION FOR ARTICLE EMBEDDINGS
+DEFINE TABLE IF NOT EXISTS article_embeddings SCHEMAFULL;
+
+-- FIELD DEFINITION FOR ARTICLE EMBEDDINGS
+DEFINE FIELD IF NOT EXISTS id ON TABLE article_embeddings TYPE string;
+DEFINE FIELD IF NOT EXISTS title ON TABLE article_embeddings TYPE string;
+DEFINE FIELD IF NOT EXISTS metadata ON TABLE article_embeddings TYPE string;
+DEFINE FIELD IF NOT EXISTS content ON TABLE article_embeddings TYPE string;
+DEFINE FIELD IF NOT EXISTS content_vector ON TABLE article_embeddings TYPE array<float>;
+
+-- INDEX DEFINITION FOR ARTICLE EMBEDDINGS
 DEFINE ANALYZER IF NOT EXISTS my_analyzer TOKENIZERS class FILTERS snowball(english);
 DEFINE INDEX IF NOT EXISTS title_index ON TABLE blog_article FIELDS title SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
 
@@ -32,3 +45,6 @@ DEFINE INDEX IF NOT EXISTS author_index ON TABLE blog_article FIELDS author SEAR
 
 DEFINE ANALYZER IF NOT EXISTS content_analyzer TOKENIZERS class FILTERS snowball(english);
 DEFINE INDEX IF NOT EXISTS content_index ON TABLE blog_article FIELDS content SEARCH ANALYZER content_analyzer BM25 HIGHLIGHTS;
+
+-- INDEX DEFINITION FOR ARTICLE EMBEDDINGS
+DEFINE INDEX IF NOT EXISTS content_vector_index ON article_embeddings FIELDS content_vector MTREE DIMENSION 384 DIST EUCLIDEAN;
