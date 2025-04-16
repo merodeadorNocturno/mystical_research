@@ -2,7 +2,7 @@ use crate::models::{
     about_model::{AboutBody, AboutHomePage, AboutHomeSchemaMarkup, AboutItem, AboutStructure},
     // ai_model::BlogStructure,
     // blog_model::*,
-    contact_models::{ContactHomePage, ContactHomeSchemaMarkup},
+    contact_model::{ContactHomePage, ContactHomeSchemaMarkup},
     general_model::PageType,
     index_model::{HeaderData, IndexBody, IndexSchemaMarkup, NavLink},
     topics_model::{TopicCategory, TopicHomePage, TopicHomeSchemaMarkup},

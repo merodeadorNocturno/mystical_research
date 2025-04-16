@@ -1,9 +1,10 @@
-use crate::db::config_db::Database;
-use crate::models::{contact_models::ContactFormData, mock::mock_contact_home_page_object};
+use crate::db::{config_db::Database, contact_db::ContactDB};
+use crate::models::{contact_model::ContactFormData, mock::mock_contact_home_page_object};
 use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
 };
+use actix_web::HttpRequest;
 use actix_web::{
     web::{get, post, Data, Form, ServiceConfig},
     HttpResponse, Responder,
@@ -12,7 +13,9 @@ use handlebars::{Handlebars, RenderError};
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::collections::BTreeMap;
 use std::path::Path;
+use surrealdb::sql::Value;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct TitleError {
@@ -85,78 +88,64 @@ async fn contact_html() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-// async fn post_contact(form: Form<ContactFormData>) -> Result<String, RenderError> {
-//     let contact_data = form.into_inner();
-//     info!("Received contact form submission: {:?}", contact_data);
+async fn post_contact(
+    form: Form<ContactFormData>,
+    db: Data<Database>,
+) -> Result<String, RenderError> {
+    let contact_data = form.into_inner();
+    info!("Received contact form submission: {:?}", &contact_data);
 
-//     // --- Server-Side Validation ---
-//     let mut errors: Vec<String> = Vec::new();
-//     if contact_data.name.trim().is_empty() {
-//         errors.push("Name cannot be empty.".to_string());
-//     }
-//     if contact_data.email.trim().is_empty() || !contact_data.email.contains('@') {
-//         // Basic email check
-//         errors.push("Please provide a valid email address.".to_string());
-//     }
-//     if contact_data.message.trim().len() < 5 {
-//         // Basic length check
-//         errors.push("Message must be at least 5 characters long.".to_string());
-//     }
+    let mut records = BTreeMap::new();
+    records.insert("email", Value::from(contact_data.email.to_string()));
+    records.insert("message", Value::from(contact_data.message.to_string()));
+    records.insert("name", Value::from(contact_data.name.to_string()));
+    records.insert(
+        "subject",
+        Value::from(contact_data.subject.unwrap().to_string()),
+    );
 
-//     // If using validator crate:
-//     // if let Err(validation_errors) = contact_data.validate() {
-//     //     // Format validation_errors into user-friendly messages
-//     //     // For simplicity, just joining them here
-//     //     let error_messages = validation_errors.field_errors().iter().flat_map(|(_, errors)| errors.iter().filter_map(|e| e.message.as_ref().map(|m| m.to_string()))).collect::<Vec<_>>().join(" ");
-//     //     return HttpResponse::BadRequest().content_type("text/html").body(format!(
-//     //         "<div class=\"form-response error\">Validation failed: {}</div>", error_messages
-//     //     ));
-//     // }
+    let contact_form_data: ContactFormData = ContactFormData::builder()
+        .name(records.get("name").unwrap().to_string())
+        .email(records.get("email").unwrap().to_string())
+        .subject(records.get("subject").unwrap().to_string())
+        .message(records.get("message").unwrap().to_string())
+        .deleted(false)
+        .build();
 
-//     if !errors.is_empty() {
-//         let error_html = errors
-//             .iter()
-//             .map(|e| format!("<p>{}</p>", e))
-//             .collect::<String>();
-//         // Return 400 Bad Request with error messages for HTMX target
-//         return HttpResponse::BadRequest()
-//             .content_type("text/html")
-//             .body(format!(
-//                 "<div class=\"form-response error\">Please correct the following errors:{}</div>",
-//                 error_html
-//             ));
-//     }
+    let add_contact_form_data: Option<ContactFormData> =
+        Database::save_one(&db, contact_form_data).await;
 
-//     // --- Process the data (e.g., save to DB, send email) ---
-//     // Placeholder: Simulate processing
-//     info!("Processing contact data for: {}", contact_data.email);
-//     // Replace this with your actual logic (e.g., database insert)
-//     let save_result: Result<(), String> = Ok(()); // Simulate success
+    let handlebars = Handlebars::new();
+    let contact_hbs = "contact/contact_success_response";
 
-//     match save_result {
-//         Ok(_) => {
-//             info!(
-//                 "Successfully processed contact form from {}",
-//                 contact_data.email
-//             );
-//             // Return success message for HTMX target
-//             // Optionally clear the form by returning an empty form or keep fields filled
-//             HttpResponse::Ok().content_type("text/html").body(
-//                  "<div class=\"form-response success\">Thank you for your message! We will get back to you soon.</div>"
-//                  // To clear the form, you could return the form structure again, empty:
-//                  // "<form id=\"contact-form\" ...> ... <button>Send</button></form><div id=\"contact-form-response\">...success msg...</div>"
-//                  // Or use hx-swap="outerHTML" on the form and return the success message *plus* a new empty form.
-//              )
-//         }
-//         Err(e) => {
-//             error!("Failed to process contact form: {}", e);
-//             // Return server error message for HTMX target
-//             HttpResponse::InternalServerError().content_type("text/html").body(
-//                   "<div class=\"form-response error\">Sorry, there was an error processing your request. Please try again later.</div>"
-//              )
-//         }
-//     }
-// }
+    let contact_home_template = match read_hbs_template(contact_hbs) {
+        Ok(contents) => contents,
+        Err(err) => {
+            error!(
+                "Failed to render contents for contact page: {}",
+                err.to_string()
+            );
+            TitleError::new(err.to_string()).error
+        }
+    };
+
+    // --- Server-Side Validation ---
+
+    let section_template = match handlebars.render_template(
+        &contact_home_template,
+        &json!(&mock_contact_home_page_object()),
+    ) {
+        Ok(template) => template,
+        Err(err) => {
+            error!(
+                "Failed to render contents for contact page: {}",
+                err.to_string()
+            );
+            TitleError::new(err.to_string()).error
+        }
+    };
+    Ok(section_template)
+}
 
 pub fn contact_controller(cfg: &mut ServiceConfig) {
     cfg.route(
@@ -195,21 +184,25 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
         }),
     );
 
-    // cfg.route(
-    //     "/contact",
-    //     post().to(|form, db:Data<Database>| async move {
-    //         let contact_home_template = post_contact(form).await;
-    //         match contact_home_template {
-    //             Ok(template) => HttpResponse::Ok()
-    //                 .content_type("text/html")
-    //                 .body(template),
-    //             Err(err) => HttpResponse::InternalServerError()
-    //                 .content_type("text/html")
-    //                 .body(format!(
-    //                     "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load contact page: {}</span>",
-    //                     err
-    //                 )),
-    //         }
-    //     }),
-    // );
+    cfg.route(
+        "/contact",
+        post().to(|_req: HttpRequest, form, db: Data<Database>| async move {
+            let new_contact = post_contact(form, db).await;
+
+            match new_contact {
+                Ok(created_contact) => HttpResponse::Ok()
+                    .content_type("text/html")
+                    .body(created_contact),
+                Err(e) => HttpResponse::Ok()
+                    .content_type("text/html")
+                    .append_header(("HX-Trigger", "error_contact_table"))
+                    .body(
+                        format!(
+                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load Enterprise: {}</span>",
+                            e.to_string()
+                        )
+                    )
+            }
+        }),
+    );
 }

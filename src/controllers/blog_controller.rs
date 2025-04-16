@@ -1,5 +1,4 @@
-use crate::db::blog_db::BlogDB;
-use crate::db::config_db::Database;
+use crate::db::{blog_db::BlogDB, config_db::Database};
 use crate::models::{
     blog_model::{BlogArticle, BlogPreview},
     general_model::SearchQuery,

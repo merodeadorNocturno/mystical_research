@@ -8,7 +8,7 @@
 
 <main class="container">
     <section class="content-columns">
-        <article class="content-main">
+        <article class="content-main" id="contact-content-area">
             <h2>Send us a Message</h2>
             <p>
                 For any inquiries, feedback, or spiritual guidance, please fill
@@ -19,23 +19,27 @@
                 id="contact-form"
                 class="contact-form"
                 hx-post="/contact"
-                hx-target="#contact-form-response"
+                hx-target="#contact-content-area"
                 hx-swap="innerHTML"
                 hx-indicator="#loading-indicator"
             >
+                <input type="hidden" name="deleted" value="false" />
                 <div class="form-group">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name" required />
+                    <div class="validation-error" data-field="name"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Your Email</label>
                     <input type="email" id="email" name="email" required />
+                    <div class="validation-error" data-field="email"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="subject">Subject</label>
                     <input type="text" id="subject" name="subject" />
+                    <div class="validation-error" data-field="subject"></div>
                 </div>
 
                 <div class="form-group">
@@ -46,6 +50,7 @@
                         rows="5"
                         required
                     ></textarea>
+                    <div class="validation-error" data-field="message"></div>
                 </div>
 
                 <button type="submit" class="btn">Send Message</button>
@@ -54,7 +59,12 @@
                 <!-- Optional: Add styling to hide by default -->
             </form>
 
-            <div id="contact-form-response" class="form-response"></div>
+            <div
+                id="contact-form-general-error"
+                class="form-response error"
+                style="display: none;"
+            ></div>
+
         </article>
 
         <aside class="content-sidebar">
