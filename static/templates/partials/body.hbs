@@ -65,8 +65,14 @@
       </div>
     </aside>
   </section>
-{{> newsletter_section }}
+
+  <!-- Newsletter Section -->
+  <section class="newsletter" id="newsletter_form_container">
+      {{> newsletter_section }}
+  </section>
+
 {{> footer}}
+
 <script>
   document.addEventListener('htmx:beforeRequest', function(event) {
     const loadingOverlay = document.getElementById('loading-overlay');

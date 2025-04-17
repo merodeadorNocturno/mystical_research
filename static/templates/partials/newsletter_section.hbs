@@ -1,14 +1,23 @@
 <!-- Newsletter Section -->
-<section class="newsletter">
-  <div class="newsletter-content">
+<!-- <section class="newsletter"> -->
+<div class="newsletter-content">
     <h2>Join Our Mystic Circle</h2>
-    <form class="newsletter-form">
-      <input
-        class="newsletter-input"
-        type="email"
-        placeholder="Enter your celestial email..."
-      />
-      <button type="submit">Subscribe</button>
+    <form
+        id="newsletter-form"
+        class="newsletter-form"
+        hx-post="/htmx/mailing_list"
+        hx-target="#newsletter_form_container"
+        hx-swap="innerHTML"
+        hx-indicator="#loading-indicator"
+    >
+        <input
+            class="newsletter-input"
+            type="email"
+            placeholder="Enter your celestial email..."
+            name="email"
+            required
+        />
+        <button type="submit">Subscribe</button>
     </form>
-  </div>
-</section>
+</div>
+<!-- </section> -->
