@@ -105,6 +105,8 @@ async fn post_htmx_contact(
     let add_contact_form_data: Option<ContactFormData> =
         Database::save_one(&db, contact_form_data).await;
 
+    info!("Saved email {:?}", add_contact_form_data);
+
     let handlebars = Handlebars::new();
     let contact_hbs = "contact/contact_success_response";
 
