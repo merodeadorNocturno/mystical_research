@@ -1,5 +1,7 @@
 use crate::db::{config_db::Database, contact_db::ContactDB};
-use crate::models::{contact_model::ContactFormData, mock::mock_contact_home_page_object};
+use crate::models::{
+    contact_model::ContactFormData, general_model::TitleError, mock::mock_contact_home_page_object,
+};
 use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
@@ -7,26 +9,14 @@ use crate::utils::{
 use actix_web::HttpRequest;
 use actix_web::{
     web::{get, post, Data, Form, ServiceConfig},
-    HttpResponse, Responder,
+    HttpResponse,
 };
 use handlebars::{Handlebars, RenderError};
 use log::{error, info};
-use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::Path;
 use surrealdb::sql::Value;
-
-#[derive(Debug, Deserialize, Serialize)]
-struct TitleError {
-    pub error: String,
-}
-
-impl TitleError {
-    pub fn new(error: String) -> TitleError {
-        TitleError { error }
-    }
-}
 
 async fn htmx_contact() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
@@ -88,7 +78,7 @@ async fn contact_html() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
-async fn post_contact(
+async fn post_htmx_contact(
     form: Form<ContactFormData>,
     db: Data<Database>,
 ) -> Result<String, RenderError> {
@@ -187,7 +177,7 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
     cfg.route(
         "/contact",
         post().to(|_req: HttpRequest, form, db: Data<Database>| async move {
-            let new_contact = post_contact(form, db).await;
+            let new_contact = post_htmx_contact(form, db).await;
 
             match new_contact {
                 Ok(created_contact) => HttpResponse::Ok()

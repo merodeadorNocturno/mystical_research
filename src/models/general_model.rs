@@ -28,3 +28,14 @@ pub struct UpdatedAt {
 pub struct SearchQuery {
     pub q: Option<String>, // The search query will be in a parameter named 'q'
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct TitleError {
+    pub error: String,
+}
+
+impl TitleError {
+    pub fn new(error: String) -> TitleError {
+        TitleError { error }
+    }
+}

@@ -4,8 +4,9 @@ use actix_web::{middleware, web::Data, App, HttpServer};
 use controllers::{
     about_controller::about_controller, blog_api_controller::blog_api_controller,
     blog_controller::blog_html_controller, contact_controller::contact_controller,
-    index_controller::index_controller, resources_controller::resources_controller,
-    static_controllers::static_controllers, topics_controller::topics_controller,
+    index_controller::index_controller, mailing_controller::mailing_list_controller,
+    resources_controller::resources_controller, static_controllers::static_controllers,
+    topics_controller::topics_controller,
 };
 use db::config_db::Database;
 use env_logger::{Builder, WriteStyle};
@@ -60,6 +61,7 @@ async fn main() -> std::io::Result<()> {
             .configure(resources_controller)
             .configure(topics_controller)
             .configure(contact_controller)
+            .configure(mailing_list_controller)
             .configure(blog_html_controller)
             .configure(static_controllers)
     })

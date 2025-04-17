@@ -4,5 +4,6 @@ pub mod blog_model;
 pub mod contact_model;
 pub mod general_model;
 pub mod index_model;
+pub mod mailing_model;
 pub mod mock;
 pub mod topics_model;
