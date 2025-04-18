@@ -30,27 +30,50 @@ async fn blog_home_html(
     db: &Data<Database>,
 ) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
-    let number_of_results: Option<usize> = query.r;
+    // let number_of_results: Option<usize> = query.r;
+    // let articles_opt = match number_of_results {
+    //     Some(num) => Database::find_all(db, Some(num)).await,
+    //     None => Database::find_all(db, None).await,
+    // };
 
     let mut handlebars = Handlebars::new();
     let this_path = std::path::Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
-    let blog_home_hbs = "index/index";
+    let blog_home_hbs_path = "index/index";
 
-    let articles_opt = match number_of_results {
-        Some(num) => Database::find_all(db, Some(num)).await,
-        None => Database::find_all(db, None).await,
+    let current_page = match query.page {
+        Some(page) => page as u64,
+        None => 1 as u64,
     };
+
+    let articles_opt =
+        Database::find_active_paginated(db, current_page as usize, POST_PER_PAGE as usize).await;
+
+    let option_total_articles = Database::get_number_of_articles(db).await;
+
+    let total_articles = match option_total_articles {
+        Some(num_of_articles) => num_of_articles,
+        None => 0,
+    };
+
+    let pages_f64 = (total_articles as f64 / POST_PER_PAGE as f64).ceil();
+    let total_pages = pages_f64 as u64;
+
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
-    let blog_home_template = match read_hbs_template(blog_home_hbs) {
-        Ok(template) => template,
+    let blog_home_template = match read_hbs_template(blog_home_hbs_path) {
+        Ok(contents) => contents,
         Err(err) => {
-            eprintln!("Failed to read blog home template: {}", err);
-            String::new()
+            error!("Failed to read blog home template: {}", err);
+            return Err(RenderError::from(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                format!("Template not found: {}", blog_home_hbs_path),
+            )));
         }
     };
+
+    let pages = create_pagination_links(current_page, total_pages);
 
     let context_data = json!({
         "posts": blog_previews,
@@ -59,7 +82,10 @@ async fn blog_home_html(
             "description": "A collection of mystical and artistic explorations.",
             "logo_url": "/static/img/hero-bg.png",
             "blog_posts": &blog_previews,
-    } });
+
+        },
+        "pages": pages,
+    });
 
     let section_blog_home_template =
         match handlebars.render_template(&blog_home_template, &context_data) {
@@ -146,6 +172,7 @@ async fn htmx_blog(
     let this_path = std::path::Path::new(&template_path);
 
     register_templates(this_path, &mut handlebars);
+    // let blog_home_hbs_path = "blog/blog_home_html";
     let blog_home_hbs_path = "blog/blog_home";
 
     let current_page = match query.page {
