@@ -883,15 +883,15 @@ a:hover {
 }
 
 /* Add to your CSS file */
-.search-results {
+/* .search-results {
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #ddd; /* Light border to visually separate */
+    border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #f9f9f9; /* Light background */
-}
+    background-color: #f9f9f9;
+} */
 
-.search-results h2 {
+/* .search-results h2 {
     font-size: 1.5em;
     margin-bottom: 15px;
 }
@@ -901,18 +901,17 @@ a:hover {
     grid-template-columns: repeat(
         auto-fit,
         minmax(300px, 1fr)
-    ); /* Responsive grid like blog posts */
+    );
     gap: 20px;
 }
 
 .search-results .blog-post {
-    /* You can reuse the styling from your .blog-posts .blog-post */
     border: 1px solid #eee;
     border-radius: 8px;
     padding: 15px;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
+} */
 
 .blog-posts .blog-post h3,
 .blog-posts .blog-post p,
@@ -959,7 +958,7 @@ a:hover {
     margin-bottom: 10px;
 } */
 
-.search-results .blog-post h3 {
+/* .search-results .blog-post h3 {
     font-size: 1.2em;
     margin-bottom: 8px;
 }
@@ -973,12 +972,12 @@ a:hover {
 .search-results .blog-post .read-more {
     display: inline-block;
     padding: 8px 15px;
-    background-color: #007bff; /* Example button color */
+    background-color: #007bff;
     color: white;
     text-decoration: none;
     border-radius: 5px;
     font-size: 0.9em;
-}
+} */
 
 .htmx-indicator {
     opacity: 0;
@@ -987,4 +986,51 @@ a:hover {
 
 .htmx-request .htmx-indicator {
     opacity: 1;
+}
+
+/* === Pagination Styles within Search Results === */
+
+/* Container for the pagination links */
+.search-results .pagination {
+    text-align: center; /* Center the pagination links */
+    margin-top: 2.5rem; /* Space between results grid and pagination */
+    padding-top: 1.5rem; /* Extra space above */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator line (adjust color if needed) */
+}
+
+/* Style for individual pagination links (<a>) and the current page indicator (<span>) */
+.search-results .pagination a,
+.search-results .pagination span.current {
+    display: inline-block; /* Allows padding and margin */
+    padding: 0.6rem 1.1rem; /* Comfortable clickable area */
+    margin: 0 0.3rem; /* Spacing between page numbers/links */
+    border: 1px solid var(--accent-color); /* Border using theme color */
+    border-radius: 4px; /* Slightly rounded corners */
+    color: var(--text-color); /* Use theme text color */
+    text-decoration: none; /* Remove underline from links */
+    font-size: 0.95rem;
+    min-width: 40px; /* Ensure even small numbers have decent width */
+    text-align: center; /* Center text inside the block */
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover effect for pagination links */
+.search-results .pagination a:hover {
+    background-color: var(--accent-color); /* Accent background on hover */
+    color: var(--primary-color); /* Darker text for contrast on hover */
+    border-color: var(--accent-color); /* Ensure border matches */
+    text-decoration: none; /* Keep underline off */
+}
+
+/* Style for the CURRENT page number (<span>) */
+.search-results .pagination span.current {
+    background-color: var(
+        --accent-color
+    ); /* Use accent color for current page */
+    color: var(--primary-color); /* Darker text for contrast */
+    font-weight: bold; /* Make it stand out */
+    cursor: default; /* Indicate it's not clickable */
+    border-color: var(--accent-color); /* Ensure border matches */
 }
