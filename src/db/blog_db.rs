@@ -1,3 +1,5 @@
+use std::ptr::null_mut;
+
 use crate::db::config_db::Database;
 use crate::models::blog_model::BlogArticle;
 use crate::utils::crud_utils::*;
@@ -26,6 +28,12 @@ pub trait BlogDB {
         db: &Data<Database>,
         number_of_records: Option<usize>,
     ) -> Option<Vec<BlogArticle>>;
+    async fn get_number_of_articles(db: &Data<Database>) -> Option<u64>;
+    async fn find_active_paginated(
+        db: &Data<Database>,
+        page: usize,
+        page_size: usize,
+    ) -> Option<Vec<BlogArticle>>;
 }
 
 #[async_trait]
@@ -43,6 +51,22 @@ impl BlogDB for Database {
 
     async fn add_one(db: &Data<Database>, new_blog_article: BlogArticle) -> Option<BlogArticle> {
         util_add_one(db, new_blog_article, BLOG_TABLE).await
+    }
+
+    async fn find_active_paginated(
+        db: &Data<Database>,
+        page: usize,
+        page_size: usize,
+    ) -> Option<Vec<BlogArticle>> {
+        util_find_active_paginated(
+            db,
+            BLOG_TABLE,
+            page,
+            page_size,
+            Some("published_at"),
+            Some(true),
+        )
+        .await
     }
 
     // async fn update_one(db: &Data<Database>, blog_article: BlogArticle) -> Option<BlogArticle> {
@@ -84,5 +108,14 @@ impl BlogDB for Database {
         number_of_records: Option<usize>,
     ) -> Option<Vec<BlogArticle>> {
         util_find_random_articles(db, BLOG_TABLE, number_of_records).await
+    }
+
+    async fn get_number_of_articles(db: &Data<Database>) -> Option<u64> {
+        let number_of_articles: Option<u64> = util_count_records(db, BLOG_TABLE).await;
+
+        match number_of_articles {
+            Some(count) => Some(count),
+            None => None,
+        }
     }
 }

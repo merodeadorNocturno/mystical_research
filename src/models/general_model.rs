@@ -39,3 +39,8 @@ impl TitleError {
         TitleError { error }
     }
 }
+
+#[derive(Debug, Deserialize)]
+pub struct CountResult {
+    pub count: u64,
+}

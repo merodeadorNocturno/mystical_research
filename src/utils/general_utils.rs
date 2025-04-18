@@ -89,3 +89,33 @@ pub fn generate_slug_with_random_suffix(title: &str) -> String {
 pub fn string_to_vec_string(cs_string: String) -> Vec<String> {
     cs_string.split(',').map(|s| s.to_string()).collect()
 }
+
+pub fn create_pagination_links(current_page: u64, total_pages: u64) -> String {
+    let mut links = String::new();
+
+    // Generate previous link
+    if current_page > 1 {
+        let cp = current_page - 1;
+        links.push_str(&format!(
+            "<a href=\"/blog_home.html?page={}\" hx-get=\"/htmx/blog?page={}\" hx-target=\".main_container\" hx-push-url=\"/blog_home.html?page={}\">Previous</a> ",
+            cp, cp, cp
+        ));
+    }
+
+    // Generate page numbers
+    for page in 1..=total_pages {
+        if page == current_page {
+            links.push_str(&format!("<span class=\"current\">{}</span> ", page));
+        } else {
+            links.push_str(&format!("<a href=\"/blog_home.html?page={}\" hx-get=\"/htmx/blog?page={}\" hx-target=\".main_container\" hx-push-url=\"/blog_home.html?page={}\">{}</a> ", page, page, page, page));
+        }
+    }
+
+    // Generate next link
+    if current_page < total_pages {
+        let cp = current_page + 1;
+        links.push_str(&format!("<a href=\"/blog_home.html?page={}\" hx-get=\"/htmx/blog?page={}\" hx-target=\".main_container\" hx-push-url=\"/blog_home.html?page={}\">Next</a>", cp, cp, cp));
+    }
+
+    links
+}

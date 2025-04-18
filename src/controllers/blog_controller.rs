@@ -6,7 +6,7 @@ use crate::models::{
 use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
-    general_utils::{string_to_vec_string, trim_to_words},
+    general_utils::{create_pagination_links, string_to_vec_string, trim_to_words},
     linked_data::linked_data_blog_article,
 };
 use actix_web::{
@@ -22,6 +22,8 @@ use serde_json::json;
 struct TitleError {
     pub error: String,
 }
+
+const POST_PER_PAGE: u64 = 9;
 
 async fn blog_home_html(
     query: Query<BlogHomeQuery>,
@@ -146,10 +148,23 @@ async fn htmx_blog(
     register_templates(this_path, &mut handlebars);
     let blog_home_hbs_path = "blog/blog_home";
 
-    let articles_opt = match query.r {
-        Some(number) => Database::find_all(db, Some(number)).await,
-        None => Database::find_all(db, None).await,
+    let current_page = match query.page {
+        Some(page) => page as u64,
+        None => 1 as u64,
     };
+
+    let articles_opt =
+        Database::find_active_paginated(db, current_page as usize, POST_PER_PAGE as usize).await;
+
+    let option_total_articles = Database::get_number_of_articles(db).await;
+
+    let total_articles = match option_total_articles {
+        Some(num_of_articles) => num_of_articles,
+        None => 0,
+    };
+
+    let pages_f64 = (total_articles as f64 / POST_PER_PAGE as f64).ceil();
+    let total_pages = pages_f64 as u64;
 
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(articles_opt);
 
@@ -164,7 +179,9 @@ async fn htmx_blog(
         }
     };
 
-    let context_data = json!({"posts": blog_previews,});
+    let pages = create_pagination_links(current_page, total_pages);
+
+    let context_data = json!({"posts": blog_previews, "pages": pages});
 
     match handlebars.render_template(&template_content, &context_data) {
         Ok(rendered_html) => Ok(rendered_html),
@@ -372,6 +389,7 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
 #[derive(Deserialize, Debug)] // <-- Must derive Deserialize
 struct BlogHomeQuery {
     r: Option<usize>,
+    page: Option<u64>,
 }
 
 fn respond_to_html_result(
