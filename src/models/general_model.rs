@@ -26,7 +26,8 @@ pub struct UpdatedAt {
 
 #[derive(Debug, Deserialize)]
 pub struct SearchQuery {
-    pub q: Option<String>, // The search query will be in a parameter named 'q'
+    pub q: Option<String>,
+    pub r: Option<u32>, // The search query will be in a parameter named 'q'
 }
 
 #[derive(Debug, Deserialize, Serialize)]

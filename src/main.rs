@@ -3,10 +3,10 @@ use actix_cors::Cors;
 use actix_web::{middleware, web::Data, App, HttpServer};
 use controllers::{
     about_controller::about_controller, blog_api_controller::blog_api_controller,
-    blog_controller::blog_html_controller, contact_controller::contact_controller,
-    index_controller::index_controller, mailing_controller::mailing_list_controller,
-    resources_controller::resources_controller, static_controllers::static_controllers,
-    topics_controller::topics_controller,
+    blog_controller::blog_html_controller, contact_api_controller::contact_api_controller,
+    contact_controller::contact_controller, index_controller::index_controller,
+    mailing_controller::mailing_list_controller, resources_controller::resources_controller,
+    static_controllers::static_controllers, topics_controller::topics_controller,
 };
 use db::config_db::Database;
 use env_logger::{Builder, WriteStyle};
@@ -56,6 +56,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::NormalizePath::trim())
             .app_data(db_data.clone())
             .configure(blog_api_controller)
+            .configure(contact_api_controller)
             .configure(index_controller)
             .configure(about_controller)
             .configure(resources_controller)
