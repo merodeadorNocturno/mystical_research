@@ -17,14 +17,12 @@ pub struct Database {
 
 impl Database {
     pub async fn init() -> Result<Self, Error> {
-        // let db_address: String = set_environment_variable("DB_ADDRESS", "0.0.0.0:8000");
+        let db_address: String = set_environment_variable("DB_ADDRESS", "0.0.0.0:8000");
         let db_ns = set_environment_variable("DB_NAMESPACE", "mystical_ns");
         let db_name = set_environment_variable("DB_NAME", "mystical_db");
 
         // let client = Surreal::new::<Ws>(db_address).await?;
-        let client =
-            any::connect("wss://boaty-mcboatfac-069rokc6hhpe7bs1pf37qbmd4c.aws-use1.surreal.cloud")
-                .await?;
+        let client = any::connect(db_address).await?;
 
         client
             .signin(Root {
