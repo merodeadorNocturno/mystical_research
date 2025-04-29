@@ -1,14 +1,15 @@
 use super::schema_db::Schema;
 use crate::config::connection::set_environment_variable;
 use surrealdb::{
-    engine::remote::ws::{Client, Ws},
+    engine::{any, any::Any}, //, remote::ws::Client},
     opt::auth::Root,
-    Error, Surreal,
+    Error,
+    Surreal,
 };
 
 #[derive(Debug)]
 pub struct Database {
-    pub client: Surreal<Client>,
+    pub client: Surreal<Any>,
     pub name_space: String,
     pub db_name: String,
     pub schema: Schema, // Add the schema here
@@ -16,11 +17,14 @@ pub struct Database {
 
 impl Database {
     pub async fn init() -> Result<Self, Error> {
-        let db_address: String = set_environment_variable("DB_ADDRESS", "0.0.0.0:8000");
+        // let db_address: String = set_environment_variable("DB_ADDRESS", "0.0.0.0:8000");
         let db_ns = set_environment_variable("DB_NAMESPACE", "mystical_ns");
         let db_name = set_environment_variable("DB_NAME", "mystical_db");
 
-        let client = Surreal::new::<Ws>(db_address).await?;
+        // let client = Surreal::new::<Ws>(db_address).await?;
+        let client =
+            any::connect("wss://boaty-mcboatfac-069rokc6hhpe7bs1pf37qbmd4c.aws-use1.surreal.cloud")
+                .await?;
 
         client
             .signin(Root {
