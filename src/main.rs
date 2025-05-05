@@ -14,7 +14,6 @@ use log::{info, warn};
 mod config;
 mod controllers;
 mod db;
-mod mock;
 mod models;
 mod utils;
 

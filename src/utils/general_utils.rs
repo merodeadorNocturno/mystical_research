@@ -1,4 +1,6 @@
+use log::info;
 use rand::{rng, Rng};
+use std::{fs, io, path::PathBuf};
 use surrealdb::Uuid;
 use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
 
@@ -118,4 +120,53 @@ pub fn create_pagination_links(current_page: u64, total_pages: u64) -> String {
     }
 
     links
+}
+
+// Creates a robots.txt file in the static/templates directory.
+///
+/// This function generates a basic robots.txt allowing all crawlers access
+/// and specifying the sitemap location.
+///
+/// # Arguments
+///
+/// * `template_dir` - The path to the `static/templates` directory.
+/// * `base_url` - The base URL of the website (e.g., "https://mysticalresearch.com")
+///              used for generating the Sitemap URL.
+///
+/// # Errors
+///
+/// Returns an `io::Error` if the directory cannot be created or the file
+/// cannot be written.
+pub fn create_robots_txt_template(template_dir: &str, base_url: &str) -> io::Result<()> {
+    // 1. Define the content
+    //    Allowing all crawlers (`*`) and access to everything (`/`) is common.
+    //    Adjust `Disallow` rules as needed for specific private areas.
+    let robots_content = format!(
+        r#"User-agent: *
+Allow: /
+# Disallow: /admin/ # Example: Disallow specific paths if needed
+# Disallow: /private/
+
+Sitemap: {}/sitemap.xml
+"#,
+        base_url.trim_end_matches('/') // Ensure no double slash in sitemap URL
+    );
+
+    // 2. Construct the full file path within the specified template directory
+    let mut robots_path = PathBuf::from(template_dir);
+
+    // Ensure the template directory itself exists (optional, defensive check)
+    fs::create_dir_all(&robots_path)?;
+
+    robots_path.push("robots.txt");
+
+    // 3. Write the content to the file
+    fs::write(&robots_path, robots_content)?;
+
+    info!(
+        "Successfully created robots.txt template at: {:?}",
+        robots_path
+    );
+
+    Ok(())
 }
