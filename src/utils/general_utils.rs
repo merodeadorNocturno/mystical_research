@@ -1,4 +1,3 @@
-use crate::utils::env_utils::PageConfiguration;
 use log::info;
 use rand::{rng, Rng};
 use std::{fs, io, path::PathBuf};
@@ -245,17 +244,4 @@ pub fn get_template_path() -> PathBuf {
     let path_str =
         std::env::var("TEMPLATE_PATH").unwrap_or_else(|_| "static/templates".to_string());
     PathBuf::from(path_str)
-}
-
-/// Gets the base URL for the site.
-/// Ensure this aligns with how `set_env_urls` determines the base URL.
-pub fn get_base_url(page_config: &PageConfiguration) -> String {
-    // Construct base URL from config. Handle default ports.
-    let scheme = "http"; // Or "https" if using TLS
-    let port_str = match (scheme, page_config.server_port.as_str()) {
-        ("http", "80") => "".to_string(),
-        ("https", "443") => "".to_string(),
-        _ => format!(":{}", page_config.server_port),
-    };
-    format!("{}://{}{}", scheme, page_config.server_address, port_str)
 }

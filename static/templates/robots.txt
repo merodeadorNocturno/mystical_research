@@ -3,4 +3,4 @@ Allow: /
 # Disallow: /admin/ # Example: Disallow specific paths if needed
 # Disallow: /private/
 
-Sitemap: http://localhost:8081/sitemap.xml
+Sitemap: https://mysticalresearch.com/sitemap.xml

@@ -1,8 +1,6 @@
 use crate::utils::{
     env_utils::*,
-    general_utils::{
-        create_robots_txt_template, create_sitemap_xml_template, get_base_url, get_template_path,
-    },
+    general_utils::{create_robots_txt_template, create_sitemap_xml_template, get_template_path},
 };
 use actix_cors::Cors;
 use actix_files as fs;
@@ -41,18 +39,16 @@ async fn main() -> std::io::Result<()> {
         Err(err) => warn!("Error getting current directory: {}", err),
     }
 
-    let page_config = set_env_urls();
-
     let PageConfiguration {
         server_address,
         server_port,
+        public_base_url,
         ..
     } = set_env_urls();
 
     let template_path = get_template_path();
 
     let static_asset_path = PathBuf::from("static");
-    let base_url = get_base_url(&page_config);
 
     if let Err(e) = std_fs::create_dir_all(&template_path) {
         error!(
@@ -70,13 +66,13 @@ async fn main() -> std::io::Result<()> {
         return Err(e);
     }
 
-    if let Err(e) = create_robots_txt_template(&template_path, &base_url) {
+    if let Err(e) = create_robots_txt_template(&template_path, &public_base_url) {
         error!("Failed to create robots.txt: {}", e);
 
         return Err(io::Error::new(io::ErrorKind::Other, e));
     }
 
-    if let Err(e) = create_sitemap_xml_template(&template_path, &base_url) {
+    if let Err(e) = create_sitemap_xml_template(&template_path, &public_base_url) {
         error!("Failed to create sitemap.xml: {}", e);
 
         return Err(io::Error::new(io::ErrorKind::Other, e));

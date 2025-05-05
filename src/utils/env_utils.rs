@@ -48,7 +48,7 @@ fn get_backend_url() -> String {
 //     level_filter
 // }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct PageConfiguration {
     pub server_conf: String,
     pub backend_url: String,
@@ -60,6 +60,7 @@ pub struct PageConfiguration {
     pub ai_request_url: String,
     pub google_model: String,
     pub template_path: String,
+    pub public_base_url: String,
 }
 
 pub fn set_env_urls() -> PageConfiguration {
@@ -77,6 +78,7 @@ pub fn set_env_urls() -> PageConfiguration {
         ),
         google_model: set_environment_variable("GOOGLE_MODEL", "gemini-2.0-flash"),
         template_path: set_environment_variable("TEMPLATE_PATH", "./static/templates"),
+        public_base_url: set_environment_variable("PUBLIC_BASE_URL", "https://example.com"),
     }
 }
 
