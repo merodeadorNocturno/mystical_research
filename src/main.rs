@@ -1,5 +1,11 @@
-use crate::utils::env_utils::*;
+use crate::utils::{
+    env_utils::*,
+    general_utils::{
+        create_robots_txt_template, create_sitemap_xml_template, get_base_url, get_template_path,
+    },
+};
 use actix_cors::Cors;
+use actix_files as fs;
 use actix_web::{middleware, web::Data, App, HttpServer};
 use controllers::{
     about_controller::about_controller, blog_api_controller::blog_api_controller,
@@ -10,7 +16,9 @@ use controllers::{
 };
 use db::config_db::Database;
 use env_logger::{Builder, WriteStyle};
-use log::{info, warn};
+use log::{error, info, warn};
+use std::{fs as std_fs, io, path::PathBuf};
+
 mod config;
 mod controllers;
 mod db;
@@ -29,15 +37,50 @@ async fn main() -> std::io::Result<()> {
         .init();
 
     match get_cwd() {
-        Ok(_) => info!("Successfully retrieved current directory"),
+        Ok(cwd) => info!("Successfully retrieved current directory: {:?}", cwd),
         Err(err) => warn!("Error getting current directory: {}", err),
     }
+
+    let page_config = set_env_urls();
 
     let PageConfiguration {
         server_address,
         server_port,
         ..
     } = set_env_urls();
+
+    let template_path = get_template_path();
+
+    let static_asset_path = PathBuf::from("static");
+    let base_url = get_base_url(&page_config);
+
+    if let Err(e) = std_fs::create_dir_all(&template_path) {
+        error!(
+            "Failed to create template directory {:?}: {}",
+            template_path, e
+        );
+        return Err(e);
+    }
+
+    if let Err(e) = std_fs::create_dir_all(&static_asset_path) {
+        error!(
+            "Failed to create static asset directory {:?}: {}",
+            static_asset_path, e
+        );
+        return Err(e);
+    }
+
+    if let Err(e) = create_robots_txt_template(&template_path, &base_url) {
+        error!("Failed to create robots.txt: {}", e);
+
+        return Err(io::Error::new(io::ErrorKind::Other, e));
+    }
+
+    if let Err(e) = create_sitemap_xml_template(&template_path, &base_url) {
+        error!("Failed to create sitemap.xml: {}", e);
+
+        return Err(io::Error::new(io::ErrorKind::Other, e));
+    }
 
     let my_db = Database::init().await.expect("CANT_CONNECT_TO_DB");
     let db_data = Data::new(my_db);
@@ -64,6 +107,7 @@ async fn main() -> std::io::Result<()> {
             .configure(mailing_list_controller)
             .configure(blog_html_controller)
             .configure(static_controllers)
+            .service(fs::Files::new("/static", static_asset_path.clone()).show_files_listing())
     })
     .bind(server_address_conf)
     .expect("FAILED TO BIND TO PORT")

@@ -9,23 +9,23 @@ use crate::models::general_model::CountResult;
 use serde::{de::DeserializeOwned, Serialize};
 use surrealdb::{Error, Response as SR_Response};
 
-pub async fn util_find_all<T: DeserializeOwned>(
-    db: &Data<Database>,
-    table_name: &str,
-) -> Option<Vec<T>> {
-    let result = db.client.select(table_name).await;
+// pub async fn util_find_all<T: DeserializeOwned>(
+//     db: &Data<Database>,
+//     table_name: &str,
+// ) -> Option<Vec<T>> {
+//     let result = db.client.select(table_name).await;
 
-    match result {
-        Ok(all_results) => Some(all_results),
-        Err(err) => {
-            error!(
-                "Error fetching all records from table {}: {}",
-                table_name, err
-            );
-            None
-        }
-    }
-}
+//     match result {
+//         Ok(all_results) => Some(all_results),
+//         Err(err) => {
+//             error!(
+//                 "Error fetching all records from table {}: {}",
+//                 table_name, err
+//             );
+//             None
+//         }
+//     }
+// }
 
 pub async fn util_find_one<T: DeserializeOwned>(
     db: &Data<Database>,

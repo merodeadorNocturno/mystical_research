@@ -1,3 +1,4 @@
+use crate::utils::env_utils::PageConfiguration;
 use log::info;
 use rand::{rng, Rng};
 use std::{fs, io, path::PathBuf};
@@ -137,10 +138,7 @@ pub fn create_pagination_links(current_page: u64, total_pages: u64) -> String {
 ///
 /// Returns an `io::Error` if the directory cannot be created or the file
 /// cannot be written.
-pub fn create_robots_txt_template(template_dir: &str, base_url: &str) -> io::Result<()> {
-    // 1. Define the content
-    //    Allowing all crawlers (`*`) and access to everything (`/`) is common.
-    //    Adjust `Disallow` rules as needed for specific private areas.
+pub fn create_robots_txt_template(output_dir: &PathBuf, base_url: &str) -> io::Result<()> {
     let robots_content = format!(
         r#"User-agent: *
 Allow: /
@@ -152,21 +150,112 @@ Sitemap: {}/sitemap.xml
         base_url.trim_end_matches('/') // Ensure no double slash in sitemap URL
     );
 
-    // 2. Construct the full file path within the specified template directory
-    let mut robots_path = PathBuf::from(template_dir);
-
-    // Ensure the template directory itself exists (optional, defensive check)
-    fs::create_dir_all(&robots_path)?;
-
+    let mut robots_path = output_dir.clone();
     robots_path.push("robots.txt");
 
-    // 3. Write the content to the file
     fs::write(&robots_path, robots_content)?;
+    info!("Successfully created robots.txt at: {:?}", robots_path);
+    Ok(())
+}
 
-    info!(
-        "Successfully created robots.txt template at: {:?}",
-        robots_path
+/// Creates a basic sitemap.xml file in the specified directory.
+///
+/// This function generates a placeholder sitemap. A real implementation
+/// should dynamically generate this based on website content (pages, blog posts).
+///
+/// # Arguments
+///
+/// * `output_dir` - The path to the directory where the sitemap should be created.
+/// * `base_url` - The base URL of the website (e.g., "https://mysticalresearch.com").
+///
+/// # Errors
+///
+/// Returns an `io::Error` if the file cannot be written.
+pub fn create_sitemap_xml_template(output_dir: &PathBuf, base_url: &str) -> io::Result<()> {
+    // Ensure base_url ends with a slash for correct concatenation below
+    let base = format!("{}/", base_url.trim_end_matches('/'));
+
+    // Basic placeholder sitemap content.
+    // TODO: Replace this with dynamic generation based on your content (blog posts, pages).
+    let sitemap_content = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{}</loc>
+    <lastmod>{}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{}about.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>{}blog_home.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{}resources.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+   <url>
+    <loc>{}topics.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+   <url>
+    <loc>{}contact.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- Add other important URLs here -->
+</urlset>
+"#,
+        base,
+        chrono::Utc::now().format("%Y-%m-%d").to_string(), // Add a lastmod for the homepage
+        base,
+        base,
+        base,
+        base,
+        base
     );
 
+    let mut sitemap_path = output_dir.clone();
+    sitemap_path.push("sitemap.xml");
+
+    fs::write(&sitemap_path, sitemap_content)?;
+    info!("Successfully created sitemap.xml at: {:?}", sitemap_path);
     Ok(())
+}
+
+// --- Helper function to get the designated static content directory ---
+// You might already have this logic in env_utils, adjust as needed.
+// This example assumes your robots.txt and sitemap.xml will live directly
+// inside the `template_path` directory. If they should live elsewhere (e.g., a
+// dedicated `public` or `static_root` directory), adjust accordingly.
+
+/// Gets the configured path for static template files.
+/// It's often better to determine this path once at startup.
+pub fn get_template_path() -> PathBuf {
+    // Example: Reading from an environment variable or using a default
+    // Ensure this aligns with how `set_env_urls` determines `template_path`.
+    let path_str =
+        std::env::var("TEMPLATE_PATH").unwrap_or_else(|_| "static/templates".to_string());
+    PathBuf::from(path_str)
+}
+
+/// Gets the base URL for the site.
+/// Ensure this aligns with how `set_env_urls` determines the base URL.
+pub fn get_base_url(page_config: &PageConfiguration) -> String {
+    // Construct base URL from config. Handle default ports.
+    let scheme = "http"; // Or "https" if using TLS
+    let port_str = match (scheme, page_config.server_port.as_str()) {
+        ("http", "80") => "".to_string(),
+        ("https", "443") => "".to_string(),
+        _ => format!(":{}", page_config.server_port),
+    };
+    format!("{}://{}{}", scheme, page_config.server_address, port_str)
 }
