@@ -103,7 +103,7 @@ async fn main() -> std::io::Result<()> {
             .configure(mailing_list_controller)
             .configure(blog_html_controller)
             .configure(static_controllers)
-            .service(fs::Files::new("/static", static_asset_path.clone()).show_files_listing())
+            .service(fs::Files::new("/static", static_asset_path.clone()))
     })
     .bind(server_address_conf)
     .expect("FAILED TO BIND TO PORT")
