@@ -1,5 +1,3 @@
-use std::ptr::null_mut;
-
 use crate::db::config_db::Database;
 use crate::models::blog_model::BlogArticle;
 use crate::utils::crud_utils::*;

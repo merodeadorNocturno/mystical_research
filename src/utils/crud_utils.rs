@@ -71,49 +71,49 @@ where
     }
 }
 
-pub async fn util_update_record<T: DeserializeOwned + Serialize>(
-    db: &Data<Database>,
-    record: T,
-    table_name: &str,
-) -> Option<T>
-where
-    T: DeserializeOwned + Serialize + Send + Sync + 'static,
-{
-    let t_id = get_uuid();
-    let t_to_update: Result<Option<T>, Error> =
-        db.client.select((table_name, &t_id.to_string())).await;
+// pub async fn util_update_record<T: DeserializeOwned + Serialize>(
+//     db: &Data<Database>,
+//     record: T,
+//     table_name: &str,
+// ) -> Option<T>
+// where
+//     T: DeserializeOwned + Serialize + Send + Sync + 'static,
+// {
+//     let t_id = get_uuid();
+//     let t_to_update: Result<Option<T>, Error> =
+//         db.client.select((table_name, &t_id.to_string())).await;
 
-    match t_to_update {
-        Ok(t_found) => match t_found {
-            Some(_t) => {
-                let updated_t: Result<Option<T>, Error> = db
-                    .client
-                    .update((table_name, &t_id.to_string()))
-                    .merge(record)
-                    .await;
+//     match t_to_update {
+//         Ok(t_found) => match t_found {
+//             Some(_t) => {
+//                 let updated_t: Result<Option<T>, Error> = db
+//                     .client
+//                     .update((table_name, &t_id.to_string()))
+//                     .merge(record)
+//                     .await;
 
-                match updated_t {
-                    Ok(updated_t_values) => updated_t_values,
-                    Err(err) => {
-                        error!(
-                            "Error updating record with ID {} in table {}: {}",
-                            &t_id, &table_name, &err
-                        );
-                        None
-                    }
-                }
-            }
-            None => None,
-        },
-        Err(err) => {
-            error!(
-                "Error fetching record with ID {} in table {}: {}",
-                &t_id, &table_name, &err
-            );
-            None
-        }
-    }
-}
+//                 match updated_t {
+//                     Ok(updated_t_values) => updated_t_values,
+//                     Err(err) => {
+//                         error!(
+//                             "Error updating record with ID {} in table {}: {}",
+//                             &t_id, &table_name, &err
+//                         );
+//                         None
+//                     }
+//                 }
+//             }
+//             None => None,
+//         },
+//         Err(err) => {
+//             error!(
+//                 "Error fetching record with ID {} in table {}: {}",
+//                 &t_id, &table_name, &err
+//             );
+//             None
+//         }
+//     }
+// }
 
 pub async fn util_find_active_records<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,

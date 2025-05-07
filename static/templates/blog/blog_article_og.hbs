@@ -15,7 +15,7 @@
         <!-- Introduction -->
         <section class="post-intro">
             <p>
-                {{article.summary}}
+                {{{article.summary}}}
             </p>
         </section>
 
@@ -30,7 +30,7 @@
             <h3>Table of Contents</h3>
             <ul>
                 {{#each table_of_contents}}
-                    <li><a href="#{{this}}">{{this}}</a></li>
+                    <li><a href="#{{this}}">{{{this}}}</a></li>
                 {{/each}}
             </ul>
         </aside>
@@ -78,7 +78,7 @@
         <section id="spreads">
             <h2>Keywords</h2>
             {{#each keywords}}
-                <span>{{this}}</span>
+                <span>{{{this}}}</span>
             {{/each}}
             <!-- <div class="spread-example">
                 <img
@@ -108,15 +108,17 @@
     <!-- Author Bio -->
     <aside class="author-bio immersive">
         <div class="author-image">
-            <img src="/img/author.jpg" alt="Author Name" loading="lazy" />
+            <img
+                src="/static/img/avatar2.png"
+                alt="Author Name"
+                loading="lazy"
+            />
         </div>
         <div class="author-details">
             <h3>About the Author</h3>
             <p>
-                <strong>Jane Doe</strong>
-                is a professional tarot reader with over 10 years of experience.
-                She specializes in helping beginners unlock the mysteries of the
-                tarot.
+                <strong>{{article.author}}</strong>
+
             </p>
         </div>
     </aside>
