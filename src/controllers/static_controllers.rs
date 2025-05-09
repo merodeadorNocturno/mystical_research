@@ -49,6 +49,29 @@ async fn serve_robots_txt(_req: HttpRequest) -> impl Responder {
     }
 }
 
+#[get("/ads.txt")]
+async fn serve_ads_txt(_req: HttpRequest) -> impl Responder {
+    // Determine the path *once* at startup if possible, or use a helper
+    let mut robots_file_path = get_template_path(); // Use helper
+    robots_file_path.push("ads.txt");
+    info!("Attempting to serve ads.txt from: {:?}", robots_file_path); // Added logging
+
+    match read_to_string(&robots_file_path).await {
+        Ok(content) => HttpResponse::Ok()
+            .content_type("text/plain; charset=utf-8")
+            .body(content),
+        Err(e) => {
+            error!(
+                "Failed to read ads.txt file at {:?}: {}",
+                robots_file_path, e
+            );
+            HttpResponse::NotFound()
+                .content_type("text/plain")
+                .body("Ads.txt not found.")
+        }
+    }
+}
+
 // Handler to serve the sitemap.xml file
 #[get("/sitemap.xml")]
 async fn serve_sitemap_xml(_req: HttpRequest) -> impl Responder {
@@ -77,5 +100,6 @@ async fn serve_sitemap_xml(_req: HttpRequest) -> impl Responder {
 
 pub fn static_controllers(cfg: &mut ServiceConfig) {
     cfg.service(serve_robots_txt);
+    cfg.service(serve_ads_txt);
     cfg.service(serve_sitemap_xml);
 }
