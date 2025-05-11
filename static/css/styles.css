@@ -432,13 +432,19 @@ h6 {
 
 /* Featured Image */
 .post-featured-image {
-    margin: 2rem 0;
+    position: relative; /* Keep if needed for overlays or other positioned children */
+    width: 100%; /* Modified: Set width to 100% of parent */
+    aspect-ratio: 1 / 1; /* Added: Enforce 1:1 aspect ratio */
+    overflow: hidden; /* Keep: Clip the image */
+    margin-bottom: 1.5rem; /* Existing */
 }
 
 .post-featured-image img {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block; /* Or inline-block, depending on layout needs, but block is common for images filling containers */
 }
 
 .post-featured-image.immersive {
