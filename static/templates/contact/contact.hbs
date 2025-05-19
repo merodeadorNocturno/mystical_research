@@ -19,6 +19,7 @@
             hx-swap="innerHTML"
             hx-indicator="#loading-indicator"
         >
+            <input type="hidden" name="csrf_token" value="{{csrf_token}}" /> <!-- Add CSRF token hidden field -->
             <input type="hidden" name="deleted" value="false" />
             <div class="form-group">
                 <label for="name">Your Name</label>

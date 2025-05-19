@@ -3,7 +3,12 @@ use crate::utils::{
     general_utils::{create_robots_txt_template, create_sitemap_xml_template, get_template_path},
 };
 use actix_cors::Cors;
+use actix_csrf::CsrfMiddleware;
 use actix_files as fs;
+use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
+use actix_web::cookie::Key;
+use actix_web::http::Method; // Added for CsrfMiddleware configuration
+use rand::rngs::StdRng;
 use actix_web::{middleware, web::Data, App, HttpServer};
 use controllers::{
     about_controller::about_controller, blog_api_controller::blog_api_controller,
@@ -81,6 +86,11 @@ async fn main() -> std::io::Result<()> {
     let my_db = Database::init().await.expect("CANT_CONNECT_TO_DB");
     let db_data = Data::new(my_db);
 
+    // IMPORTANT: In a real application, load this key from a secure, persistent
+    // configuration or environment variable. Generating it on startup means all
+    // sessions are invalidated on restart.
+    let secret_key = Key::generate();
+
     info!(
         "DB up and running:: {} :: {}",
         db_data.db_name, db_data.name_space
@@ -90,9 +100,25 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let cors = Cors::permissive().max_age(MAX_AGE);
+        let session_mw =
+            SessionMiddleware::builder(CookieSessionStore::default(), secret_key.clone())
+                .cookie_secure(false) // Set to true if using HTTPS
+                .cookie_same_site(actix_web::cookie::SameSite::Lax)
+                .session_lifecycle(
+                    PersistentSession::default()
+                        .session_ttl(actix_web::cookie::time::Duration::days(1)),
+                )
+                .build();
+
         App::new()
-            .wrap(cors)
+            .wrap(
+                CsrfMiddleware::<StdRng>::new()
+                    .set_cookie(Method::GET, "/contact.html")
+                    .set_cookie(Method::GET, "/htmx/contact"),
+            )
+            .wrap(session_mw)
             .wrap(middleware::NormalizePath::trim())
+            .wrap(cors)
             .app_data(db_data.clone())
             .configure(blog_api_controller)
             .configure(index_controller)

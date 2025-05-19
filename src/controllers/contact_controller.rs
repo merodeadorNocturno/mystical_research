@@ -6,7 +6,8 @@ use crate::utils::{
     env_utils::{set_env_urls, PageConfiguration},
     fs_utils::{read_hbs_template, register_templates},
 };
-use actix_web::HttpRequest;
+use actix_csrf::extractor::CsrfToken;
+use actix_web::HttpRequest; // HttpRequest might still be needed for the POST route
 use actix_web::{
     web::{get, post, Data, Form, ServiceConfig},
     HttpResponse,
@@ -18,7 +19,7 @@ use std::collections::BTreeMap;
 use std::path::Path;
 use surrealdb::sql::Value;
 
-async fn htmx_contact() -> Result<String, RenderError> {
+async fn htmx_contact(token: CsrfToken) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
 
@@ -38,11 +39,15 @@ async fn htmx_contact() -> Result<String, RenderError> {
         }
     };
 
-    let section_template = handlebars.render_template(&section_template, &json!({}))?;
+    // Extract CSRF token value using the CsrfToken extractor
+    let csrf_token_value = token.get().to_string();
+
+
+    let section_template = handlebars.render_template(&section_template, &json!({ "csrf_token": csrf_token_value }))?;
     Ok(section_template)
 }
 
-async fn contact_html() -> Result<String, RenderError> {
+async fn contact_html(token: CsrfToken) -> Result<String, RenderError> {
     let PageConfiguration { template_path, .. } = set_env_urls();
 
     let mut handlebars = Handlebars::new();
@@ -61,10 +66,25 @@ async fn contact_html() -> Result<String, RenderError> {
             TitleError::new(err.to_string()).error
         }
     };
+    
+    // Extract CSRF token value using the CsrfToken extractor
+    let csrf_token_value = token.get().to_string();
+
+    // Add csrf_token to the mock object or create a new context
+    let contact_page_data = mock_contact_home_page_object();
+    // This assumes mock_contact_home_page_object() returns a serde_json::Value or a struct that can be merged/extended.
+    // If it's a struct, you might need to create a new struct that includes the csrf_token or use a map.
+    // For simplicity, let's assume we can convert it to a map and insert the token.
+    let mut data_map = match serde_json::to_value(&contact_page_data) {
+        Ok(serde_json::Value::Object(map)) => map,
+        _ => serde_json::Map::new(), // Or handle error
+    };
+    data_map.insert("csrf_token".to_string(), json!(csrf_token_value));
+
 
     let section_template = match handlebars.render_template(
         &contact_home_template,
-        &json!(&mock_contact_home_page_object()),
+        &data_map, // Pass the map with the token
     ) {
         Ok(template) => template,
         Err(err) => {
@@ -91,14 +111,14 @@ async fn post_htmx_contact(
     records.insert("name", Value::from(contact_data.name.to_string()));
     records.insert(
         "subject",
-        Value::from(contact_data.subject.unwrap().to_string()),
+        Value::from(contact_data.subject.unwrap_or_default().to_string()), // Handle Option
     );
 
     let contact_form_data: ContactFormData = ContactFormData::builder()
-        .name(records.get("name").unwrap().to_string())
-        .email(records.get("email").unwrap().to_string())
-        .subject(records.get("subject").unwrap().to_string())
-        .message(records.get("message").unwrap().to_string())
+        .name(records.get("name").map(|v| v.to_string().replace("\"", "")).unwrap_or_default()) // Sanitize if necessary
+        .email(records.get("email").map(|v| v.to_string().replace("\"", "")).unwrap_or_default())
+        .subject(records.get("subject").map(|v| v.to_string().replace("\"", "")).unwrap_or_default())
+        .message(records.get("message").map(|v| v.to_string().replace("\"", "")).unwrap_or_default())
         .deleted(false)
         .build();
 
@@ -142,9 +162,8 @@ async fn post_htmx_contact(
 pub fn contact_controller(cfg: &mut ServiceConfig) {
     cfg.route(
         "/htmx/contact",
-        get().to(|| async move {
-            let contact_template = htmx_contact().await;
-            match contact_template {
+        get().to(|token: CsrfToken| async move {
+            match htmx_contact(token).await {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
                     .body(template),
@@ -160,9 +179,8 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
 
     cfg.route(
         "/contact.html",
-        get().to(|| async move {
-            let contact_home_template = contact_html().await;
-            match contact_home_template {
+        get().to(|token: CsrfToken| async move {
+            match contact_html(token).await {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
                     .body(template),

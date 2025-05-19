@@ -1,5 +1,5 @@
 use log::info;
-use rand::{rng, Rng};
+use rand::Rng; // Updated for rand 0.8.x
 use std::{fs, io, path::PathBuf};
 use surrealdb::Uuid;
 use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
@@ -80,9 +80,9 @@ pub fn generate_slug_with_random_suffix(title: &str) -> String {
     }
 
     // 5. Generate random suffix (using thread_rng and gen_range)
-    let mut rng = rng(); // Get thread-local RNG
-                         // Use gen_range for generating a random number within a range
-    let random_suffix: u32 = rng.random_range(1000..=9999);
+    let mut rng = rand::thread_rng(); // Get thread-local RNG for rand 0.8.x
+                                     // Use gen_range for generating a random number within a range
+    let random_suffix: u32 = rng.gen_range(1000..=9999); // Updated for rand 0.8.x
 
     // 6. Format the final slug string
     format!("{}_{}.html", slug_base, random_suffix)
