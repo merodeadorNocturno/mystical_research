@@ -4,19 +4,23 @@ use std::fs;
 
 #[derive(Debug, Clone)]
 pub struct FieldDefinition {
+    #[allow(dead_code)]
     pub name: String,
+    #[allow(dead_code)]
     pub field_type: String, // e.g., "option<string>", "record", etc.
                             // Add other relevant properties if needed (constraints, etc.)
 }
 
 #[derive(Debug, Clone)]
 pub struct TableDefinition {
+    #[allow(dead_code)]
     pub name: String,
     pub fields: HashMap<String, FieldDefinition>, // Field name -> FieldDefinition
 }
 
 #[derive(Debug, Clone)]
 pub struct Schema {
+    #[allow(dead_code)]
     pub tables: HashMap<String, TableDefinition>, // Table name -> TableDefinition
 }
 

@@ -1,10 +1,10 @@
 use super::schema_db::Schema;
 use crate::config::connection::set_environment_variable;
 use surrealdb::{
-    engine::{any, any::Any}, //, remote::ws::Client},
-    opt::auth::Root,
     Error,
     Surreal,
+    engine::{any, any::Any}, //, remote::ws::Client},
+    opt::auth::Root,
 };
 
 #[derive(Debug)]
@@ -12,6 +12,7 @@ pub struct Database {
     pub client: Surreal<Any>,
     pub name_space: String,
     pub db_name: String,
+    #[allow(dead_code)]
     pub schema: Schema, // Add the schema here
 }
 

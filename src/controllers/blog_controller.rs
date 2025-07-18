@@ -4,14 +4,14 @@ use crate::models::{
     general_model::SearchQuery,
 };
 use crate::utils::{
-    env_utils::{set_env_urls, PageConfiguration},
+    env_utils::{PageConfiguration, set_env_urls},
     fs_utils::{read_hbs_template, register_templates},
     general_utils::{create_pagination_links, string_to_vec_string, trim_to_words},
     linked_data::linked_data_blog_article,
 };
 use actix_web::{
-    web::{get, Data, Path, Query, ServiceConfig},
     HttpRequest, HttpResponse,
+    web::{Data, Path, Query, ServiceConfig, get},
 };
 use handlebars::{Handlebars, RenderError};
 use log::{error, info, warn};
@@ -287,7 +287,7 @@ async fn htmx_blog_search(
         Database::search_content(db, search_term.clone()).await // Pass cloned term
     } else {
         None // Or maybe return latest posts if search is empty? Decide behavior.
-             // Let's assume empty search term means no results for now.
+        // Let's assume empty search term means no results for now.
     };
 
     let blog_previews: Vec<BlogPreview> = get_blog_articles_from_db(search_result);
@@ -415,7 +415,6 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
 
 #[derive(Deserialize, Debug)] // <-- Must derive Deserialize
 struct BlogHomeQuery {
-    r: Option<usize>,
     page: Option<u64>,
 }
 
