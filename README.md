@@ -88,6 +88,7 @@ These routes serve HTML content, rendering pages using Handlebars templates.
 - **Input Validation:** [validator](https://crates.io/crates/validator) - For validating user inputs (though not heavily used in the provided code, it's available for future use).
 - **Asynchronous Runtime:** [tokio](https://tokio.rs/) - Actix-web and SurrealDB rely on Tokio for asynchronous operations.
 - **HTTP Client:** [reqwest](https://crates.io/crates/reqwest) - For making HTTP requests to the Google Gemini API.
+- **Scheduling (Unused):** [tokio-cron-scheduler](https://crates.io/crates/tokio-cron-scheduler) - A dependency for scheduling tasks, currently not implemented in the project.
 
 ## Development
 
