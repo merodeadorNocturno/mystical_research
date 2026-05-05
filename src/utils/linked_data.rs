@@ -7,8 +7,8 @@ pub struct BlogArticleLD {
     title: String,
     summary: String,
     image_urls: String,
-    published_at: surrealdb::Datetime,
-    updated_at: surrealdb::Datetime,
+    published_at: surrealdb::types::Datetime,
+    updated_at: surrealdb::types::Datetime,
     author: String,
 }
 
