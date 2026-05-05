@@ -10,66 +10,73 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <!-- Primary Meta Tags -->
-        <title>MysticWeb | Ancient Wisdom & Modern Mysticism</title>
+        <title>Mystical Research | Philosophy, Mysticism, & Theology</title>
+        
+        <!-- Fonts: Academic Modern -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+        <!-- HTMX for frontend routing -->
+        <script src="https://unpkg.com/htmx.org@2.0.4" loading="lazy"></script>
         <meta
             name="description"
-            content="Explore ancient mystical traditions including tarot, astrology, and numerology. Join our community of spiritual seekers."
+            content="A sanctuary for intellectual and spiritual exploration, Mystical Research offers deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology."
         />
         <meta
             name="keywords"
-            content="mysticism, tarot, astrology, numerology, spiritual guidance, ancient wisdom"
+            content="philosophy, mysticism, theology, research, essays, ancient wisdom, spiritual inquiry"
         />
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
         <meta
             property="og:title"
-            content="MysticWeb | Ancient Wisdom & Modern Mysticism"
+            content="Mystical Research | Philosophy, Mysticism, & Theology"
         />
         <meta
             property="og:description"
-            content="Explore ancient mystical traditions including tarot, astrology, and numerology."
+            content="Deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology."
         />
         <meta
             property="og:image"
-            content="https://yourdomain.com/img/og-image.jpg"
+            content="https://www.mysticalresearch.com/static/img/article4.png"
         />
 
         <!-- Twitter -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta
             name="twitter:title"
-            content="MysticWeb | Ancient Wisdom & Modern Mysticism"
+            content="Mystical Research | Philosophy, Mysticism, & Theology"
         />
         <meta
             name="twitter:description"
-            content="Explore ancient mystical traditions including tarot, astrology, and numerology."
+            content="Deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology."
         />
         <meta
             name="twitter:image"
-            content="https://yourdomain.com/img/twitter-card.jpg"
+            content="https://www.mysticalresearch.com/static/img/article4.png"
         />
 
         <!-- Canonical URL -->
-        <link rel="canonical" href="https://yourdomain.com/" />
+        <link rel="canonical" href="https://www.mysticalresearch.com/blog_home.html" />
 
         <!-- Favicon -->
-        <link rel="icon" type="image/png" href="/img/favicon.png" />
+        <link rel="icon" type="image/png" href="/static/favicon.ico" />
 
         <!-- Schema Markup -->
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "MysticWeb",
-                "url": "https://yourdomain.com/",
-                "description": "Ancient Wisdom & Modern Mysticism",
+                "name": "Mystical Research",
+                "url": "https://www.mysticalresearch.com",
+                "description": "A sanctuary for intellectual and spiritual exploration, Mystical Research offers deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology. We bridge ancient wisdom with modern inquiry to illuminate the mysteries of existence.",
                 "publisher": {
                     "@type": "Organization",
-                    "name": "MysticWeb",
+                    "name": "Mystical Research",
                     "logo": {
                         "@type": "ImageObject",
-                        "url": "https://yourdomain.com/img/logo.png"
+                        "url": "https://www.mysticalresearch.com/static/img/article4.png"
                     }
                 }
             }
@@ -78,22 +85,22 @@
     <body>
         <nav class="main-nav">
             <div class="nav-container">
-                <div class="logo">🔮 MysticWeb</div>
+                <div class="logo">🔮 Mystical Research</div>
                 <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="topics.html">Topics</a></li>
-                    <li><a href="resources.html">Resources</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="index.html" hx-push-url="/">Home</a></li>
+                    <li><a href="about.html" hx-get="/htmx/about" hx-target=".main_container" hx-push-url="/about.html">About</a></li>
+                    <li><a href="topics.html" hx-get="/htmx/topics" hx-target=".main_container" hx-push-url="/topics.html">Topics</a></li>
+                    <li><a href="blog_home.html" hx-get="/htmx/blog" hx-target=".main_container" hx-push-url="/blog_home.html">Blog</a></li>
+                    <li><a href="contact.html" hx-get="/htmx/contact" hx-target=".main_container" hx-push-url="/contact.html">Contact</a></li>
                 </ul>
             </div>
         </nav>
 
-        <header></header>
+        <section class="main_container">
+            <header></header>
 
-        <main class="container">
-            <section class="search-bar">
+            <main class="container">
+                <section class="search-bar">
                 <input
                     type="search"
                     id="search-input"
@@ -220,7 +227,7 @@
                     </article>
                 </div>
             </section>
-        </main>
+        </section>
 
         <!-- <aside class="ad-container">
             <div class="ad-content">
@@ -229,7 +236,7 @@
         </aside> -->
 
         <footer class="main-footer">
-            <p>&copy; 2023 MysticWeb. All rights reserved.</p>
+            <p>&copy; 2026 Mystical Research. All rights reserved.</p>
         </footer>
 
         <script>

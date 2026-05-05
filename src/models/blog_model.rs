@@ -73,7 +73,7 @@ pub struct BlogArticle {
     pub summary: Option<String>,
     pub content: Option<String>,
     pub keywords: Option<String>,
-    pub page_type: Option<PageType>,
+    pub page_type: Option<String>,
     pub deleted: Option<bool>,
     pub author: Option<String>,
     pub image_urls: Option<String>,
@@ -98,7 +98,7 @@ pub struct BlogArticleBuilder {
     keywords: Option<String>,
     content: Option<String>,
     table_of_contents: Option<String>,
-    page_type: Option<PageType>,
+    page_type: Option<String>,
     deleted: Option<bool>,
     author: Option<String>,
     image_urls: Option<String>,
@@ -156,7 +156,7 @@ impl BlogArticleBuilder {
         self.table_of_contents = Some(table_of_contents);
         self
     }
-    pub fn page_type(mut self, page_type: PageType) -> Self {
+    pub fn page_type(mut self, page_type: String) -> Self {
         self.page_type = Some(page_type);
         self
     }

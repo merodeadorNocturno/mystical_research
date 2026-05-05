@@ -14,7 +14,7 @@ use actix_web::{
     web::{Data, Path, Query, ServiceConfig, get},
 };
 use handlebars::{Handlebars, RenderError};
-use log::{error, info, warn};
+use log::{error, info};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
@@ -79,9 +79,16 @@ async fn blog_home_html(
     let context_data = json!({
         "posts": blog_previews,
         "section": "BlogHome",
+        "header": {
+            "site_name": "Mystical Research",
+            "site_description": "A sanctuary for intellectual and spiritual exploration, Mystical Research offers deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology. We bridge ancient wisdom with modern inquiry to illuminate the mysteries of existence.",
+            "keywords": "philosophy, mysticism, theology, research, essays",
+            "logo_url": "https://www.mysticalresearch.com/static/img/article4.png",
+            "canonical_url": "https://www.mysticalresearch.com/blog_home.html",
+        },
         "linked_data": {
-            "description": "A collection of mystical and artistic explorations.",
-            "logo_url": "/static/img/hero-bg.png",
+            "description": "A sanctuary for intellectual and spiritual exploration, Mystical Research offers deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology. We bridge ancient wisdom with modern inquiry to illuminate the mysteries of existence.",
+            "logo_url": "/static/img/article4.png",
             "blog_posts": &blog_previews,
 
         },
@@ -381,17 +388,16 @@ pub fn blog_html_controller(cfg: &mut ServiceConfig) {
 fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPreview> {
     match articles {
         Some(articles) => {
-            info!("Fetched {} blog articles from DB", articles.len());
-            articles
+            let previews: Vec<BlogPreview> = articles
                 .into_iter()
                 .filter_map(|article| {
-                    match (
-                        article.title,
-                        article.summary,
-                        article.image_urls,
-                        article.slug,
-                    ) {
-                        (Some(title), Some(summary), Some(image_url), Some(slug)) => {
+                    match (article.title.clone(), article.summary.clone()) {
+                        (Some(title), Some(summary)) => {
+                            let image_url = article.image_urls.clone().unwrap_or_else(|| "/static/img/article4.png".to_string());
+                            let slug = article.slug.clone().unwrap_or_else(|| {
+                                article.id.as_ref().map(|id| format!("{:?}", id)).unwrap_or_else(|| "unknown".to_string())
+                            });
+
                             Some(BlogPreview {
                                 image_url,
                                 slug,
@@ -400,15 +406,16 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
                             })
                         }
                         _ => {
-                            warn!("Invalid blog article data");
                             None
                         }
                     }
                 })
-                .collect()
+                .collect();
+                
+            previews
         }
         None => {
-            error!("Failed to fetch blog articles from DB");
+            error!("Failed to fetch blog articles from DB (Option was None)");
             Vec::new()
         }
     }

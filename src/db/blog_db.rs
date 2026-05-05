@@ -16,10 +16,6 @@ pub trait BlogDB {
     ) -> Option<Vec<BlogArticle>>;
     async fn find_one(db: &Data<Database>, id: String) -> Option<BlogArticle>;
     async fn add_one(db: &Data<Database>, new_blog_article: BlogArticle) -> Option<BlogArticle>;
-    // async fn update_one(db: &Data<Database>, blog: BlogArticle) -> Option<BlogArticle>;
-    // async fn find_all_including_deleted(db: &Data<Database>) -> Option<Vec<BlogArticle>>;
-    // async fn find_all_deleted(db: &Data<Database>) -> Option<Vec<BlogArticle>>;
-    // async fn delete_one(db: &Data<Database>, id: String) -> Option<Vec<BlogArticle>>;
     async fn search_content(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>>;
     async fn search_slug_id(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>>;
     async fn find_random_articles(
@@ -61,27 +57,11 @@ impl BlogDB for Database {
             BLOG_TABLE,
             page,
             page_size,
-            Some("published_at"),
+            Some("created_at"),
             Some(true),
         )
         .await
     }
-
-    // async fn update_one(db: &Data<Database>, blog_article: BlogArticle) -> Option<BlogArticle> {
-    //     util_update_record(db, blog_article, BLOG_TABLE).await
-    // }
-
-    // async fn find_all_including_deleted(db: &Data<Database>) -> Option<Vec<BlogArticle>> {
-    //     util_find_all(&db, BLOG_TABLE).await
-    // }
-
-    // async fn find_all_deleted(db: &Data<Database>) -> Option<Vec<BlogArticle>> {
-    //     util_query_deleted(&db, BLOG_TABLE).await
-    // }
-
-    // async fn delete_one(db: &Data<Database>, id: String) -> Option<Vec<BlogArticle>> {
-    //     util_remove_record(&db, id, BLOG_TABLE).await
-    // }
 
     async fn search_content(db: &Data<Database>, search_term: String) -> Option<Vec<BlogArticle>> {
         let fields = vec![

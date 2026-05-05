@@ -9,23 +9,7 @@ use crate::models::general_model::CountResult;
 use serde::{Serialize, de::DeserializeOwned};
 use surrealdb::{Error, IndexedResults, types::SurrealValue};
 
-// pub async fn util_find_all<T: DeserializeOwned>(
-//     db: &Data<Database>,
-//     table_name: &str,
-// ) -> Option<Vec<T>> {
-//     let result = db.client.select(table_name).await;
 
-//     match result {
-//         Ok(all_results) => Some(all_results),
-//         Err(err) => {
-//             error!(
-//                 "Error fetching all records from table {}: {}",
-//                 table_name, err
-//             );
-//             None
-//         }
-//     }
-// }
 
 pub async fn util_find_one<T: DeserializeOwned>(
     db: &Data<Database>,
@@ -72,49 +56,7 @@ where
     }
 }
 
-// pub async fn util_update_record<T: DeserializeOwned + Serialize>(
-//     db: &Data<Database>,
-//     record: T,
-//     table_name: &str,
-// ) -> Option<T>
-// where
-//     T: DeserializeOwned + Serialize + Send + Sync + 'static,
-// {
-//     let t_id = get_uuid();
-//     let t_to_update: Result<Option<T>, Error> =
-//         db.client.select((table_name, &t_id.to_string())).await;
 
-//     match t_to_update {
-//         Ok(t_found) => match t_found {
-//             Some(_t) => {
-//                 let updated_t: Result<Option<T>, Error> = db
-//                     .client
-//                     .update((table_name, &t_id.to_string()))
-//                     .merge(record)
-//                     .await;
-
-//                 match updated_t {
-//                     Ok(updated_t_values) => updated_t_values,
-//                     Err(err) => {
-//                         error!(
-//                             "Error updating record with ID {} in table {}: {}",
-//                             &t_id, &table_name, &err
-//                         );
-//                         None
-//                     }
-//                 }
-//             }
-//             None => None,
-//         },
-//         Err(err) => {
-//             error!(
-//                 "Error fetching record with ID {} in table {}: {}",
-//                 &t_id, &table_name, &err
-//             );
-//             None
-//         }
-//     }
-// }
 
 pub async fn util_find_active_records<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,
@@ -227,8 +169,20 @@ where
         table_name, order_field, order_direction, page_size, start_index
     );
 
-    // Execute the query
-    let query_result = db.client.query(&surreal_query).await; // Pass query as reference
+    // Execute the query with retry logic for expired sessions
+    let mut query_result = db.client.query(&surreal_query).await;
+
+    if let Err(e) = &query_result {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!("Session expired for paginated query on {}, re-authenticating...", table_name);
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                // Retry the query after successful authentication
+                query_result = db.client.query(&surreal_query).await;
+            }
+        }
+    }
 
     match query_result {
         Ok(mut response) => {
@@ -259,7 +213,18 @@ pub async fn util_count_records(db: &Data<Database>, table_name: &str) -> Option
     let surreal_query = format!("SELECT count() FROM {} GROUP ALL", table_name);
 
     let index: usize = 0;
-    let query_result = db.client.query(surreal_query.clone()).await;
+    let mut query_result = db.client.query(surreal_query.clone()).await;
+
+    if let Err(e) = &query_result {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!("Session expired for count query on {}, re-authenticating...", table_name);
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                query_result = db.client.query(surreal_query.clone()).await;
+            }
+        }
+    }
 
     match query_result {
         Ok(mut result) => {
@@ -296,80 +261,7 @@ pub async fn util_count_records(db: &Data<Database>, table_name: &str) -> Option
 }
 // --- END NEW COUNT FUNCTION ---
 
-// pub async fn util_query_deleted<T: DeserializeOwned + Serialize>(
-//     db: &Data<Database>,
-//     table_name: &str,
-// ) -> Option<Vec<T>> {
-//     let surreal_query = format!("SELECT * FROM {} WHERE deleted = true", table_name);
 
-//     let query_t_result: Result<SR_Response, Error> = db.client.query(surreal_query).await;
-
-//     match query_t_result {
-//         Ok(mut response) => match response.take(0) {
-//             Ok(deleted_t_records) => Some(deleted_t_records),
-//             Err(e) => {
-//                 error!(
-//                     "Failed to retrieve active records from {}:: {}",
-//                     table_name, e
-//                 );
-//                 None
-//             }
-//         },
-//         Err(e) => {
-//             error!(
-//                 "Failed to retrieve active records from {}:: {}",
-//                 table_name, e
-//             );
-//             None
-//         }
-//     }
-// }
-
-// pub async fn util_remove_record<T: DeserializeOwned + Serialize>(
-//     db: &Data<Database>,
-//     id: String,
-//     table_name: &str,
-// ) -> Option<T>
-// where
-//     T: DeserializeOwned + Serialize + Send + Sync + 'static,
-// {
-//     let t_id = id.clone();
-//     let t_to_update: Result<Option<T>, Error> = db.client.select((table_name, &t_id)).await;
-
-//     match t_to_update {
-//         Ok(t_found) => match t_found {
-//             Some(_t) => {
-//                 let updated_t: Result<Option<T>, Error> = db
-//                     .client
-//                     .update((table_name, &t_id))
-//                     .merge(Deleted {
-//                         deleted: true,
-//                         updated_at: Local::now(),
-//                     })
-//                     .await;
-
-//                 match updated_t {
-//                     Ok(updated_t_values) => updated_t_values,
-//                     Err(err) => {
-//                         error!(
-//                             "Error updating record with ID {} in table {}: {}",
-//                             &t_id, &table_name, &err
-//                         );
-//                         None
-//                     }
-//                 }
-//             }
-//             None => None,
-//         },
-//         Err(err) => {
-//             error!(
-//                 "Error fetching record with ID {} in table {}: {}",
-//                 &t_id, &table_name, &err
-//             );
-//             None
-//         }
-//     }
-// }
 
 pub async fn util_find_random_articles<T>(
     db: &Data<Database>,

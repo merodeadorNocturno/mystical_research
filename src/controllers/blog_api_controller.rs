@@ -3,7 +3,7 @@ use crate::db::config_db::Database;
 use crate::models::{
     ai_model::{AiResponse, BlogStructure, GenerateContentResponse},
     blog_model::BlogArticle,
-    general_model::{PageType, SearchQuery},
+    general_model::SearchQuery,
 };
 use crate::utils::{
     ai_utils::{create_ai_request, generate_content},
@@ -99,7 +99,7 @@ Use the last paragraph for a comma separated list of keywords.";
         .content(blog_structure.content)
         .keywords(blog_structure.keywords.join(","))
         .table_of_contents(blog_structure.table_of_contents.join(","))
-        .page_type(PageType::BlogArticle)
+        .page_type("BlogArticle".to_string())
         .deleted(false)
         .author("BaggiE BomziE".to_string())
         .image_urls("article1.png".to_string())

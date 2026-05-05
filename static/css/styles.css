@@ -1,9 +1,15 @@
 :root {
-    --primary-color: #2a0944;
-    --secondary-color: #3b185f;
-    --accent-color: #a12568;
-    --text-color: #fec260;
-    --light-bg: #f9f9f9;
+    /* Academic Modern Palette */
+    --primary-color: #fdfdfc; /* Clean, slightly warm off-white (Parchment-like) */
+    --secondary-color: #f3f2ef; /* Light grey/beige for subtle contrast (nav/cards) */
+    --accent-color: #8c2a3e; /* Deep scholarly crimson/burgundy */
+    --text-color: #2a2a2a; /* Deep charcoal (easier on eyes than pure black) */
+    --light-bg: #ffffff;
+    --border-color: #dcdcd6; /* Fine dividing lines */
+    
+    /* Typography */
+    --font-heading: "Playfair Display", "Merriweather", serif; /* Elegant modern serif */
+    --font-body: "Inter", "Roboto", -apple-system, sans-serif; /* Clean readable sans */
 }
 
 .htmx-indicator {
@@ -45,11 +51,12 @@
 }
 
 body {
-    font-family: "Merriweather", sans-serif;
-    /* font-family: var(--font-body); */
+    font-family: var(--font-body);
     background: var(--primary-color);
     color: var(--text-color);
-    line-height: 1.6;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -59,14 +66,19 @@ h4,
 h5,
 h6 {
     font-family: var(--font-heading);
+    color: #1a1a1a;
+    font-weight: 600;
+    line-height: 1.3;
 }
 
 .main-nav {
-    background: var(--secondary-color);
-    padding: 1rem 0;
+    background: var(--primary-color);
+    padding: 1.5rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); /* Very subtle shadow */
 }
 
 .nav-container {
@@ -75,23 +87,31 @@ h6 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 1.5rem;
 }
 
 .logo {
-    font-size: 2rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--text-color);
+    letter-spacing: -0.02em;
+    /* Removed text-shadow for a cleaner modern look */
 }
 
 .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
     list-style: none;
 }
 
 .nav-links a {
-    color: var(--text-color);
+    color: #555;
     text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     transition: color 0.3s ease;
 }
 
@@ -100,68 +120,91 @@ h6 {
 }
 
 .hero {
-    height: 70vh;
+    height: 60vh;
     background:
-        linear-gradient(rgba(42, 9, 68, 0.8), rgba(58, 24, 95, 0.8)),
+        linear-gradient(rgba(26, 26, 26, 0.85), rgba(26, 26, 26, 0.85)), /* Dark elegant overlay */
         url("../img/hero-bg.jpeg") center/cover;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 2rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .hero-content h1 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    color: #ffffff; /* White text on dark hero */
+    text-shadow: none; /* Modern look */
+}
+
+.hero-content p {
+    color: #eeeeee;
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 2rem;
 }
 
 .featured-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 4rem 0;
+    gap: 2.5rem;
+    padding: 4rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .card {
-    background: var(--secondary-color);
-    border-radius: 10px;
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px; /* Minimal border radius */
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .card-image {
-    height: 200px;
+    height: 220px;
     background-size: cover;
     background-position: center;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .newsletter {
     background: var(--secondary-color);
-    padding: 1.5rem 2rem;
+    padding: 4rem 2rem;
     text-align: center;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .newsletter-form {
     max-width: 500px;
-    margin: 1rem auto;
+    margin: 2rem auto 1rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .btn {
     padding: 0.8rem 1.5rem;
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
+    background: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 3px;
+    font-weight: 500;
+    font-family: var(--font-body);
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: var(--accent-color);
+    color: #ffffff;
 }
 
 .ad-container {
@@ -317,14 +360,26 @@ h6 {
 
 .category-card {
     text-align: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
+    padding: 3rem 2rem;
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
 }
 
 .category-icon {
     font-size: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
 }
 
 /* Immersive Hero */
@@ -393,14 +448,15 @@ h6 {
 .post-hero {
     height: 40vh;
     background:
-        linear-gradient(rgba(42, 9, 68, 0.8), rgba(58, 24, 95, 0.8)),
+        linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)),
         url("../img/xico_bg.jpeg") center/cover;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: var(--text-color);
+    color: #ffffff; /* White text on dark hero */
     padding: 2rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .post-hero.immersive {
@@ -409,34 +465,42 @@ h6 {
 
 .post-hero h1 {
     font-size: 3rem;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    color: #ffffff; /* Override general h1 color */
+    text-shadow: none; /* Removed text shadow */
+    letter-spacing: -0.01em;
 }
 
 .post-meta {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-top: 1rem;
+    font-family: var(--font-body);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 /* Post Container */
 .post-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    max-width: 760px; /* Optimal reading width */
+    margin: 3rem auto;
+    padding: 0 1.5rem;
 }
 
 .post-content {
     line-height: 1.8;
-    font-size: 1.1rem;
+    font-size: 1.15rem; /* Slightly larger for easy reading */
+    color: #333333; /* Dark gray for readability */
 }
 
 /* Featured Image */
 .post-featured-image {
-    position: relative; /* Keep if needed for overlays or other positioned children */
-    width: 100%; /* Modified: Set width to 100% of parent */
-    aspect-ratio: 1 / 1; /* Added: Enforce 1:1 aspect ratio */
-    overflow: hidden; /* Keep: Clip the image */
-    margin-bottom: 1.5rem; /* Existing */
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9; /* More standard cinematic/academic ratio */
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
 }
 
 .post-featured-image img {
@@ -444,11 +508,13 @@ h6 {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  display: block; /* Or inline-block, depending on layout needs, but block is common for images filling containers */
+  display: block;
 }
 
 .post-featured-image.immersive {
     position: relative;
+    border-radius: 0;
+    border: none;
 }
 
 .post-featured-image.immersive .image-overlay {
@@ -457,32 +523,39 @@ h6 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.15); /* Lighter overlay */
 }
 
 /* Post Introduction */
 .post-intro {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin: 2rem 0;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 4px solid var(--accent-color);
-    border-radius: 5px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-style: italic;
+    margin: 2rem 0 3rem;
+    padding: 1.5rem;
+    background: var(--secondary-color);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 0 4px 4px 0;
+    color: #444;
 }
 
 /* Table of Contents */
 .post-toc {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1.5rem;
-    border-radius: 10px;
-    margin: 2rem 0;
+    background: var(--light-bg);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin: 3rem 0;
 }
 
 .post-toc h3 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
 }
 
 .post-toc ul {
@@ -491,7 +564,16 @@ h6 {
 }
 
 .post-toc li {
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.post-toc li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
 }
 
 .post-toc a {
@@ -505,15 +587,17 @@ h6 {
 }
 
 .post-toc.immersive {
-    background: var(--secondary-color);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--light-bg); /* Keep it light */
+    border: 1px solid var(--border-color);
 }
 
 /* Blog Sections */
 .post-content h2 {
     font-size: 2rem;
-    margin: 3rem 0 1.5rem;
-    color: var(--accent-color);
+    margin: 3.5rem 0 1.5rem;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
 }
 
 .post-content p {
@@ -673,21 +757,62 @@ h6 {
 
 .blog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
 }
 
 .blog-post {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: 1px solid var(--border-color);
+    background: var(--light-bg);
+    padding: 0;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-post:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+}
+
+.blog-post img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 4px 4px 0 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.blog-post h3 {
+    margin: 1.5rem 1.5rem 0.5rem;
+    font-size: 1.4rem;
+}
+
+.blog-post p {
+    margin: 0 1.5rem 1.5rem;
+    color: #555;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    flex-grow: 1;
 }
 
 .read-more {
     display: inline-block;
     color: var(--accent-color);
     text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 1.5rem 1.5rem;
+    align-self: flex-start;
 }
 
 .read-more:hover {
@@ -697,9 +822,13 @@ h6 {
 /* Footer */
 .main-footer {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-color);
     text-align: center;
-    padding: 10px 0;
+    padding: 3rem 0;
+    border-top: 1px solid var(--border-color);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
 }
 
 .contact-hero {
@@ -919,82 +1048,7 @@ a:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 } */
 
-.blog-posts .blog-post h3,
-.blog-posts .blog-post p,
-.blog-posts .blog-post .read-more {
-    position: relative; /* Ensure these stay above the absolute image if z-index is used heavily */
-    z-index: 2;
-    /* You might add margin-bottom to the last element (read-more)
-       if the container's padding-bottom isn't enough */
-}
-
-.blog-post img {
-    display: block; /* Ensures the image behaves like a block element */
-    width: 100%; /* Make image fill the width of its container */
-    aspect-ratio: 4 / 3; /* Force a 4:3 aspect ratio */
-    object-fit: cover; /* Scale the image while preserving aspect ratio, cropping if necessary to fill the box */
-    /* Keep existing desirable styles */
-    height: auto; /* Remove or comment out explicit height if it exists, aspect-ratio handles it */
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
-.blog-posts .blog-post {
-    /* --- Add position: relative --- */
-    position: relative; /* Establishes the positioning context for the child img */
-
-    /* Keep existing styles */
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-
-    /* --- Add padding-bottom to prevent content from going under the image --- */
-    /* Adjust the value based on image height + desired spacing */
-    padding-bottom: 70px; /* Example: If image height is ~60px + 10px spacing */
-
-    /* Optional: Add a min-height to ensure the card has some height even if content is short */
-    min-height: 200px; /* Adjust as needed */
-}
-
-/* .search-results .blog-post img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 10px;
-} */
-
-/* .search-results .blog-post h3 {
-    font-size: 1.2em;
-    margin-bottom: 8px;
-}
-
-.search-results .blog-post p {
-    font-size: 0.95em;
-    color: #555;
-    margin-bottom: 12px;
-}
-
-.search-results .blog-post .read-more {
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 0.9em;
-} */
-
-.htmx-indicator {
-    opacity: 0;
-    transition: opacity 200ms ease-in;
-}
-
-.htmx-request .htmx-indicator {
-    opacity: 1;
-}
-
-/* === Pagination Styles within Search Results === */
+/* Loading Overlay Styles */
 
 /* Container for the pagination links */
 .search-results .pagination {
