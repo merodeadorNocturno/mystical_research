@@ -3,21 +3,21 @@ use crate::models::{
     contact_model::ContactFormData, general_model::TitleError, mock::mock_contact_home_page_object,
 };
 use crate::utils::{
-    env_utils::{set_env_urls, PageConfiguration},
+    env_utils::{PageConfiguration, set_env_urls},
     fs_utils::{read_hbs_template, register_templates},
 };
 use actix_csrf::extractor::CsrfToken;
 use actix_web::HttpRequest; // HttpRequest might still be needed for the POST route
 use actix_web::{
-    web::{get, post, Data, Form, ServiceConfig},
     HttpResponse,
+    web::{Data, Form, ServiceConfig, get, post},
 };
 use handlebars::{Handlebars, RenderError};
 use log::{error, info};
 use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::Path;
-use surrealdb::sql::Value;
+// use surrealdb::sql::Value;
 
 async fn htmx_contact(token: CsrfToken) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
@@ -42,8 +42,10 @@ async fn htmx_contact(token: CsrfToken) -> Result<String, RenderError> {
     // Extract CSRF token value using the CsrfToken extractor
     let csrf_token_value = token.get().to_string();
 
-
-    let section_template = handlebars.render_template(&section_template, &json!({ "csrf_token": csrf_token_value }))?;
+    let section_template = handlebars.render_template(
+        &section_template,
+        &json!({ "csrf_token": csrf_token_value }),
+    )?;
     Ok(section_template)
 }
 
@@ -66,7 +68,7 @@ async fn contact_html(token: CsrfToken) -> Result<String, RenderError> {
             TitleError::new(err.to_string()).error
         }
     };
-    
+
     // Extract CSRF token value using the CsrfToken extractor
     let csrf_token_value = token.get().to_string();
 
@@ -80,7 +82,6 @@ async fn contact_html(token: CsrfToken) -> Result<String, RenderError> {
         _ => serde_json::Map::new(), // Or handle error
     };
     data_map.insert("csrf_token".to_string(), json!(csrf_token_value));
-
 
     let section_template = match handlebars.render_template(
         &contact_home_template,
@@ -106,19 +107,39 @@ async fn post_htmx_contact(
     info!("Received contact form submission: {:?}", &contact_data);
 
     let mut records = BTreeMap::new();
-    records.insert("email", Value::from(contact_data.email.to_string()));
-    records.insert("message", Value::from(contact_data.message.to_string()));
-    records.insert("name", Value::from(contact_data.name.to_string()));
+    records.insert("email", contact_data.email.to_string());
+    records.insert("message", contact_data.message.to_string());
+    records.insert("name", contact_data.name.to_string());
     records.insert(
         "subject",
-        Value::from(contact_data.subject.unwrap_or_default().to_string()), // Handle Option
+        contact_data.subject.unwrap_or_default().to_string(), // Handle Option
     );
 
     let contact_form_data: ContactFormData = ContactFormData::builder()
-        .name(records.get("name").map(|v| v.to_string().replace("\"", "")).unwrap_or_default()) // Sanitize if necessary
-        .email(records.get("email").map(|v| v.to_string().replace("\"", "")).unwrap_or_default())
-        .subject(records.get("subject").map(|v| v.to_string().replace("\"", "")).unwrap_or_default())
-        .message(records.get("message").map(|v| v.to_string().replace("\"", "")).unwrap_or_default())
+        .name(
+            records
+                .get("name")
+                .map(|v| v.to_string().replace("\"", ""))
+                .unwrap_or_default(),
+        ) // Sanitize if necessary
+        .email(
+            records
+                .get("email")
+                .map(|v| v.to_string().replace("\"", ""))
+                .unwrap_or_default(),
+        )
+        .subject(
+            records
+                .get("subject")
+                .map(|v| v.to_string().replace("\"", ""))
+                .unwrap_or_default(),
+        )
+        .message(
+            records
+                .get("message")
+                .map(|v| v.to_string().replace("\"", ""))
+                .unwrap_or_default(),
+        )
         .deleted(false)
         .build();
 

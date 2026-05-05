@@ -2,14 +2,13 @@ use crate::db::{config_db::Database, mailing_db::MailingListDB};
 use crate::models::{general_model::TitleError, mailing_model::MailingList};
 use crate::utils::fs_utils::read_hbs_template;
 use actix_web::{
-    web::{post, Data, Form, ServiceConfig},
     HttpRequest, HttpResponse,
+    web::{Data, Form, ServiceConfig, post},
 };
 use handlebars::{Handlebars, RenderError};
 use log::{error, info};
 use serde_json::json;
 use std::collections::BTreeMap;
-use surrealdb::sql::Value;
 
 async fn post_htmx_mailing_list(
     form: Form<MailingList>,
@@ -18,7 +17,7 @@ async fn post_htmx_mailing_list(
     let email_data = form.into_inner();
 
     let mut my_email = BTreeMap::new();
-    my_email.insert("email", Value::from(email_data.email.to_string()));
+    my_email.insert("email", email_data.email.to_string());
 
     let mailing_list: MailingList = MailingList::builder()
         .email(my_email.get("email").unwrap().to_string())

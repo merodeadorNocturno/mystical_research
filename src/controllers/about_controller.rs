@@ -4,8 +4,8 @@ use crate::utils::{
     fs_utils::{read_hbs_template, register_templates},
 };
 use actix_web::{
-    web::{get, ServiceConfig},
     HttpResponse,
+    web::{ServiceConfig, get},
 };
 use handlebars::{Handlebars, RenderError};
 use log::error;
@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::path::Path;
 
+#[allow(unused)]
 #[derive(Debug, Deserialize, Serialize)]
 struct Title {
     title: String,

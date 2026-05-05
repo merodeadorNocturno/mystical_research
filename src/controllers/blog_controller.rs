@@ -18,6 +18,7 @@ use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
+#[allow(unused)]
 #[derive(Debug, Deserialize, Serialize)]
 struct TitleError {
     pub error: String,
