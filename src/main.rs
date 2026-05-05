@@ -5,11 +5,10 @@ use crate::utils::{
 use actix_cors::Cors;
 use actix_csrf::CsrfMiddleware;
 use actix_files as fs;
-use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
+use actix_session::{SessionMiddleware, config::PersistentSession, storage::CookieSessionStore};
 use actix_web::cookie::Key;
 use actix_web::http::Method; // Added for CsrfMiddleware configuration
-use rand::rngs::StdRng;
-use actix_web::{middleware, web::Data, App, HttpServer};
+use actix_web::{App, HttpServer, middleware, web::Data};
 use controllers::{
     about_controller::about_controller, blog_api_controller::blog_api_controller,
     blog_controller::blog_html_controller, contact_controller::contact_controller,
@@ -20,6 +19,7 @@ use controllers::{
 use db::config_db::Database;
 use env_logger::{Builder, WriteStyle};
 use log::{error, info, warn};
+use rand::rngs::StdRng;
 use std::{fs as std_fs, io, path::PathBuf};
 
 mod config;
@@ -28,7 +28,7 @@ mod db;
 mod models;
 mod utils;
 
-const MAX_AGE: usize = 3600;
+const MAX_AGE: usize = 3_600;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -84,6 +84,7 @@ async fn main() -> std::io::Result<()> {
     }
 
     let my_db = Database::init().await.expect("CANT_CONNECT_TO_DB");
+
     let db_data = Data::new(my_db);
 
     // IMPORTANT: In a real application, load this key from a secure, persistent
