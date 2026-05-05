@@ -6,8 +6,8 @@ use actix_web::web::Data;
 use log::error;
 // use reqwest::Response;
 use crate::models::general_model::CountResult;
-use serde::{de::DeserializeOwned, Serialize};
-use surrealdb::{Error, Response as SR_Response};
+use serde::{Serialize, de::DeserializeOwned};
+use surrealdb::{Error, IndexedResults, types::SurrealValue};
 
 // pub async fn util_find_all<T: DeserializeOwned>(
 //     db: &Data<Database>,
@@ -31,8 +31,11 @@ pub async fn util_find_one<T: DeserializeOwned>(
     db: &Data<Database>,
     id: String,
     table_name: &str,
-) -> Option<T> {
-    let result: Result<Option<T>, Error> = db.client.select((table_name, &id)).await;
+) -> Option<T>
+where
+    T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue,
+{
+    let result: Result<Option<T>, Error> = db.client.select((table_name, id.clone())).await;
 
     match result {
         Ok(record) => record,
@@ -48,12 +51,12 @@ pub async fn util_find_one<T: DeserializeOwned>(
 
 pub async fn util_add_one<T>(db: &Data<Database>, record: T, table_name: &str) -> Option<T>
 where
-    T: DeserializeOwned + Serialize + Send + Sync + 'static,
+    T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue,
 {
     let uuid_v7 = get_uuid();
     let added_t_record = db
         .client
-        .create((table_name, &uuid_v7))
+        .create((table_name, uuid_v7.clone()))
         .content(record)
         .await;
 
@@ -61,10 +64,8 @@ where
         Ok(added_record) => added_record,
         Err(err) => {
             error!(
-                "Error adding record with ID {} to table {}: {}",
-                &uuid_v7.to_string(),
-                &table_name,
-                &err
+                "Error adding record with ID {:?} to table {}: {}",
+                &uuid_v7, &table_name, &err
             );
             None
         }
@@ -119,7 +120,10 @@ pub async fn util_find_active_records<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,
     table_name: &str,
     number_of_records: Option<usize>,
-) -> Option<Vec<T>> {
+) -> Option<Vec<T>>
+where
+    T: DeserializeOwned + Send + Sync + 'static + SurrealValue,
+{
     let surreal_query = match number_of_records {
         Some(number) => format!(
             "SELECT * FROM {} WHERE deleted = false LIMIT {}",
@@ -148,7 +152,10 @@ pub async fn util_fulltext_search<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,
     table_name: &str,
     search_fields: &str,
-) -> Option<Vec<T>> {
+) -> Option<Vec<T>>
+where
+    T: DeserializeOwned + Send + Sync + 'static + SurrealValue,
+{
     let surreal_query = format!(
         "SELECT * FROM {table_name}
         WHERE {search_fields} AND deleted = false;"
@@ -192,7 +199,7 @@ pub async fn util_find_active_paginated<T>(
     descending: Option<bool>,
 ) -> Option<Vec<T>>
 where
-    T: DeserializeOwned + Send + Sync + 'static, // Removed Serialize trait bound as it's not needed for reads
+    T: DeserializeOwned + Send + Sync + 'static + SurrealValue, // Removed Serialize trait bound as it's not needed for reads
 {
     // Basic validation for pagination parameters
     if page <= 0 || page_size <= 0 {
@@ -370,7 +377,7 @@ pub async fn util_find_random_articles<T>(
     number_of_elements: Option<usize>,
 ) -> Option<Vec<T>>
 where
-    T: DeserializeOwned + Serialize + Send + Sync + 'static,
+    T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue,
 {
     let surreal_string_query = match number_of_elements {
         Some(noe) => format!(
@@ -380,7 +387,7 @@ where
         None => format!("SELECT * FROM {} ORDER BY RAND();", table_name),
     };
 
-    let result: Result<SR_Response, Error> = db.client.query(surreal_string_query).await;
+    let result: Result<IndexedResults, Error> = db.client.query(surreal_string_query).await;
 
     match result {
         Ok(mut response) => match response.take(0) {

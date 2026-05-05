@@ -1,13 +1,13 @@
 use log::info;
 use rand::Rng; // Updated for rand 0.8.x
 use std::{fs, io, path::PathBuf};
-use surrealdb::Uuid;
-use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+use surrealdb::types::RecordIdKey;
+use unicode_normalization::{UnicodeNormalization, char::is_combining_mark};
 
-pub fn get_uuid() -> String {
-    let uuid_v7 = Uuid::now_v7();
+pub fn get_uuid() -> RecordIdKey {
+    let uuid_v7 = RecordIdKey::uuid();
 
-    String::from(uuid_v7)
+    uuid_v7
 }
 
 pub fn create_or_conditional(search_term: &str, fields: Vec<String>) -> String {
@@ -81,7 +81,7 @@ pub fn generate_slug_with_random_suffix(title: &str) -> String {
 
     // 5. Generate random suffix (using thread_rng and gen_range)
     let mut rng = rand::thread_rng(); // Get thread-local RNG for rand 0.8.x
-                                     // Use gen_range for generating a random number within a range
+    // Use gen_range for generating a random number within a range
     let random_suffix: u32 = rng.gen_range(1000..=9999); // Updated for rand 0.8.x
 
     // 6. Format the final slug string
