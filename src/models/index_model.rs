@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{blog_model::BlogPreview, general_model::PageType};
 
+#[allow(unused)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Index {
     pub url: String,
@@ -17,6 +18,7 @@ pub struct IndexSchemaMarkup {
     pub canonical_url: Option<String>,
 }
 
+#[allow(unused)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Title {
     pub title: String,
@@ -57,6 +59,7 @@ pub struct IndexBody {
     pub explore_label: String,
 }
 
+#[allow(unused)]
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IndexFeaturedSection {
     pub section_title: String,

@@ -2,10 +2,12 @@ use crate::models::ai_model::BlogStructure;
 use crate::models::index_model::HeaderData;
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-use surrealdb::sql::Thing;
+// use surrealdb::sql::Thing;
+use surrealdb::types::{RecordId, SurrealValue};
 
 use super::general_model::PageType;
 
+#[allow(unused)]
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct BlogHomePage {
     pub body: BlogBody,
@@ -15,6 +17,7 @@ pub struct BlogHomePage {
     pub section: PageType,
 }
 
+#[allow(unused)]
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct BlogPostSchemaMarkup {
     pub title: String,
@@ -62,9 +65,9 @@ pub struct BlogFeaturedSection {
     pub blog_image_urls: Option<Vec<BlogImage>>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default, SurrealValue)]
 pub struct BlogArticle {
-    pub id: Option<Thing>,
+    pub id: Option<RecordId>,
     pub title: Option<String>,
     pub table_of_contents: Option<String>,
     pub summary: Option<String>,
@@ -74,9 +77,9 @@ pub struct BlogArticle {
     pub deleted: Option<bool>,
     pub author: Option<String>,
     pub image_urls: Option<String>,
-    pub created_at: Option<surrealdb::Datetime>,
-    pub updated_at: Option<surrealdb::Datetime>,
-    pub published_at: Option<surrealdb::Datetime>,
+    pub created_at: Option<surrealdb::types::Datetime>,
+    pub updated_at: Option<surrealdb::types::Datetime>,
+    pub published_at: Option<surrealdb::types::Datetime>,
     pub slug: Option<String>,
 }
 
@@ -100,9 +103,9 @@ pub struct BlogArticleBuilder {
     author: Option<String>,
     image_urls: Option<String>,
     slug: Option<String>,
-    created_at: Option<surrealdb::Datetime>,
-    updated_at: Option<surrealdb::Datetime>,
-    published_at: Option<surrealdb::Datetime>,
+    created_at: Option<surrealdb::types::Datetime>,
+    updated_at: Option<surrealdb::types::Datetime>,
+    published_at: Option<surrealdb::types::Datetime>,
 }
 
 impl BlogArticleBuilder {
@@ -137,15 +140,15 @@ impl BlogArticleBuilder {
         self.content = Some(content);
         self
     }
-    pub fn created_at(mut self, created_at: &surrealdb::Datetime) -> Self {
+    pub fn created_at(mut self, created_at: &surrealdb::types::Datetime) -> Self {
         self.created_at = Some(created_at.clone());
         self
     }
-    pub fn updated_at(mut self, updated_at: &surrealdb::Datetime) -> Self {
+    pub fn updated_at(mut self, updated_at: &surrealdb::types::Datetime) -> Self {
         self.updated_at = Some(updated_at.clone());
         self
     }
-    pub fn published_at(mut self, published_at: &surrealdb::Datetime) -> Self {
+    pub fn published_at(mut self, published_at: &surrealdb::types::Datetime) -> Self {
         self.published_at = Some(published_at.clone());
         self
     }
@@ -193,6 +196,7 @@ pub struct BlogPreview {
     pub slug: String,
 }
 
+#[allow(unused)]
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlogArticleBody {
     pub structure: BlogStructure,
@@ -201,6 +205,7 @@ pub struct BlogArticleBody {
     pub content_sections: Vec<BlogSection>, // Added content sections to map to template structure
 }
 
+#[allow(unused)]
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlogSection {
     pub section_id: String,      // e.g., "history", "cards", "spreads"
@@ -212,6 +217,7 @@ pub struct BlogSection {
                                                            // Add other section specific fields as needed based on template
 }
 
+#[allow(unused)]
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlogCard {
     pub card_image: BlogImage,

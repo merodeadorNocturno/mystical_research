@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
+use surrealdb::types::SurrealValue;
 use validator::Validate;
 
-#[derive(Debug, Deserialize, Serialize, Validate)]
+#[derive(Debug, Deserialize, Serialize, Validate, SurrealValue)]
 pub struct MailingList {
     #[validate(email(message = "Invalid email format"))]
     pub email: String,

@@ -1,7 +1,8 @@
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
+use surrealdb::types::SurrealValue;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, SurrealValue)]
 pub enum PageType {
     Home,
     About,
@@ -13,12 +14,14 @@ pub enum PageType {
     Resources,
 }
 
+#[allow(unused)]
 #[derive(Serialize)]
 pub struct Deleted {
     pub deleted: bool,
     pub updated_at: DateTime<Local>,
 }
 
+#[allow(unused)]
 #[derive(Serialize)]
 pub struct UpdatedAt {
     pub updated_at: DateTime<Local>,
@@ -40,7 +43,7 @@ impl TitleError {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, SurrealValue)]
 pub struct CountResult {
     pub count: u64,
 }

@@ -1,5 +1,6 @@
 use crate::models::{general_model::PageType, index_model::HeaderData};
 use serde::{Deserialize, Serialize};
+use surrealdb::types::SurrealValue;
 use validator::Validate;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -24,7 +25,7 @@ pub struct ContactHomeSchemaMarkup {
     pub search_action_target: String, // For search action URL template
 }
 
-#[derive(Deserialize, Debug, Serialize, Validate)] // Added Serialize for potential logging/DB
+#[derive(Deserialize, Debug, Serialize, Validate, SurrealValue)] // Added Serialize for potential logging/DB
 pub struct ContactFormData {
     #[validate(length(min = 1, message = "Name cannot be empty"))]
     pub name: String,
