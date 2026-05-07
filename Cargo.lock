@@ -72,6 +72,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-governor"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a7ffa43d3e1e92518355ffbc82c146b5f0fe24fba87f19f405270da7a7b3c1e"
+dependencies = [
+ "actix-http",
+ "actix-web",
+ "futures",
+ "governor",
+]
+
+[[package]]
 name = "actix-http"
 version = "3.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -382,11 +394,12 @@ dependencies = [
 
 [[package]]
 name = "angels"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "actix-cors",
  "actix-csrf",
  "actix-files",
+ "actix-governor",
  "actix-session",
  "actix-web",
  "argon2",
@@ -1578,6 +1591,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
 
 [[package]]
+name = "foldhash"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
+
+[[package]]
 name = "foreign-types"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1764,23 +1783,6 @@ dependencies = [
 
 [[package]]
 name = "geo"
-version = "0.28.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f811f663912a69249fa620dcd2a005db7254529da2d8a0b23942e81f47084501"
-dependencies = [
- "earcutr",
- "float_next_after",
- "geo-types",
- "geographiclib-rs",
- "log",
- "num-traits",
- "robust",
- "rstar 0.12.2",
- "spade",
-]
-
-[[package]]
-name = "geo"
 version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2fc1a1678e54befc9b4bcab6cd43b8e7f834ae8ea121118b0fd8c42747675b4a"
@@ -1804,6 +1806,7 @@ version = "0.32.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f3901269ec6d4f6068d3f09e5f02f995bd076398dcd1dfec407cd230b02d11b"
 dependencies = [
+ "earcutr",
  "float_next_after",
  "geo-types",
  "geographiclib-rs",
@@ -1815,6 +1818,7 @@ dependencies = [
  "rstar 0.12.2",
  "serde",
  "sif-itree",
+ "spade",
 ]
 
 [[package]]
@@ -1908,6 +1912,29 @@ name = "glob"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
+
+[[package]]
+name = "governor"
+version = "0.10.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9efcab3c1958580ff1f25a2a41be1668f7603d849bb63af523b208a3cc1223b8"
+dependencies = [
+ "cfg-if",
+ "dashmap",
+ "futures-sink",
+ "futures-timer",
+ "futures-util",
+ "getrandom 0.3.4",
+ "hashbrown 0.16.1",
+ "nonzero_ext",
+ "parking_lot",
+ "portable-atomic",
+ "quanta",
+ "rand 0.9.0",
+ "smallvec",
+ "spinning_top",
+ "web-time",
+]
 
 [[package]]
 name = "group"
@@ -2033,7 +2060,7 @@ checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
 dependencies = [
  "allocator-api2",
  "equivalent",
- "foldhash",
+ "foldhash 0.1.5",
 ]
 
 [[package]]
@@ -2041,6 +2068,11 @@ name = "hashbrown"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
+dependencies = [
+ "allocator-api2",
+ "equivalent",
+ "foldhash 0.2.0",
+]
 
 [[package]]
 name = "hashbrown"
@@ -2998,6 +3030,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "nonzero_ext"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "38bf9645c8b145698bb0b18a4637dcacbc421ea49bef2317e4fd8065a387cf21"
+
+[[package]]
 name = "ntapi"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3719,6 +3757,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "quanta"
+version = "0.12.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3ab5a9d756f0d97bdc89019bd2e4ea098cf9cde50ee7564dde6b81ccc8f06c7"
+dependencies = [
+ "crossbeam-utils",
+ "libc",
+ "once_cell",
+ "raw-cpuid",
+ "wasi",
+ "web-sys",
+ "winapi",
+]
+
+[[package]]
 name = "quick_cache"
 version = "0.6.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3879,6 +3932,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99d9a13982dcf210057a8a78572b2217b667c3beacbf3a0d8b454f6f82837d38"
 dependencies = [
  "getrandom 0.3.4",
+]
+
+[[package]]
+name = "raw-cpuid"
+version = "11.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "498cd0dc59d73224351ee52a95fee0f1a617a2eae0e7d9d720cc622c73a54186"
+dependencies = [
+ "bitflags",
 ]
 
 [[package]]
@@ -4399,7 +4461,7 @@ dependencies = [
  "security-framework 3.7.0",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4540,7 +4602,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b55fb86dfd3a2f5f76ea78310a88f96c4ea21a3031f8d212443d56123fd0521"
 dependencies = [
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4761,6 +4823,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spinning_top"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d96d2d1d716fb500937168cc09353ffdc7a012be8475ac7308e1bdf0e3923300"
+dependencies = [
+ "lock_api",
+]
+
+[[package]]
 name = "spki"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4971,7 +5042,7 @@ dependencies = [
  "chrono",
  "flatbuffers",
  "futures",
- "geo 0.28.0",
+ "geo 0.32.0",
  "prost",
  "prost-types",
  "rust_decimal",
