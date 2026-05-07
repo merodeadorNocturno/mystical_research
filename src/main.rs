@@ -5,6 +5,7 @@ use crate::utils::{
 use actix_cors::Cors;
 use actix_csrf::CsrfMiddleware;
 use actix_files as fs;
+use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_session::{SessionMiddleware, config::PersistentSession, storage::CookieSessionStore};
 use actix_web::cookie::Key;
 use actix_web::http::Method; // Added for CsrfMiddleware configuration
@@ -99,6 +100,13 @@ async fn main() -> std::io::Result<()> {
 
     let server_address_conf: String = format!("{server_address}:{server_port}");
 
+    let gov_conf = get_gvt_conf();
+    let governor_cof = GovernorConfigBuilder::default()
+        .requests_per_second(gov_conf.requests_per_second as u64)
+        .burst_size(gov_conf.burst_size as u32)
+        .finish()
+        .unwrap();
+
     HttpServer::new(move || {
         let cors = Cors::permissive().max_age(MAX_AGE);
         let session_mw =
@@ -118,8 +126,11 @@ async fn main() -> std::io::Result<()> {
                     .set_cookie(Method::GET, "/htmx/contact"),
             )
             .wrap(session_mw)
-            .wrap(middleware::NormalizePath::trim())
             .wrap(cors)
+            .wrap(middleware::NormalizePath::trim())
+            .wrap(Governor::new(&governor_cof))
+            .wrap(middleware::DefaultHeaders::new().add(("X-Frame-Options", "DENY")))
+            .wrap(middleware::Logger::default())
             .app_data(db_data.clone())
             .configure(blog_api_controller)
             .configure(index_controller)
