@@ -4,6 +4,12 @@ use std::{env, io};
 
 use crate::config::connection::set_environment_variable;
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct GovConf {
+    pub requests_per_second: usize,
+    pub burst_size: usize,
+}
+
 pub fn get_cwd() -> io::Result<()> {
     let current_dir = env::current_dir()?;
     info!("Current working directory: {}", current_dir.display());
@@ -90,4 +96,20 @@ pub fn create_ai_request_string() -> String {
         ..
     } = set_env_urls();
     format!("{ai_request_url}{google_model}:generateContent?key={ai_google_api_key}")
+}
+
+pub fn get_gvt_conf() -> GovConf {
+    let requests_per_second = set_environment_variable("REQUESTS_PER_SECOND", "5");
+    let burst_size = set_environment_variable("BURST_SIZE", "120");
+
+    GovConf {
+        requests_per_second: match requests_per_second.parse::<usize>() {
+            Ok(number) => number,
+            Err(_e) => 5 as usize,
+        },
+        burst_size: match burst_size.parse::<usize>() {
+            Ok(number) => number,
+            Err(_e) => 120 as usize,
+        },
+    }
 }
