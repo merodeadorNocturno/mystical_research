@@ -10,11 +10,11 @@ use crate::models::{
 
 pub fn mock_index_linked_data() -> IndexSchemaMarkup {
     IndexSchemaMarkup {
-        site_name: "My Awesome Site".to_string(),
-        site_description: "This is a description of my awesome site for search engines."
+        site_name: "Mystical Research".to_string(),
+        site_description: "A sanctuary for those seeking to understand the deep connections between the spiritual and the material worlds."
             .to_string(),
-        main_image_url: Some("main-image.jpg".to_string()),
-        search_term_string: Some("awesome, site, keywords".to_string()),
+        main_image_url: Some("/static/img/hero-bg.jpeg".to_string()),
+        search_term_string: Some("mysticism, angels, spirituality, esoteric, research".to_string()),
         canonical_url: Some("https://mysticalresearch.com/".to_string()),
     }
 }
@@ -23,7 +23,7 @@ pub fn mock_index_body() -> IndexBody {
     IndexBody {
         title: "Welcome to Mystical Research!".to_string(),
         description: "Explore where the mundane and the mystical intertwine".to_string(),
-        explore_url: "/blog_home.html".to_string(),
+        explore_url: "/blog.html".to_string(),
         learn_more_url: "/about.html".to_string(),
         explore_label: "Discover More".to_string(),
     }
@@ -50,8 +50,8 @@ pub fn mock_index_body() -> IndexBody {
 
 pub fn mock_header_data() -> HeaderData {
     HeaderData {
-        site_name: "Angels Project".to_string(),
-        site_description: "Empowering Innovation".to_string(),
+        site_name: "Mystical Research".to_string(),
+        site_description: "Bridging the Mundane and the Mystical".to_string(),
         navigation_links: vec![
             NavLink {
                 label: "Home".to_string(),
@@ -78,8 +78,8 @@ pub fn mock_header_data() -> HeaderData {
                 url: "/contact.html".to_string(),
             },
         ],
-        logo_url: Some("/static/images/angels-logo-header.png".to_string()), // Example logo URL
-        canonical_url: Some("https://example.com/".to_string()), // Example canonical URL
+        logo_url: Some("/static/img/deck-logo.jpg".to_string()), // Example logo URL
+        canonical_url: Some("https://mysticalresearch.com/".to_string()), // Example canonical URL
     }
 }
 
@@ -165,17 +165,17 @@ pub fn mock_header_data() -> HeaderData {
 pub fn mock_contact_home_page_object() -> ContactHomePage {
     ContactHomePage {
         header: mock_header_data(),
-        hero_title: "Get in Touch".to_string(),
-        hero_description: "We'd love to hear from you!".to_string(),
-        contact_email: "info@mysticweb.com".to_string(),
+        hero_title: "Connect with the Mystical".to_string(),
+        hero_description: "We welcome your inquiries, insights, and experiences.".to_string(),
+        contact_email: "contact@mysticalresearch.com".to_string(),
         contact_phone: "+1-555-MYSTIC".to_string(),
-        contact_address: "123 Celestial Way\nMystic Falls, CA 90001".to_string(),
+        contact_address: "777 Ethereal Avenue\nSan Francisco, CA 94103".to_string(),
         linked_data: ContactHomeSchemaMarkup {
             contact_page_title: "Contact Us - Mystical Research".to_string(),
-            site_description: "Get in touch with us for any inquiries or support.".to_string(),
+            site_description: "Get in touch with the Mystical Research team for inquiries, collaborations, or sharing your spiritual journey.".to_string(),
             canonical_url: "https://mysticalresearch.com/contact.html".to_string(),
             site_name: "Mystical Research".to_string(),
-            site_logo_url: "https://mysticalresearch.com/images/logo.png".to_string(),
+            site_logo_url: "https://mysticalresearch.com/static/img/deck-logo.jpg".to_string(),
             search_action_target: "https://mysticalresearch.com/search?q={search_term_string}"
                 .to_string(),
         },
@@ -187,12 +187,12 @@ pub fn mock_topic_home_page_object() -> TopicHomePage {
     TopicHomePage {
         header: mock_header_data(),
         linked_data: TopicHomeSchemaMarkup {
-            topic_page_title: "Explore Mystical Topics - Angels Project".to_string(),
-            site_description: "Dive into a wide range of mystical and spiritual topics."
+            topic_page_title: "Explore Mystical Topics - Mystical Research".to_string(),
+            site_description: "Delve into the realms of angels, lunar magic, elemental arts, and more as we explore the hidden facets of our existence."
                 .to_string(),
             canonical_url: "https://mysticalresearch.com/topics.html".to_string(),
-            site_name: "Angels Project".to_string(),
-            site_logo_url: "https://mysticalresearch.com/images/angels-logo.png".to_string(),
+            site_name: "Mystical Research".to_string(),
+            site_logo_url: "https://mysticalresearch.com/static/img/deck-logo.jpg".to_string(),
             search_action_target: "https://mysticalresearch.com/search?q={search_term_string}"
                 .to_string(),
         },
@@ -200,19 +200,19 @@ pub fn mock_topic_home_page_object() -> TopicHomePage {
             TopicCategory {
                 category_icon: "🌙".to_string(),
                 category_title: "Lunar Magic".to_string(),
-                category_description: "Moon phase rituals".to_string(),
+                category_description: "Moon phase rituals and celestial influences".to_string(),
                 category_url: "/topics/lunar-magic".to_string(),
             },
             TopicCategory {
                 category_icon: "🜁".to_string(),
                 category_title: "Elemental Arts".to_string(),
-                category_description: "Master the four elements".to_string(),
+                category_description: "Harmonizing with the four fundamental forces".to_string(),
                 category_url: "/topics/elemental-arts".to_string(),
             },
             TopicCategory {
                 category_icon: "🌿".to_string(),
-                category_title: "Herbalism".to_string(),
-                category_description: "The power of plants".to_string(),
+                category_title: "Sacred Herbalism".to_string(),
+                category_description: "The spiritual and medicinal power of the plant kingdom".to_string(),
                 category_url: "/topics/herbalism".to_string(),
             },
         ],
@@ -224,31 +224,31 @@ pub fn mock_about_home_page_object() -> AboutHomePage {
     AboutHomePage {
         body: AboutBody {
             structure: AboutStructure {
-                title: "About Us".to_string(),
-                description: "Learn more about our mission and journey.".to_string(),
-                about_section_title: "Our Core Values".to_string(),
+                title: "About Mystical Research".to_string(),
+                description: "Our mission is to bridge the gap between ancient wisdom and modern inquiry, providing a space for rigorous research and spiritual exploration.".to_string(),
+                about_section_title: "Our Guiding Principles".to_string(),
                 items: vec![
                     AboutItem {
-                        title: "Value 1".to_string(),
-                        description: "Description for value 1.".to_string(),
-                        url: "/about/value1".to_string(),
+                        title: "Integrity".to_string(),
+                        description: "Honest and thorough exploration of spiritual phenomena.".to_string(),
+                        url: "/about/integrity".to_string(),
                     },
                     AboutItem {
-                        title: "Value 2".to_string(),
-                        description: "Description for value 2.".to_string(),
-                        url: "/about/value2".to_string(),
+                        title: "Inclusivity".to_string(),
+                        description: "Welcoming diverse perspectives and traditions.".to_string(),
+                        url: "/about/inclusivity".to_string(),
                     },
                 ],
             },
         },
         linked_data: AboutHomeSchemaMarkup {
-            about_page_title: "About Us - Angels Project".to_string(),
-            site_description: "Learn about Angels Project and our mission to empower innovation."
+            about_page_title: "About Us - Mystical Research".to_string(),
+            site_description: "Learn about the Mystical Research project and our dedication to exploring the intersections of spirituality, science, and the human experience."
                 .to_string(),
-            canonical_url: "https://example.com/about.html".to_string(),
-            site_name: "Angels Project".to_string(),
-            site_logo_url: "/static/images/angels-logo.png".to_string(),
-            search_action_target: "https://example.com/search?q={search_term_string}".to_string(),
+            canonical_url: "https://mysticalresearch.com/about.html".to_string(),
+            site_name: "Mystical Research".to_string(),
+            site_logo_url: "/static/img/deck-logo.jpg".to_string(),
+            search_action_target: "https://mysticalresearch.com/search?q={search_term_string}".to_string(),
         },
         header: mock_header_data(),
         section: PageType::About,
