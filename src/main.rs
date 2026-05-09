@@ -33,6 +33,8 @@ const MAX_AGE: usize = 3_600;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // Install the default crypto provider (using ring)
+    let _ = rustls::crypto::ring::default_provider().install_default();
     let mut builder = Builder::new();
 
     builder
@@ -130,7 +132,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::NormalizePath::trim())
             .wrap(Governor::new(&governor_cof))
             .wrap(middleware::DefaultHeaders::new().add(("X-Frame-Options", "DENY")))
-            .wrap(middleware::Logger::default())
+            .wrap(middleware::Logger::new("%{r}a %r %s %b %T"))
             .app_data(db_data.clone())
             .configure(blog_api_controller)
             .configure(index_controller)
