@@ -27,9 +27,28 @@ The project follows a modular, separation-of-concerns pattern, organized into th
     - `blog_api_controller.rs`: Provides a JSON-based API for blog resources. This is where the AI content generation is triggered (`/blogs/ai/creator`).
 - **Placeholder AI Controller:** The file `src/controllers/ai_controller.rs` is currently an empty placeholder and is not used. All AI-related logic is initiated from the `blog_api_controller`.
 - **Builder Pattern:** The models, particularly `src/models/blog_model.rs`, make use of the builder pattern (e.g., `BlogArticleBuilder`). This provides a fluent and robust way to construct complex objects, especially after receiving data from the AI API.
-- **Unused Scheduler Dependency:** The `Cargo.toml` file includes the `tokio-cron-scheduler` dependency. However, an analysis of the codebase shows that it is **not currently implemented or used**. It was likely considered for future scheduled tasks but has not been integrated.
 
-## 3. Development Conventions
+## 3. Cross-Platform Compilation & Deployment
+
+The production environment for this project is AlmaLinux running on ARM (Ampere) architecture. To facilitate deployment from other architectures (e.g., macOS or x86 Linux), the following setup is used:
+
+- **Target Architecture:** `aarch64-unknown-linux-gnu` (glibc 2.34).
+- **Tooling:** We use `cargo-zigbuild` to handle cross-compilation without needing complex linker setups.
+    - Command: `cargo zigbuild --target aarch64-unknown-linux-gnu.2.34 --release`
+- **TLS Strategy:** To avoid dependencies on the target system's OpenSSL version, `Cargo.toml` is configured to use `rustls` with `ring`. This ensures the binary is more portable.
+    - Dependency setup: `reqwest` is used with `default-features = false` and `rustls-tls-manual-roots-no-provider`.
+- **Scripts:**
+    - `build_alma_linux.sh`: Automates the cross-compilation process using `zigbuild`.
+    - `copy_exe.sh`: Deploys the compiled binary to the production server via `scp`.
+
+### Requirements for Developers:
+If you need to build for production, ensure you have `zig` and `cargo-zigbuild` installed:
+```bash
+brew install zig
+cargo install cargo-zigbuild
+```
+
+## 4. Development Conventions
 
 - **Modularity:** Functionality is organized into distinct modules. When adding new features, follow the existing structure.
 - **Error Handling:** The project uses Rust's `Result` type for error handling. Avoid panics.
