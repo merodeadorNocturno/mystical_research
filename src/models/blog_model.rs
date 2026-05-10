@@ -2,7 +2,6 @@ use crate::models::ai_model::BlogStructure;
 use crate::models::index_model::HeaderData;
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-// use surrealdb::sql::Thing;
 use surrealdb::types::{RecordId, SurrealValue};
 
 use super::general_model::PageType;
@@ -84,6 +83,11 @@ pub struct BlogArticle {
 }
 
 impl BlogArticle {
+    /// Creates a new `BlogArticleBuilder` to construct a `BlogArticle`.
+    ///
+    /// # Returns
+    ///
+    /// A new `BlogArticleBuilder` instance.
     pub fn builder() -> BlogArticleBuilder {
         BlogArticleBuilder::new()
     }
