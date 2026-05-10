@@ -90,7 +90,7 @@ async fn blog_home_html(
             "description": "A sanctuary for intellectual and spiritual exploration, Mystical Research offers deep-dive essays and scholarly investigations into the intersections of philosophy, mysticism, and theology. We bridge ancient wisdom with modern inquiry to illuminate the mysteries of existence.",
             "logo_url": "/static/img/article4.png",
             "blog_posts": &blog_previews,
-
+            "blog_search": "life",
         },
         "pages": pages,
     });
@@ -390,12 +390,19 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
         Some(articles) => {
             let previews: Vec<BlogPreview> = articles
                 .into_iter()
-                .filter_map(|article| {
-                    match (article.title.clone(), article.summary.clone()) {
+                .filter_map(
+                    |article| match (article.title.clone(), article.summary.clone()) {
                         (Some(title), Some(summary)) => {
-                            let image_url = article.image_urls.clone().unwrap_or_else(|| "/static/img/article4.png".to_string());
+                            let image_url = article
+                                .image_urls
+                                .clone()
+                                .unwrap_or_else(|| "/static/img/article4.png".to_string());
                             let slug = article.slug.clone().unwrap_or_else(|| {
-                                article.id.as_ref().map(|id| format!("{:?}", id)).unwrap_or_else(|| "unknown".to_string())
+                                article
+                                    .id
+                                    .as_ref()
+                                    .map(|id| format!("{:?}", id))
+                                    .unwrap_or_else(|| "unknown".to_string())
                             });
 
                             Some(BlogPreview {
@@ -405,13 +412,11 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
                                 title,
                             })
                         }
-                        _ => {
-                            None
-                        }
-                    }
-                })
+                        _ => None,
+                    },
+                )
                 .collect();
-                
+
             previews
         }
         None => {
