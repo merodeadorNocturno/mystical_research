@@ -30,8 +30,15 @@ pub trait BlogDB {
     ) -> Option<Vec<BlogArticle>>;
 }
 
+/// Implements the `BlogDB` trait for the `Database` struct.
 #[async_trait]
 impl BlogDB for Database {
+    /// Finds all active blog articles, optionally limited by the number of records.
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - The database connection.
+    /// * `number_of_records` - The number of records to return, or `None` for all records.
     async fn find_all(
         db: &Data<Database>,
         number_of_records: Option<usize>,
@@ -47,6 +54,12 @@ impl BlogDB for Database {
         util_add_one(db, new_blog_article, BLOG_TABLE).await
     }
 
+    /// Finds a random set of active blog articles, optionally limited by the number of records.
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - The database connection.
+    /// * `number_of_records` - The number of records to return, or `None` for all records.
     async fn find_active_paginated(
         db: &Data<Database>,
         page: usize,

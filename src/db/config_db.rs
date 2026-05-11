@@ -10,7 +10,6 @@ use surrealdb::{
     opt::auth::Root,
 };
 
-
 #[derive(Debug)]
 pub struct Database {
     pub client: Surreal<Any>,
@@ -20,7 +19,14 @@ pub struct Database {
     pub schema: Schema, // Add the schema here
 }
 
+/// Authenticates the database connection using environment variables.
+///
+/// # Returns
+///
+/// * `Ok(())` - The authentication was successful.
+/// * `Err(Error)` - The authentication failed.
 impl Database {
+    /// Creates a new `Database` instance and authenticates the connection.
     pub async fn authenticate(&self) -> Result<(), Error> {
         let db_ns = set_environment_variable("DB_NAMESPACE", "mystical_ns");
         let db_name = set_environment_variable("DB_NAME", "mystical_db");
@@ -30,17 +36,18 @@ impl Database {
         // Clear any expired session
         let _ = self.client.invalidate().await;
 
-        self.client
-            .signin(Root {
-                username,
-                password,
-            })
-            .await?;
+        self.client.signin(Root { username, password }).await?;
 
         self.client.use_ns(&db_ns).use_db(&db_name).await?;
         Ok(())
     }
 
+    /// Initializes a new `Database` instance and authenticates the connection.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Self)` - The `Database` instance was initialized successfully.
+    /// * `Err(Error)` - The initialization failed.
     pub async fn init() -> Result<Self, Error> {
         let db_address: String = set_environment_variable("DB_ADDRESS", "0.0.0.0:8000");
         let db_ns = set_environment_variable("DB_NAMESPACE", "mystical_ns");
@@ -48,15 +55,6 @@ impl Database {
 
         let username = set_environment_variable("DB_USERNAME", "mystical_admin");
         let password = set_environment_variable("DB_PASSWORD", "mystical_password");
-
-        // info!(
-        //     "**** address: {}, ns: {}, name: {}, username: {}, password: {}",
-        //     &db_address.to_string(),
-        //     &db_ns.to_string(),
-        //     &db_name.to_string(),
-        //     &username,
-        //     &password,
-        // );
 
         let client = any::connect(format!("{}/rpc", &db_address)).await?;
         client

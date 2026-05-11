@@ -30,6 +30,7 @@ impl TitleError {
     }
 }
 
+/// Registers the routes for the about controller.
 async fn htmx_about() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
@@ -54,6 +55,7 @@ async fn htmx_about() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
+/// Renders the about page HTML.
 async fn about_html() -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
     let PageConfiguration { template_path, .. } = set_env_urls();
@@ -88,6 +90,7 @@ async fn about_html() -> Result<String, RenderError> {
     Ok(section_template)
 }
 
+/// Registers the routes for the about controller.
 pub fn about_controller(cfg: &mut ServiceConfig) {
     cfg.route(
       "/htmx/about",

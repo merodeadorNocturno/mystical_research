@@ -26,6 +26,9 @@ use actix_web::{
 };
 use log::error;
 
+/// Searches for blog articles based on the provided query.
+///
+/// Returns a JSON response with the search results.
 #[get("/blogs/search")]
 #[tracing::instrument(name = "Show Blog Articles", skip(db))]
 async fn blogs_search(
@@ -178,6 +181,11 @@ async fn blogs_article_slug(
     }
 }
 
+/// Registers the routes for the blog API controller.
+///
+/// # Arguments
+///
+/// * `cfg` - The service configuration to register the routes on.
 pub fn blog_api_controller(cfg: &mut ServiceConfig) {
     cfg.service(blogs);
     cfg.service(blogs_id);
