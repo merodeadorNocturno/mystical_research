@@ -444,6 +444,214 @@ h6 {
 
 /* === Blog Post Styles === */
 
+/* === Academic Layout Additions === */
+.post-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+    align-items: start;
+}
+
+.post-main {
+    min-width: 0;
+}
+
+.post-header-academic {
+    margin-bottom: 2.5rem;
+}
+
+.post-header-academic .post-meta {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.post-header-academic .post-title {
+    font-size: 3.5rem;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    font-family: var(--font-heading);
+}
+
+.post-abstract {
+    margin: 3rem 0;
+    padding: 2.5rem;
+    background: var(--light-bg);
+    border-top: 4px solid var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.15rem;
+    line-height: 1.8;
+}
+
+.abstract-title {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.post-content.editorial {
+    font-size: 1.25rem;
+    line-height: 1.9;
+    color: #333;
+}
+
+.post-content.editorial > p:first-of-type::first-letter {
+    font-family: var(--font-heading);
+    float: left;
+    font-size: 4.5rem;
+    line-height: 0.8;
+    margin: 0.1em 0.15em 0 0;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.post-content.editorial h2 {
+    font-size: 2.2rem;
+    margin: 4rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-content.editorial h3 {
+    font-size: 1.6rem;
+    margin: 2.5rem 0 1rem;
+}
+
+.post-sidebar {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-widget {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 4px;
+}
+
+.sidebar-widget h3 {
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.sidebar-author {
+    text-align: center;
+}
+
+.sidebar-author img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 2px solid var(--border-color);
+}
+
+.sidebar-author h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.sidebar-author .author-role {
+    font-size: 0.9rem;
+    color: #777;
+    font-style: italic;
+}
+
+.sidebar-ad-container {
+    height: 350px;
+    background: #f9f9f9;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.in-content-ad {
+    margin: 3rem 0;
+    padding: 1rem;
+    background: #f9f9f9;
+    border: 1px dashed #ccc;
+    text-align: center;
+    color: #aaa;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sidebar TOC Specifics */
+.sidebar-widget.post-toc {
+    margin: 0; /* Reset default margin */
+    padding: 1.5rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+}
+
+.sidebar-widget.post-toc h3 {
+    margin-bottom: 1rem;
+}
+
+.sidebar-widget.post-toc ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-widget.post-toc li {
+    margin: 0.8rem 0;
+    padding-left: 1rem;
+    position: relative;
+    font-size: 0.95rem;
+}
+
+.sidebar-widget.post-toc li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+}
+
+@media (max-width: 992px) {
+    .post-layout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .post-sidebar {
+        position: static;
+        margin-top: 3rem;
+    }
+    
+    .post-header-academic .post-title {
+        font-size: 2.5rem;
+    }
+}
+
+
 /* Post Hero Section */
 .post-hero {
     height: 40vh;
