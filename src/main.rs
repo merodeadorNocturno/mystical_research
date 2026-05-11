@@ -113,7 +113,7 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::permissive().max_age(MAX_AGE);
         let session_mw =
             SessionMiddleware::builder(CookieSessionStore::default(), secret_key.clone())
-                .cookie_secure(false) // Set to true if using HTTPS
+                .cookie_secure(true) // Set to true if using HTTPS
                 .cookie_same_site(actix_web::cookie::SameSite::Lax)
                 .session_lifecycle(
                     PersistentSession::default()
