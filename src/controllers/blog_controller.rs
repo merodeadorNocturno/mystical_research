@@ -25,6 +25,7 @@ struct TitleError {
 }
 
 const POST_PER_PAGE: u64 = 9;
+const TRIMMED_NUMBER_OF_WORDS: usize = 14;
 
 async fn blog_home_html(
     query: Query<BlogHomeQuery>,
@@ -408,7 +409,10 @@ fn get_blog_articles_from_db(articles: Option<Vec<BlogArticle>>) -> Vec<BlogPrev
                             Some(BlogPreview {
                                 image_url,
                                 slug,
-                                summary: format!("{}...", trim_to_words(&summary, 14)),
+                                summary: format!(
+                                    "{}...",
+                                    trim_to_words(&summary, TRIMMED_NUMBER_OF_WORDS)
+                                ),
                                 title,
                             })
                         }
