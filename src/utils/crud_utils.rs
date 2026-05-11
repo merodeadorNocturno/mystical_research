@@ -9,8 +9,17 @@ use crate::models::general_model::CountResult;
 use serde::{Serialize, de::DeserializeOwned};
 use surrealdb::{Error, IndexedResults, types::SurrealValue};
 
-
-
+/// Finds a single record by ID in the specified table.
+///
+/// # Arguments
+///
+/// * `db` - A reference to the database connection.
+/// * `id` - The ID of the record to find.
+/// * `table_name` - The name of the table to search.
+///
+/// # Returns
+///
+/// The found record, or `None` if an error occurs.
 pub async fn util_find_one<T: DeserializeOwned>(
     db: &Data<Database>,
     id: String,
@@ -33,6 +42,17 @@ where
     }
 }
 
+/// Adds a single record to the specified table.
+///
+/// # Arguments
+///
+/// * `db` - A reference to the database connection.
+/// * `record` - The record to add.
+/// * `table_name` - The name of the table to add the record to.
+///
+/// # Returns
+///
+/// The added record, or `None` if an error occurs.
 pub async fn util_add_one<T>(db: &Data<Database>, record: T, table_name: &str) -> Option<T>
 where
     T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue,
@@ -56,8 +76,17 @@ where
     }
 }
 
-
-
+/// Finds active records in the specified table.
+///
+/// # Arguments
+///
+/// * `db` - A reference to the database connection.
+/// * `table_name` - The name of the table to search.
+/// * `number_of_records` - The number of records to return (optional).
+///
+/// # Returns
+///
+/// A `Vec` of records that match the search criteria, or `None` if an error occurs.
 pub async fn util_find_active_records<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,
     table_name: &str,
@@ -90,6 +119,17 @@ where
     }
 }
 
+/// Performs a full-text search on the specified table and returns the results.
+///
+/// # Arguments
+///
+/// * `db` - A reference to the database connection.
+/// * `table_name` - The name of the table to search.
+/// * `search_fields` - The fields to search within.
+///
+/// # Returns
+///
+/// A `Vec` of records that match the search criteria, or `None` if an error occurs.
 pub async fn util_fulltext_search<T: DeserializeOwned + Serialize>(
     db: &Data<Database>,
     table_name: &str,
@@ -174,7 +214,10 @@ where
 
     if let Err(e) = &query_result {
         if e.to_string().to_lowercase().contains("session has expired") {
-            log::warn!("Session expired for paginated query on {}, re-authenticating...", table_name);
+            log::warn!(
+                "Session expired for paginated query on {}, re-authenticating...",
+                table_name
+            );
             if let Err(auth_err) = db.authenticate().await {
                 error!("Failed to re-authenticate: {}", auth_err);
             } else {
@@ -209,6 +252,16 @@ where
 }
 // --- END NEW PAGINATED FUNCTION ---
 
+/// Counts the number of records in the specified table.
+///
+/// # Arguments
+///
+/// * `db` - A reference to the database connection.
+/// * `table_name` - The name of the table to count records from.
+///
+/// # Returns
+///
+/// The number of records in the table, or `None` if an error occurs.
 pub async fn util_count_records(db: &Data<Database>, table_name: &str) -> Option<u64> {
     let surreal_query = format!("SELECT count() FROM {} GROUP ALL", table_name);
 
@@ -217,7 +270,10 @@ pub async fn util_count_records(db: &Data<Database>, table_name: &str) -> Option
 
     if let Err(e) = &query_result {
         if e.to_string().to_lowercase().contains("session has expired") {
-            log::warn!("Session expired for count query on {}, re-authenticating...", table_name);
+            log::warn!(
+                "Session expired for count query on {}, re-authenticating...",
+                table_name
+            );
             if let Err(auth_err) = db.authenticate().await {
                 error!("Failed to re-authenticate: {}", auth_err);
             } else {
@@ -261,8 +317,17 @@ pub async fn util_count_records(db: &Data<Database>, table_name: &str) -> Option
 }
 // --- END NEW COUNT FUNCTION ---
 
-
-
+/// Finds a random set of articles from the specified table.
+///
+/// # Arguments
+///
+/// * `db` - A reference to the database connection.
+/// * `table_name` - The name of the table to search.
+/// * `number_of_elements` - The number of articles to return (optional).
+///
+/// # Returns
+///
+/// A `Vec` of articles, or `None` if an error occurs.
 pub async fn util_find_random_articles<T>(
     db: &Data<Database>,
     table_name: &str,
