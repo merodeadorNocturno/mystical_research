@@ -1,3 +1,4 @@
+use crate::config::connection::set_environment_variable;
 use crate::utils::{
     env_utils::*,
     general_utils::{create_robots_txt_template, create_sitemap_xml_template, get_template_path},
@@ -90,10 +91,9 @@ async fn main() -> std::io::Result<()> {
 
     let db_data = Data::new(my_db);
 
-    // IMPORTANT: In a real application, load this key from a secure, persistent
-    // configuration or environment variable. Generating it on startup means all
-    // sessions are invalidated on restart.
-    let secret_key = Key::generate();
+    // Load the session secret key from environment variable or use a default
+    let secret_key_string = set_environment_variable("SESSION_SECRET_KEY", "a_very_long_and_secure_session_secret_key_that_is_at_least_64_characters_long_for_security");
+    let secret_key = Key::from(secret_key_string.as_bytes());
 
     info!(
         "DB up and running:: {} :: {}",
