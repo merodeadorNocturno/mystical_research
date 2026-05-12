@@ -28,7 +28,21 @@ pub async fn util_find_one<T: DeserializeOwned>(
 where
     T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue,
 {
-    let result: Result<Option<T>, Error> = db.client.select((table_name, id.clone())).await;
+    let mut result: Result<Option<T>, Error> = db.client.select((table_name, id.clone())).await;
+
+    if let Err(e) = &result {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!(
+                "Session expired for util_find_one on {}, re-authenticating...",
+                table_name
+            );
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                result = db.client.select((table_name, id.clone())).await;
+            }
+        }
+    }
 
     match result {
         Ok(record) => record,
@@ -55,14 +69,32 @@ where
 /// The added record, or `None` if an error occurs.
 pub async fn util_add_one<T>(db: &Data<Database>, record: T, table_name: &str) -> Option<T>
 where
-    T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue,
+    T: DeserializeOwned + Serialize + Send + Sync + 'static + SurrealValue + Clone,
 {
     let uuid_v7 = get_uuid();
-    let added_t_record = db
+    let mut added_t_record = db
         .client
         .create((table_name, uuid_v7.clone()))
-        .content(record)
+        .content(record.clone())
         .await;
+
+    if let Err(e) = &added_t_record {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!(
+                "Session expired for util_add_one on {}, re-authenticating...",
+                table_name
+            );
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                added_t_record = db
+                    .client
+                    .create((table_name, uuid_v7.clone()))
+                    .content(record)
+                    .await;
+            }
+        }
+    }
 
     match added_t_record {
         Ok(added_record) => added_record,
@@ -102,7 +134,21 @@ where
         ),
         None => format!("SELECT * FROM {} WHERE deleted = false", table_name),
     };
-    let query_t_result = db.client.query(surreal_query).await;
+    let mut query_t_result = db.client.query(&surreal_query).await;
+
+    if let Err(e) = &query_t_result {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!(
+                "Session expired for util_find_active_records on {}, re-authenticating...",
+                table_name
+            );
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                query_t_result = db.client.query(&surreal_query).await;
+            }
+        }
+    }
 
     match query_t_result {
         Ok(mut result) => match result.take(0) {
@@ -142,7 +188,21 @@ where
         "SELECT * FROM {table_name}
         WHERE {search_fields} AND deleted = false;"
     );
-    let query_t_result = db.client.query(surreal_query).await;
+    let mut query_t_result = db.client.query(&surreal_query).await;
+
+    if let Err(e) = &query_t_result {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!(
+                "Session expired for util_fulltext_search on {}, re-authenticating...",
+                table_name
+            );
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                query_t_result = db.client.query(&surreal_query).await;
+            }
+        }
+    }
 
     match query_t_result {
         Ok(mut result) => match result.take(0) {
@@ -344,7 +404,21 @@ where
         None => format!("SELECT * FROM {} ORDER BY RAND();", table_name),
     };
 
-    let result: Result<IndexedResults, Error> = db.client.query(surreal_string_query).await;
+    let mut result: Result<IndexedResults, Error> = db.client.query(surreal_string_query.clone()).await;
+
+    if let Err(e) = &result {
+        if e.to_string().to_lowercase().contains("session has expired") {
+            log::warn!(
+                "Session expired for random articles query on {}, re-authenticating...",
+                table_name
+            );
+            if let Err(auth_err) = db.authenticate().await {
+                error!("Failed to re-authenticate: {}", auth_err);
+            } else {
+                result = db.client.query(surreal_string_query).await;
+            }
+        }
+    }
 
     match result {
         Ok(mut response) => match response.take(0) {

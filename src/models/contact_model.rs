@@ -26,6 +26,7 @@ pub struct ContactHomeSchemaMarkup {
 }
 
 #[derive(Deserialize, Debug, Serialize, Validate, SurrealValue)] // Added Serialize for potential logging/DB
+#[derive(Clone)]
 pub struct ContactFormData {
     #[validate(length(min = 1, message = "Name cannot be empty"))]
     pub name: String,

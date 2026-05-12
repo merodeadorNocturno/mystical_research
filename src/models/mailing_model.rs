@@ -3,6 +3,7 @@ use surrealdb::types::SurrealValue;
 use validator::Validate;
 
 #[derive(Debug, Deserialize, Serialize, Validate, SurrealValue)]
+#[derive(Clone)]
 pub struct MailingList {
     #[validate(email(message = "Invalid email format"))]
     pub email: String,
