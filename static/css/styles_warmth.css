@@ -1,9 +1,18 @@
+@font-face {
+  font-family: 'Ryman Eco';
+  src: url('../fonts/RymanEco-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --primary-color: #f2a65a; /* Peach/Apricot - Warm and inviting base */
   --secondary-color: #e07a5f; /* Burnt Coral - Richer warm shade for structure */
   --accent-color: #ffc13b; /* Golden Yellow - Sunny and vibrant accent */
   --text-color: #3d2b1f; /* Dark Coffee Brown - Warm and readable text */
   --light-bg: #f8f0e3; /* Cream Beige - Soft and warm light background */
+  --font-heading: "Ryman Eco", serif;
+  --font-body: "Ryman Eco", "Merriweather", serif;
 }
 
 * {
@@ -13,8 +22,7 @@
 }
 
 body {
-  font-family: "Merriweather", sans-serif;
-  /* font-family: var(--font-body); */
+  font-family: var(--font-body);
   background: var(--primary-color);
   color: var(--text-color);
   line-height: 1.6;

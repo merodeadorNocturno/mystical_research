@@ -1,15 +1,22 @@
+@font-face {
+  font-family: 'Ryman Eco';
+  src: url('../fonts/RymanEco-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --primary-color: #f0f4f7; /* Light Grayish Blue - Soft Background */
   --secondary-color: #e0e8ef; /* Slightly Darker Grayish Blue - Cards, Nav */
   --accent-color: #00bcd4; /* Teal - Highlights, Buttons */
   --text-color: #333333; /* Dark Gray - Primary Text */
   --light-bg: #ffffff; /* White - Very Light Backgrounds */
-  --heading-font: "Roboto Slab", serif; /* More modern heading font */
-  --body-font: "Open Sans", sans-serif; /* Clean, readable body font */
+  --font-heading: "Ryman Eco", "Roboto Slab", serif; /* More modern heading font */
+  --font-body: "Ryman Eco", "Open Sans", sans-serif; /* Clean, readable body font */
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: var(--font-body);
   background: var(--primary-color);
   color: var(--text-color);
   line-height: 1.7; /* Slightly increased line height for readability */
@@ -21,7 +28,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Roboto Slab", serif;
+  font-family: var(--font-heading);
   color: var(--secondary-color); /* Slightly muted headings */
   font-weight: 700; /* Stronger heading weight */
 }

@@ -1,6 +1,13 @@
+@font-face {
+  font-family: 'Ryman Eco';
+  src: url('../fonts/RymanEco-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* General Styles */
 body {
-  font-family: sans-serif;
+  font-family: 'Ryman Eco', sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f4f7f6; /* Light background */

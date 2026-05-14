@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Ryman Eco';
+    src: url('../fonts/RymanEco-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     /* Academic Modern Palette */
     --primary-color: #fdfdfc; /* Clean, slightly warm off-white (Parchment-like) */
@@ -8,8 +15,8 @@
     --border-color: #dcdcd6; /* Fine dividing lines */
     
     /* Typography */
-    --font-heading: "Playfair Display", "Merriweather", serif; /* Elegant modern serif */
-    --font-body: "Inter", "Roboto", -apple-system, sans-serif; /* Clean readable sans */
+    --font-heading: "Ryman Eco", "Playfair Display", "Merriweather", serif; /* Elegant modern serif */
+    --font-body: "Ryman Eco", "Inter", "Roboto", -apple-system, sans-serif; /* Clean readable sans */
 }
 
 .htmx-indicator {
