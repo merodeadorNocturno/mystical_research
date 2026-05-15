@@ -4,7 +4,7 @@
   <title>{{header.site_name}}</title>
   <meta name="description" content="{{header.site_description}}" />
   <meta name="keywords" content="{{header.keywords}}" />
-  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{{header.site_name}}" />
@@ -27,21 +27,24 @@
   <!-- Replace with your domain -->
 
   <link rel="stylesheet" href="/static/css/styles.css" />
-  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-  
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+
   <!-- Fonts: Academic Modern -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet"
+  />
 
   <script defer>
-  document.addEventListener('htmx:afterSwap', function(event) {
+    document.addEventListener("htmx:afterSwap", function (event) {
       // Your code here runs after every HTMX swap
       window.scrollTo(0, 0); // Scroll to top example
-  });
+    });
   </script>
 
-  <meta name="google-adsense-account" content="ca-pub-3730960250065604">
+  <!--<meta name="google-adsense-account" content="ca-pub-3730960250065604">
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3730960250065604"
        crossorigin="anonymous"></script>
@@ -52,22 +55,22 @@
           t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
           y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window, document, "clarity", "script", "riyifpgz7p");
-  </script>
+  </script>-->
 
-  {{!  Example of where you might include Schema Markup dynamically (JSON-LD) }}
+  {{! Example of where you might include Schema Markup dynamically (JSON-LD) }}
   <script type="application/ld+json">
-  {{# if (eq section 'Home') }}
-    {{> section_schema}}
-  {{else if (eq section 'BlogHome') }}
-      {{> blog_home_ld}}
-  {{else if (eq section 'BlogArticle') }}
-      {{> blog_article_ld}}
-  {{else if (eq section 'Contact') }}
-      {{> contact_home_html_ld}}
-  {{else if (eq section 'Topics') }}
-      {{> topics_index_html_ld}}
-  {{else if (eq section 'About') }}
-      {{> about_index_ld}}
-  {{/ if }}
+    {{# if (eq section 'Home') }}
+      {{> section_schema}}
+    {{else if (eq section 'BlogHome') }}
+        {{> blog_home_ld}}
+    {{else if (eq section 'BlogArticle') }}
+        {{> blog_article_ld}}
+    {{else if (eq section 'Contact') }}
+        {{> contact_home_html_ld}}
+    {{else if (eq section 'Topics') }}
+        {{> topics_index_html_ld}}
+    {{else if (eq section 'About') }}
+        {{> about_index_ld}}
+    {{/ if }}
   </script>
 </head>
