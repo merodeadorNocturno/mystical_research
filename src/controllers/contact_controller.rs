@@ -106,7 +106,7 @@ async fn post_htmx_contact(
     info!("Received contact form submission: {:?}", &contact_data);
 
     let mut records = BTreeMap::new();
-    records.insert("email", contact_data.email.to_string());
+    records.insert("email", contact_data.email.replace("'", "").to_string());
     records.insert("message", contact_data.message.to_string());
     records.insert("name", contact_data.name.to_string());
     records.insert(
@@ -139,6 +139,7 @@ async fn post_htmx_contact(
                 .map(|v| v.to_string().replace("\"", ""))
                 .unwrap_or_default(),
         )
+        .date_created(&surrealdb::types::Datetime::now())
         .deleted(false)
         .build();
 
@@ -171,7 +172,9 @@ async fn post_htmx_contact(
         if let Some(obj) = context.as_object_mut() {
             obj.insert(
                 "error_message".to_string(),
-                json!("There was an error saving your contact information. Please try again later."),
+                json!(
+                    "There was an error saving your contact information. Please try again later."
+                ),
             );
         }
     }

@@ -36,6 +36,7 @@ pub struct ContactFormData {
     pub subject: Option<String>, // Subject might be optional
     #[validate(length(min = 10, message = "Message must be at least 10 characters"))]
     pub message: String,
+    pub date_created: Option<surrealdb::types::Datetime>,
     pub deleted: bool,
 }
 
@@ -52,6 +53,7 @@ pub struct ContactFormDataBuilder {
     pub email: String,
     pub subject: Option<String>, // Subject might be optional
     pub message: String,
+    pub date_created: Option<surrealdb::types::Datetime>,
     pub deleted: bool,
 }
 
@@ -60,6 +62,7 @@ impl ContactFormDataBuilder {
         Self::default()
     }
 
+    #[allow(unused)]
     pub fn id(mut self, id: RecordId) -> Self {
         self.id = Some(id);
         self
@@ -77,6 +80,11 @@ impl ContactFormDataBuilder {
 
     pub fn message(mut self, message: String) -> Self {
         self.message = message;
+        self
+    }
+
+    pub fn date_created(mut self, date_created: &surrealdb::types::Datetime) -> Self {
+        self.date_created = Some(date_created.clone());
         self
     }
 
@@ -98,6 +106,7 @@ impl ContactFormDataBuilder {
             subject: self.subject,
             message: self.message,
             deleted: self.deleted,
+            date_created: self.date_created,
         }
     }
 }

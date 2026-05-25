@@ -40,6 +40,8 @@ DEFINE FIELD IF NOT EXISTS email ON TABLE contact TYPE string;
 DEFINE FIELD IF NOT EXISTS subject ON TABLE contact TYPE string;
 DEFINE FIELD IF NOT EXISTS message ON TABLE contact TYPE string;
 DEFINE FIELD IF NOT EXISTS deleted ON TABLE contact TYPE bool;
+DEFINE FIELD IF NOT EXISTS date_created ON TABLE contact TYPE option<datetime>;
+
 
 -- FIELD DEFINITION FOR MAILING mailing_list
 DEFINE FIELD IF NOT EXISTS id ON TABLE mailing_list TYPE string;
