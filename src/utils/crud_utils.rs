@@ -398,13 +398,17 @@ where
 {
     let surreal_string_query = match number_of_elements {
         Some(noe) => format!(
-            "SELECT * FROM {} ORDER BY RAND() LIMIT {};",
+            "SELECT * FROM {} WHERE deleted = false ORDER BY RAND() LIMIT {};",
             table_name, noe
         ),
-        None => format!("SELECT * FROM {} ORDER BY RAND();", table_name),
+        None => format!(
+            "SELECT * FROM {} WHERE deleted = false ORDER BY RAND();",
+            table_name
+        ),
     };
 
-    let mut result: Result<IndexedResults, Error> = db.client.query(surreal_string_query.clone()).await;
+    let mut result: Result<IndexedResults, Error> =
+        db.client.query(surreal_string_query.clone()).await;
 
     if let Err(e) = &result {
         if e.to_string().to_lowercase().contains("session has expired") {
