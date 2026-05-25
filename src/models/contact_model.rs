@@ -1,6 +1,6 @@
 use crate::models::{general_model::PageType, index_model::HeaderData};
 use serde::{Deserialize, Serialize};
-use surrealdb::types::{SurrealValue, Uuid};
+use surrealdb::types::{RecordId, SurrealValue};
 use validator::Validate;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -28,7 +28,7 @@ pub struct ContactHomeSchemaMarkup {
 #[derive(Deserialize, Debug, Serialize, Validate, SurrealValue)] // Added Serialize for potential logging/DB
 #[derive(Clone)]
 pub struct ContactFormData {
-    pub id: Uuid,
+    pub id: Option<RecordId>,
     #[validate(length(min = 1, message = "Name cannot be empty"))]
     pub name: String,
     #[validate(email(message = "Invalid email format"))]
@@ -47,7 +47,7 @@ impl ContactFormData {
 
 #[derive(Debug, Default)]
 pub struct ContactFormDataBuilder {
-    pub id: Uuid,
+    pub id: Option<RecordId>,
     pub name: String,
     pub email: String,
     pub subject: Option<String>, // Subject might be optional
@@ -60,8 +60,8 @@ impl ContactFormDataBuilder {
         Self::default()
     }
 
-    pub fn id(mut self, id: Uuid) -> Self {
-        self.id = id;
+    pub fn id(mut self, id: RecordId) -> Self {
+        self.id = Some(id);
         self
     }
 

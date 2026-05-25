@@ -17,8 +17,6 @@ use log::{error, info};
 use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::Path;
-use surrealdb::types::{Datetime, Uuid};
-// use surrealdb::sql::Value;
 
 async fn htmx_contact(token: CsrfToken) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
@@ -117,7 +115,6 @@ async fn post_htmx_contact(
     );
 
     let contact_form_data: ContactFormData = ContactFormData::builder()
-        .id(Uuid::new_v7_from_datetime(Datetime::now()))
         .name(
             records
                 .get("name")
@@ -151,7 +148,11 @@ async fn post_htmx_contact(
     info!("Saved email {:?}", add_contact_form_data);
 
     let handlebars = Handlebars::new();
-    let contact_hbs = "contact/contact_success_response";
+    let contact_hbs = if add_contact_form_data.is_some() {
+        "contact/contact_success_response"
+    } else {
+        "contact/contact_error_response"
+    };
 
     let contact_home_template = match read_hbs_template(contact_hbs) {
         Ok(contents) => contents,
@@ -165,11 +166,17 @@ async fn post_htmx_contact(
     };
 
     // --- Server-Side Validation ---
+    let mut context = json!(&mock_contact_home_page_object());
+    if add_contact_form_data.is_none() {
+        if let Some(obj) = context.as_object_mut() {
+            obj.insert(
+                "error_message".to_string(),
+                json!("There was an error saving your contact information. Please try again later."),
+            );
+        }
+    }
 
-    let section_template = match handlebars.render_template(
-        &contact_home_template,
-        &json!(&mock_contact_home_page_object()),
-    ) {
+    let section_template = match handlebars.render_template(&contact_home_template, &context) {
         Ok(template) => template,
         Err(err) => {
             error!(
