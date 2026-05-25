@@ -17,6 +17,7 @@ use log::{error, info};
 use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::Path;
+use surrealdb::types::{Datetime, Uuid};
 // use surrealdb::sql::Value;
 
 async fn htmx_contact(token: CsrfToken) -> Result<String, RenderError> {
@@ -116,6 +117,7 @@ async fn post_htmx_contact(
     );
 
     let contact_form_data: ContactFormData = ContactFormData::builder()
+        .id(Uuid::new_v7_from_datetime(Datetime::now()))
         .name(
             records
                 .get("name")
@@ -184,6 +186,7 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
     cfg.route(
         "/htmx/contact",
         get().to(|token: CsrfToken| async move {
+          info!("{:?}", &token.get().to_string());
             match htmx_contact(token).await {
                 Ok(template) => HttpResponse::Ok()
                     .content_type("text/html")
@@ -226,10 +229,10 @@ pub fn contact_controller(cfg: &mut ServiceConfig) {
                     .body(created_contact),
                 Err(e) => HttpResponse::Ok()
                     .content_type("text/html")
-                    .append_header(("HX-Trigger", "error_contact_table"))
+                    .append_header(("HX-Trigger", "contact-content-area"))
                     .body(
                         format!(
-                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to load Enterprise: {}</span>",
+                            "<span class=\"icon is-small is-left\"><i class=\"fas fa-ban\"></i>Failed to create contact: {}</span>",
                             e.to_string()
                         )
                     )
