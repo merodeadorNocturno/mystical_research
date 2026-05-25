@@ -1,16 +1,13 @@
 use log::info;
 use rand::Rng; // Updated for rand 0.8.x
 use std::{fs, io, path::PathBuf};
-use surrealdb::types::RecordIdKey;
 use unicode_normalization::{UnicodeNormalization, char::is_combining_mark};
 
 const MIN_RANGE_VALUE: u32 = 1_000;
 const MAX_RANGE_VALUE: u32 = 9_999;
 
-pub fn get_uuid() -> RecordIdKey {
-    let uuid_v7 = RecordIdKey::uuid();
-
-    uuid_v7
+pub fn get_uuid() -> String {
+    surrealdb::types::Uuid::new_v7().to_string()
 }
 
 pub fn create_or_conditional(search_term: &str, fields: Vec<String>) -> String {
