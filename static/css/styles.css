@@ -120,15 +120,17 @@ h6 {
 }
 
 .hero {
-    height: 60vh;
+    min-height: 60vh;
+    height: auto;
     background:
         linear-gradient(rgba(26, 26, 26, 0.85), rgba(26, 26, 26, 0.85)), /* Dark elegant overlay */
         url("../img/hero-bg.jpeg") center/cover;
     display: flex;
+    flex-direction: column; /* Ensure vertical stack works well with min-height */
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 2rem;
+    padding: 4rem 2rem; /* Increased padding for better vertical breathing room */
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -1039,6 +1041,13 @@ h6 {
     letter-spacing: 0.02em;
 }
 
+.main_container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
 .contact-hero {
     background-image: linear-gradient(
             rgba(42, 9, 68, 0.8),
@@ -1047,14 +1056,35 @@ h6 {
         url("../img/cards.jpeg"); /* You might need to create or use a relevant background image */
 }
 
+.contact-hero .content-main {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-hero .content-main h2 {
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.contact-hero .content-main p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
 /* Contact Form Styles */
 .contact-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.08); /* Slightly lighter for better definition */
+    border-radius: 8px;
+    backdrop-filter: blur(5px); /* Add a modern blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .form-group {
@@ -1063,23 +1093,49 @@ h6 {
 }
 
 .form-group label {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.contact-hero .form-group label {
+    color: #ffffff; /* White labels for dark hero background */
 }
 
 .form-group input,
 .form-group textarea {
-    padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgba(
-        255,
-        255,
-        255,
-        0.1
-    ); /* Slightly transparent background */
+    padding: 0.9rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: #ffffff; /* Solid white background for high contrast */
     color: var(--text-color);
-    font-family: inherit; /* Inherit font from body */
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(140, 42, 62, 0.2);
+}
+
+.contact-form .btn {
+    background: var(--accent-color); /* Solid background by default */
+    color: #ffffff;
+    border: none;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+}
+
+.contact-form .btn:hover {
+    background: #a13148; /* Slightly lighter crimson on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .form-group textarea {
