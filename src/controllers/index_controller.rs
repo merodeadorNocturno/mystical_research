@@ -12,13 +12,15 @@ use crate::utils::{
     general_utils::trim_to_words,
 };
 use actix_web::{
-    web::{get, Data, ServiceConfig},
     HttpResponse,
+    web::{Data, ServiceConfig, get},
 };
 use handlebars::{Handlebars, RenderError};
 use log::error;
 use serde_json::json;
 use std::path::Path;
+
+const DEFAULT_IMAGE: &str = "article5.jpeg";
 
 async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
     let mut handlebars = Handlebars::new();
@@ -52,10 +54,15 @@ async fn index_html(db: &Data<Database>) -> Result<String, RenderError> {
 
     let mut featured: Vec<BlogPreview> = Vec::new();
     for this_feature in featured_results {
+        let title = this_feature.title.unwrap();
+        let image_url = match this_feature.image_urls.as_deref() {
+            Some(url) => url.to_string(),
+            None => DEFAULT_IMAGE.to_string(),
+        };
         featured.push(BlogPreview {
-            title: this_feature.title.unwrap(),
+            title,
             summary: format!("{}...", trim_to_words(&this_feature.summary.unwrap(), 16)),
-            image_url: this_feature.image_urls.unwrap(),
+            image_url,
             slug: this_feature.slug.unwrap(),
         })
     }
